@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbOutlineMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcf.pojo.DbOutline">
+        <id column="l_id" property="lId" />
+        <result column="l_content" property="lContent" />
+        <result column="l_num" property="lNum" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        l_id, l_content, l_num
+    </sql>
+<select id="bysid" resultMap="BaseResultMap">
+SELECT
+	l.*
+FROM
+	`db_outline` l
+LEFT JOIN db_comment c ON c.comment_to_line = l.l_id
+WHERE
+	c.comment_to_shop =#{sid}
+ORDER BY
+	l.l_num;
+</select>
+</mapper>

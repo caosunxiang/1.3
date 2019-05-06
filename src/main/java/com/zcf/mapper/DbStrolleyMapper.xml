@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbStrolleyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcf.pojo.DbStrolley">
+        <id column="strolley_id" property="strolleyId" />
+        <result column="strolley_table" property="strolleyTable" />
+        <result column="strolley_to_food"
+	property="strolleyToFood" />
+        <result column="strolley_food_name" property="strolleyFoodName" />
+        <result column="strolley_food_ename" property="strolleyFoodEname" />
+        <result column="strolley_num" property="strolleyNum" />
+        <result column="strolley_price" property="strolleyPrice" />
+        <result column="strolley_total" property="strolleyTotal" />
+        <result column="strolley_remark" property="strolleyRemark" />
+        <result column="strolley_time" property="strolleyTime" />
+        <result column="strolley_to_user" property="strolleyToUser" />
+        <result column="strolley_to_shop" property="strolleyToShop" />
+        <result column="strolley_shop_name" property="strolleyShopName" />
+        <result column="strolley_shop_ename" property="strolleyShopEname" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        strolley_id, strolley_table, strolley_food_name, strolley_food_ename, strolley_num, strolley_price, strolley_total, strolley_remark, strolley_time, strolley_to_user, strolley_to_shop, strolley_shop_name, strolley_shop_ename, strolley_to_food
+    </sql>
+
+</mapper>

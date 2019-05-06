@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbFoodtypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcf.pojo.DbFoodtype">
+        <id column="ft_id" property="ftId" />
+        <result column="ft_name" property="ftName" />
+        <result column="foodtype_to_shop" property="foodtypeToShop" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ft_id, ft_name, foodtype_to_shop
+    </sql>
+
+</mapper>

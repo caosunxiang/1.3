@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbCommentMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.zcf.pojo.DbComment">
+		<id column="c_id" property="cId" />
+		<result column="c_content" property="cContent" />
+		<result column="c_score" property="cScore" />
+		<result column="c_reply" property="cReply" />
+		<result column="c_time" property="cTime" />
+		<result column="comment_to_order" property="commentToOrder" />
+		<result column="c_order_table" property="cOrderTable" />
+		<result column="c_order_time" property="cOrderTime" />
+		<result column="comment_to_user" property="commentToUser" />
+		<result column="c_user_head" property="cUserHead" />
+		<result column="comment_to_shop" property="commentToShop" />
+		<result column="c_shop_name" property="cShopName" />
+		<result column="c_shop_ename" property="cShopEname" />
+		<result column="comment_to_line" property="commentToLine" />
+		<result column="c_line_content" property="cLineContent" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		c_id, c_content, c_score, c_reply, c_time, comment_to_order, c_order_table,
+		c_order_time, comment_to_user, c_user_head, comment_to_shop,
+		c_shop_name, c_shop_ename, comment_to_line, c_line_content
+	</sql>
+
+
+</mapper>

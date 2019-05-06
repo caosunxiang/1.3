@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbShopMapper">
+
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.zcf.pojo.DbShop">
+		<id column="s_id" property="sId" />
+		<result column="s_name" property="sName" />
+		<result column="s_english_name" property="sEnglishName" />
+		<result column="s_business_type" property="sBusinessType" />
+		<result column="s_type" property="sType" />
+		<result column="s_type_name" property="sTypeName" />
+		<result column="s_picture" property="sPicture" />
+		<result column="s_state" property="sState" />
+		<result column="s_verify" property="sVerify" />
+		<result column="s_score" property="sScore" />
+		<result column="s_phone" property="sPhone" />
+		<result column="s_open_time" property="sOpenTime" />
+		<result column="s_close_time" property="sCloseTime" />
+		<result column="s_longitude" property="sLongitude" />
+		<result column="s_latitude" property="sLatitude" />
+		<result column="s_hot" property="sHot" />
+		<result column="s_average" property="sAverage" />
+		<result column="s_area" property="sArea" />
+		<result column="s_email" property="sEmail" />
+		<result column="s_remark" property="sRemark" />
+		<result column="s_park" property="sPark" />
+		<result column="s_romance" property="sRomance" />
+		<result column="s_time" property="sTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		s_id, s_name, s_english_name, s_business_type, s_type,
+		s_type_name,
+		s_picture, s_state, s_verify, s_score, s_phone,
+		s_open_time,
+		s_close_time, s_longitude, s_latitude, s_hot,
+		s_average,s_area,s_email,s_remark,s_park,s_romance,s_time
+	</sql>
+
+
+	<select id="shop" resultType="java.util.Map" >
+		SELECT
+		s.*, f.*
+		FROM
+		`db_shop` s
+		LEFT JOIN db_shop_fast sf ON sf.sf_shopid = s.s_id
+		LEFT JOIN db_fast f ON f.f_id = sf_fastid
+		WHERE
+		1=1
+			and f.f_id in
+			<foreach collection="fid" open="(" separator="," close=")"
+				item="fid">
+				#{fid}
+			</foreach>
+	<if test="name!=null and name!=''">
+			AND s.s_name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="ave1!=null and ave1!=''">
+			AND s.s_average BETWEEN #{ave1}
+		</if>
+		<if test="ave2!=null and ave2!=''">
+			AND
+			#{ave2}
+		</if>
+		GROUP BY s.s_id
+	</select>
+</mapper>

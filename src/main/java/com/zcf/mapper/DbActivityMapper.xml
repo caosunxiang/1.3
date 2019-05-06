@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbActivityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcf.pojo.DbActivity">
+        <id column="a_id" property="aId" />
+        <result column="a_title" property="aTitle" />
+        <result column="a_fcontent" property="aFcontent" />
+        <result column="a_content" property="aContent" />
+        <result column="a_head" property="aHead" />
+        <result column="activity_to_shop" property="activityToShop" />
+        <result column="activity_to_discounts" property="activityToDiscounts" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a_id, a_title, a_fcontent, a_content, a_head, activity_to_shop, activity_to_discounts
+    </sql>
+<select id="getbyaid" resultType="java.util.Map">
+SELECT
+	a.*, s.s_name,
+	s.s_area,
+	s.s_phone,
+	d.d_id,
+	d.d_remark,
+	d.d_title
+FROM
+	db_activity a
+LEFT JOIN db_shop s ON a.activity_to_shop = s.s_id
+LEFT JOIN db_discounts d ON a.activity_to_discounts = d.d_id
+WHERE a.a_id=#{aid}
+</select>
+</mapper>

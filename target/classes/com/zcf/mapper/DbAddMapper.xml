@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcf.mapper.DbAddMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcf.pojo.DbAdd">
+        <id column="add_id" property="addId" />
+        <result column="add_name" property="addName" />
+        <result column="add_english" property="addEnglish" />
+        <result column="add_price" property="addPrice" />
+        <result column="add_state" property="addState" />
+        <result column="add_shop" property="addShop" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        add_id, add_name, add_english, add_price, add_state ,add_shop
+    </sql>
+<select id="getbyfid" resultMap="BaseResultMap">
+SELECT
+	a.*
+FROM
+		db_food f
+LEFT JOIN db_add_food af ON af.af_foodid = f.f_id
+LEFT JOIN db_add a ON a.add_id = af.af_addid
+WHERE
+	f.f_id = #{fid};
+</select>
+</mapper>
