@@ -151,4 +151,49 @@ public class DbOrderController {
 		}
 		return dbOrderService.getbyuid(sid);
 	}
+	
+	/**
+	 * 加單
+	 * @param table
+	 * @param subtotal
+	 * @param uid
+	 * @param sid
+	 * @param sname
+	 * @param sename
+	 * @param fid
+	 * @return
+	 */
+	@PostMapping("/toorder")
+	public Body addtoorder(String table, BigDecimal subtotal, String uid, String sid, String sname, String sename,
+			String fid) {
+		if (StringUtils.isEmpty(table) || StringUtils.isEmpty(uid) || StringUtils.isEmpty(sid)
+				|| StringUtils.isEmpty(sname) || StringUtils.isEmpty(sename) || subtotal == null
+				|| StringUtils.isEmpty(fid)) {
+			return Body.BODY_451;
+		}
+		DbOrder dbOrder = new DbOrder();
+		dbOrder.setoId(IDUtils.genItemId() + "");
+		dbOrder.setOrderToShop(sid);
+		dbOrder.setOrderToUser(uid);
+		dbOrder.setoServiceCharge(subtotal.multiply(new BigDecimal(0.1)));
+		dbOrder.setoShopEname(sename);
+		dbOrder.setoShopName(sname);
+		dbOrder.setoStrolleyTable(table);
+		dbOrder.setoSubtotal(subtotal);
+		dbOrder.setoTime(Hutool.parseDateToString());
+		dbOrder.setoTotal(dbOrder.getoServiceCharge().add(subtotal));
+		return dbOrderService.addtoorder(dbOrder, fid);
+	}
+	/**
+	//查看餐廳每桌消費情況
+	 * @param sid
+	 * @return
+	 */
+	@PostMapping("/table")
+	Body table(String sid) {
+		if (StringUtils.isEmpty(sid)) {
+			return Body.newInstance(sid);
+		}
+		return dbOrderService.table(sid);
+	}
 }

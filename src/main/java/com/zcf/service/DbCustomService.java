@@ -18,4 +18,12 @@ public interface DbCustomService extends IService<DbCustom> {
 
 	Body getall();// 查询全部的自定菜单
 
+	Body add(DbCustom custom);//添加
+
+	Body de(String cid);//刪除
+
+	Body up(DbCustom custom);//修改
+
+	Body getone(String cid);//唯一查詢
+
 }

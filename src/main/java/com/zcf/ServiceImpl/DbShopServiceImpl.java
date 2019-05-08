@@ -132,4 +132,43 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		}
 		return Body.newInstance(201, "查詢無果");
 	}
+	@Override
+	public Body  adlogin(String name,String pwd) {
+		EntityWrapper< DbShop> wrapper=new EntityWrapper<>();
+		wrapper.eq("s_name", name);
+		wrapper.eq("s_verify", pwd);
+		List<DbShop>list=dbShopMapper.selectList(wrapper);
+		if(list.size()==0) {
+			return Body.newInstance(201,"請先註冊");
+		}
+		return Body.newInstance(list.get(0));
+	}
+	@Override
+	public Body forget(String phone,Integer pwd) {
+		DbShop shop=dbShopMapper.phone(phone);
+				if(shop==null) {
+					return Body.newInstance(201, "手機號驗證有誤");
+				}
+				shop.setsVerify(pwd);
+				Integer count=dbShopMapper.updateById(shop);
+				if(count==1) {
+					return Body.newInstance(shop);
+				}
+				return Body.newInstance(201, "修改失敗");
+	}
+	@Override
+	public Body change(String sid,Integer verify1,Integer verify2) {
+		DbShop dbShop=dbShopMapper.selectById(sid);
+		if(dbShop!=null) {
+			if(dbShop.getsVerify()!=verify1) {
+				return Body.newInstance(201, "驗證碼不正確");
+			}
+			dbShop.setsVerify(verify2);
+			Integer count=dbShopMapper.updateById(dbShop);
+			if(count==1) {
+				return Body.newInstance(dbShop);
+			}
+		}
+		return Body.newInstance(201, "操作失敗");
+	}
 }

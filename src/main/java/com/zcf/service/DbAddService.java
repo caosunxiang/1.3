@@ -18,4 +18,10 @@ public interface DbAddService extends IService<DbAdd> {
 
 	Body getall();
 
+	Body up(DbAdd add);//修改
+
+	Body de(String aid);//刪除
+
+	Body add(DbAdd add);//添加
+
 }

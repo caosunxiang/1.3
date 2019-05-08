@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
+import com.zcf.pojo.DbAdd;
 import com.zcf.service.DbAddService;
+
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,4 +53,68 @@ public class DbAddController {
 	Body getall() {
 		return dbAddService.getall();
 	}
-}
+
+	/**
+	// 修改
+	 * @param aid
+	 * @param name
+	 * @param ename
+	 * @param price
+	 * @param sid
+	 * @return
+	 */
+	@PostMapping("/up")
+	Body up(String aid, String name, String ename, BigDecimal price, String sid,String state) {
+		if (StringUtils.isEmpty(aid) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(name)
+				|| StringUtils.isEmpty(sid)||StringUtils.isEmpty(state)) {
+			return Body.BODY_451;
+
+		}
+		DbAdd add = new DbAdd();
+		add.setAddEnglish(ename);
+		add.setAddId(aid);
+		add.setAddName(name);
+		add.setAddPrice(price);
+		add.setAddShop(sid);
+		add.setAddState(state);
+		return dbAddService.up(add);
+	}
+	/**
+	// 刪除
+	 * @param aid
+	 * @return
+	 */
+	@PostMapping("/de")
+	Body de(String aid) {
+		if (StringUtils.isEmpty(aid)) {
+			return Body.BODY_451;
+		}
+		return dbAddService.de(aid);
+	}
+
+
+	/**
+	 * 	// 添加
+	 * @param aid
+	 * @param name
+	 * @param ename
+	 * @param price
+	 * @param sid
+	 * @param state
+	 * @return
+	 */
+	@PostMapping("/add")
+	Body add(String aid, String name, String ename, BigDecimal price, String sid,String state) {
+		if(StringUtils.isEmpty(aid) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(name)
+				|| StringUtils.isEmpty(sid)) {
+			return Body.BODY_451;
+		}
+		DbAdd add = new DbAdd();
+		add.setAddEnglish(ename);
+		add.setAddId(aid);
+		add.setAddName(name);
+		add.setAddPrice(price);
+		add.setAddShop(sid);
+		return dbAddService.add(add);
+	}
+	}

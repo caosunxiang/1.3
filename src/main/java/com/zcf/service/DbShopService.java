@@ -34,4 +34,10 @@ public interface DbShopService extends IService<DbShop> {
 
 	Body shop(List<Integer> fid, String name, BigDecimal ave1, BigDecimal ave2);//條件查詢
 
+	Body adlogin(String name, String pwd);//後台登入
+
+	Body forget(String phone, Integer pwd);//忘記密碼
+
+	Body change(String sid, Integer verify1, Integer verify2);//修改驗證碼
+
 }

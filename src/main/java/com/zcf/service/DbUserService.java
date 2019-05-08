@@ -2,6 +2,9 @@ package com.zcf.service;
 
 import com.zcf.common.json.Body;
 import com.zcf.pojo.DbUser;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -19,5 +22,9 @@ public interface DbUserService extends IService<DbUser> {
 	Body login(String openid);
 
 	Body getbydistance(String longitude, String latitude, String uid, String sname);
+
+	Body head(MultipartFile[] files);
+
+
 
 }
