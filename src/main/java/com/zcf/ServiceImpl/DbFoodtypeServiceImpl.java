@@ -37,4 +37,28 @@ public Body getall(String sid) {
 	}
 	return Body.newInstance(201, "店鋪沒有設置分類");
 }
+@Override
+public Body add(DbFoodtype dbFoodtype) {
+	Integer count=dbFoodtypeMapper.insert(dbFoodtype);
+	if(count==1) {
+		return Body.newInstance(dbFoodtype);
+	}
+	return Body.newInstance(201, "添加失敗");
+}
+@Override
+public Body de(Integer  id) {
+	Integer count=dbFoodtypeMapper.deleteById(id);
+	if(count==1) {
+		return Body.BODY_200;
+	}
+	return Body.newInstance(201,"刪除失敗");
+}
+@Override
+public Body up(DbFoodtype dbFoodtype) {
+	Integer count=dbFoodtypeMapper.updateById(dbFoodtype);
+	if(count==1) {
+		return Body.newInstance(dbFoodtype);
+	}
+	return Body.newInstance(201, "修改失敗");
+}
 }

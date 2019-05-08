@@ -43,11 +43,11 @@ public class DbAddController {
 
 	/**
 	 * 查询所有的加配信息
-	 * 
 	 * @return
 	 */
 	@PostMapping("/getall")
 	Body getall() {
 		return dbAddService.getall();
 	}
+	
 }

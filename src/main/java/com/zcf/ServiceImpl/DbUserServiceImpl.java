@@ -8,6 +8,7 @@ import com.zcf.mapper.DbUserMapper;
 import com.zcf.service.DbUserService;
 import com.zcf.utils.AMapUtils;
 import com.zcf.utils.LngLat;
+import com.zcf.utils.UploadImgUtils;
 import com.alipay.api.internal.util.StringUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -96,5 +98,16 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 			   return Body.newInstance(list);
 		   }
 		   return Body.newInstance(201, "没有符合条件的商铺");
+	}
+@Override
+	public Body  head(MultipartFile[] files) {
+		try {
+			String head = UploadImgUtils.uploadFiles(files);
+			return Body.newInstance(head);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+return Body.newInstance(201, "上传失败");
 	}
 }

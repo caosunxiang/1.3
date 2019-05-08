@@ -155,4 +155,48 @@ public Body getbysid(String sid) {
 	}
 	return Body.newInstance(201, "查詢無果");
 }
+@Override
+public Body addtoorder(DbOrder dbOrder,String fid) {
+	//分割字符串填入集合
+		List<String > list=new ArrayList<String>();
+		fid=fid+",";
+		 char a[]=fid.toCharArray();
+		 Integer c=0;
+			Integer changeCount =0;
+		 for (int i = 0; i < a.length; i++) {
+			 if(a[i]==',') {
+				String string= fid.substring(c, i);
+				c=i+1;
+				System.out.println(string);
+			 list.add(string);
+			 changeCount++;
+			 }
+		 }
+		 //添加订单
+		Integer count=dbOrderMapper.insert(dbOrder);
+		List<DbFood>dbFoods=new ArrayList<>();
+		for (String string : list) {
+			//为订单里的菜品添加月销售额
+			DbFood dbFood=dbFoodMapper.selectById(string);
+			//添加推送需要的菜品信息
+			dbFoods.add(dbFood);
+			Integer num=dbFood.getfMonth();
+			dbFood.setfMonth(num++);
+			//把单独的菜品关联到订单中
+			DbOrderFood entity=new DbOrderFood();
+			entity.setOfFoodid(string);
+			entity.setOfOrderid(dbOrder.getoId());
+			dbOrderFoodMapper.insert(entity);
+			dbFoodMapper.updateById(dbFood);
+		}
+		if(count==1) {
+			WebSocket socket=new WebSocket();
+			Map<String, Object> msg = new HashMap<String, Object>();
+			msg.put("touser", dbOrder.getOrderToShop());
+			msg.put("data", dbFoods);
+			socket.onMessage(JsonUtils.objectToJson(msg));
+			return Body.newInstance(dbOrder);
+		}
+		return Body.newInstance(201, "添加失敗");
+}
 }

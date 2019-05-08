@@ -50,6 +50,7 @@
 		LEFT JOIN db_fast f ON f.f_id = sf_fastid
 		WHERE
 		1=1
+				and s.s_state <![CDATA[ <> ]]>1
 			and f.f_id in
 			<foreach collection="fid" open="(" separator="," close=")"
 				item="fid">
@@ -66,5 +67,8 @@
 			#{ave2}
 		</if>
 		GROUP BY s.s_id
+	</select>
+	<select id="phone" resultMap="BaseResultMap">
+	SELECT * FROM `db_shop` s where s.s_phone=#{phone};
 	</select>
 </mapper>

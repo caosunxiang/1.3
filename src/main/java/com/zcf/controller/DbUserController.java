@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
@@ -76,6 +77,18 @@ public Body login(String uid) {
 		return Body.BODY_451;
 	}
 	return dbUserService.login(uid);
+}
+/**
+ * 上传
+ * @param files
+ * @return
+ */
+@PostMapping("/head")
+public Body  head(MultipartFile[] files) {
+	if(files!=null) {
+		return Body.BODY_451;
+	}
+	return  dbUserService.head(files);
 }
 }
 

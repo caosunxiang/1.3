@@ -16,4 +16,10 @@ public interface DbFoodtypeService extends IService<DbFoodtype> {
 
 	Body getall(String sid);//查找商鋪分類
 
+	Body add(DbFoodtype dbFoodtype);//添加分類
+
+	Body de(Integer id);//刪除
+
+	Body up(DbFoodtype dbFoodtype);//修改
+
 }

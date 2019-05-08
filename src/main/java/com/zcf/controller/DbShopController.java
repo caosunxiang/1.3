@@ -49,7 +49,7 @@ public class DbShopController {
 	}
 
 	/**
-	 * 用户验证商家识别码
+	 * 验证商家识别码
 	 * 
 	 * @param verify
 	 * @param sid
@@ -182,4 +182,32 @@ public class DbShopController {
 		 }
 		return dbShopService.shop(list, name, ave1, ave2);
 	}
+	
+	/**
+	 * 後台登入
+	 * @param name
+	 * @param pwd
+	 * @return
+	 */
+	@PostMapping("/adlogin")
+	Body adlogin(String name, String pwd) {
+		if(StringUtils.isEmpty(name)||StringUtils.isEmpty(pwd)) {
+			return Body.BODY_451;
+		}
+		return dbShopService.adlogin(name, pwd);
+	}
+	/**
+	 * 忘記密碼
+	 * @param phone
+	 * @param pwd
+	 * @return
+	 */
+	@PostMapping("/forget")
+	Body forget(String phone, Integer pwd) {
+		if(StringUtils.isEmpty(phone)||pwd!=null) {
+			return Body.BODY_451;
+		}
+		return dbShopService.forget(phone, pwd);
+	}
+	
 }
