@@ -38,6 +38,9 @@ public interface DbShopService extends IService<DbShop> {
 
 	Body forget(String phone, Integer pwd);//忘記密碼
 
+<<<<<<< HEAD
 	Body change(String sid, Integer verify1, Integer verify2);//修改驗證碼
 
+=======
+>>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
 }

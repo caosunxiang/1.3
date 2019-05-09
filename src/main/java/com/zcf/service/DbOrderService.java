@@ -33,6 +33,9 @@ public interface DbOrderService extends IService<DbOrder> {
 
 	Body addtoorder(DbOrder dbOrder, String fid);//加單
 
+<<<<<<< HEAD
 	Body table(String sid);//查看餐廳每桌消費情況
 
+=======
+>>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
 }
