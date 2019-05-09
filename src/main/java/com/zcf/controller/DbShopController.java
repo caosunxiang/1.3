@@ -210,7 +210,7 @@ public class DbShopController {
 		return dbShopService.forget(phone, pwd);
 	}
 	
-<<<<<<< HEAD
+
 	/**
 	 * //修改驗證碼
 	 * @param sid
@@ -225,6 +225,5 @@ public class DbShopController {
 		}
 		return dbShopService.change(sid, verify1, verify2);
 	}
-=======
->>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
+
 }

@@ -133,9 +133,7 @@ public class DbFoodController {
 	 * 
 <<<<<<< HEAD
 	 */ 
-=======
-	 */
->>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
+
 	@PostMapping("/de")
 	Body de(String fid) {
 		if(StringUtils.isEmpty(fid)) {

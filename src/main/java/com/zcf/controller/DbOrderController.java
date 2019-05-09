@@ -184,7 +184,7 @@ public class DbOrderController {
 		dbOrder.setoTotal(dbOrder.getoServiceCharge().add(subtotal));
 		return dbOrderService.addtoorder(dbOrder, fid);
 	}
-<<<<<<< HEAD
+
 	/**
 	//查看餐廳每桌消費情況
 	 * @param sid
@@ -193,10 +193,9 @@ public class DbOrderController {
 	@PostMapping("/table")
 	Body table(String sid) {
 		if (StringUtils.isEmpty(sid)) {
-			return Body.newInstance(sid);
+			return Body.BODY_451;
 		}
 		return dbOrderService.table(sid);
 	}
-=======
->>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
+
 }

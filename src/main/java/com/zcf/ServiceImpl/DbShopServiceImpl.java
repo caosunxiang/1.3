@@ -156,7 +156,7 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 				}
 				return Body.newInstance(201, "修改失敗");
 	}
-<<<<<<< HEAD
+
 	@Override
 	public Body change(String sid,Integer verify1,Integer verify2) {
 		DbShop dbShop=dbShopMapper.selectById(sid);
@@ -172,6 +172,5 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		}
 		return Body.newInstance(201, "操作失敗");
 	}
-=======
->>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
+
 }

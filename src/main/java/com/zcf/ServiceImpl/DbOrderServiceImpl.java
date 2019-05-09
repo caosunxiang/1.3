@@ -199,7 +199,7 @@ public Body addtoorder(DbOrder dbOrder,String fid) {
 		}
 		return Body.newInstance(201, "添加失敗");
 }
-<<<<<<< HEAD
+
 @Override
 public Body table(String sid) {
 	EntityWrapper< DbOrder>wrapper=new EntityWrapper<>();
@@ -211,6 +211,5 @@ public Body table(String sid) {
 	}
 	return Body.newInstance(201, "還沒有訂單");
 }
-=======
->>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
+
 }

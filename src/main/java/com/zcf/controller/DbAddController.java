@@ -53,7 +53,7 @@ public class DbAddController {
 		return dbAddService.getall();
 	}
 	
-<<<<<<< HEAD
+
 
 	/**
 	// 修改
@@ -119,6 +119,4 @@ public class DbAddController {
 		return dbAddService.add(add);
 	}
 	}
-=======
-}
->>>>>>> 90c2cac59635ed4e7576a34de1ea8482d3292f50
+
