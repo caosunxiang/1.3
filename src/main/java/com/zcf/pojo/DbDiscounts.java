@@ -22,7 +22,7 @@ public class DbDiscounts extends Model<DbDiscounts> {
     /**
      * 优惠劵id
      */
-    @TableId(value = "d_id", type = IdType.AUTO)
+    @TableId(value = "d_id", type = IdType.NONE)
     private String dId;
     /**
      * 优惠券价格

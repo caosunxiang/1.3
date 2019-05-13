@@ -37,7 +37,7 @@ public Body byopenid(String openid) {
 }
 @Override
 public Body attention(DbUserShop dbUserShop) {
-	DbUserShop shop=userShopMapper.selectById(dbUserShop);
+	DbUserShop shop=userShopMapper.selectOne(dbUserShop);
 	if(shop!=null) {
 		return Body.newInstance(201, "您已經關注過了");
 	}

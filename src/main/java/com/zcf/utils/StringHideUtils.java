@@ -1,5 +1,8 @@
 package com.zcf.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * java对字符串进行加星号处理
  * 
@@ -68,5 +71,22 @@ public class StringHideUtils {
 		return content.substring(0, frontNum) + starStr
 				+ content.substring(content.length() - endNum, content.length());
 
+	}
+	public static List<String> divide(String msg){
+		List<String >list=new ArrayList<String>();
+		msg = msg + ",";
+		char a[] = msg.toCharArray();
+		Integer c = 0;
+		Integer changeCount = 0;
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] == ',') {
+				String string = msg.substring(c, i);
+				c = i + 1;
+				System.out.println(string);
+				list.add(string);
+				changeCount++;
+			}
+		}
+		return list;
 	}
 }

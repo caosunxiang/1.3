@@ -21,7 +21,7 @@ public class DbFood extends Model<DbFood> {
     /**
      * 食品id
      */
-    @TableId(value = "f_id", type = IdType.AUTO)
+    @TableId(value = "f_id", type = IdType.NONE)
     private String fId;
     /**
      * 食品名称

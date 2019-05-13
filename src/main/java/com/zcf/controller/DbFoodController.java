@@ -141,4 +141,12 @@ public class DbFoodController {
 		}
 		return dbFoodService.de(fid);
 	}
+	/**
+	//出售百分比
+	 * @return
+	 */
+	@PostMapping("/percentage")
+	Body percentage() {
+		return dbFoodService.percentage();
+	}
 }

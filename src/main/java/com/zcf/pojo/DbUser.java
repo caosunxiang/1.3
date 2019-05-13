@@ -20,7 +20,7 @@ public class DbUser extends Model<DbUser> {
     /**
      * 用户id
      */
-    @TableId(value = "open_id", type = IdType.AUTO)
+    @TableId(value = "open_id", type = IdType.NONE)
     private String openId;
     /**
      * 微信名称
