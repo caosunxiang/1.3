@@ -29,6 +29,10 @@ public class DbFoodtype extends Model<DbFoodtype> {
      */
     private String ftName;
     /**
+     * 菜品分类
+     * */
+    private String ftState;
+    /**
      * 商铺菜品分类
      */
     private String foodtypeToShop;
@@ -50,7 +54,15 @@ public class DbFoodtype extends Model<DbFoodtype> {
         this.ftName = ftName;
     }
 
-    public String getFoodtypeToShop() {
+    public String getFtState() {
+		return ftState;
+	}
+
+	public void setFtState(String ftState) {
+		this.ftState = ftState;
+	}
+
+	public String getFoodtypeToShop() {
         return foodtypeToShop;
     }
 

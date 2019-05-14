@@ -137,6 +137,8 @@ public class DbShopController {
 		dbShop.setsArea(area);
 		dbShop.setsAverage(ave);
 		dbShop.setsBusinessType(btype);
+		dbShop.setsType(type);
+		dbShop.setsTypeName(tname);
 		dbShop.setsCloseTime(colse);
 		dbShop.setsEmail(email);
 		dbShop.setsEnglishName(ename);
@@ -204,7 +206,7 @@ public class DbShopController {
 	 */
 	@PostMapping("/forget")
 	Body forget(String phone, Integer pwd) {
-		if(StringUtils.isEmpty(phone)||pwd!=null) {
+		if(StringUtils.isEmpty(phone)||pwd==null) {
 			return Body.BODY_451;
 		}
 		return dbShopService.forget(phone, pwd);

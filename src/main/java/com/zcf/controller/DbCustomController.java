@@ -59,8 +59,8 @@ Body getall() {
  * @return
  */
 @PostMapping("/add")
-Body add(String cid,String name,String ename,String sid) {
-	if(StringUtils.isEmpty(cid)||StringUtils.isEmpty(name)||StringUtils.isEmpty(sid)) {
+Body add(String name,String ename,String sid) {
+	if(StringUtils.isEmpty(name)||StringUtils.isEmpty(sid)) {
 		return Body.BODY_451;
 	}
 	DbCustom custom=new DbCustom();
@@ -99,7 +99,7 @@ Body up(String cid,String name,String ename,String sid,String state) {
 	}
 	DbCustom custom=new DbCustom();
 	custom.setcEnglishName(ename);
-	custom.setcId(IDUtils.genItemId()+"");
+	custom.setcId(cid);
 	custom.setcName(name);
 	custom.setShopCustom(sid);
 	custom.setcState(state);

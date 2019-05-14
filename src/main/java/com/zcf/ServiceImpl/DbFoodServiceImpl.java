@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * <p>
@@ -110,8 +111,8 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 		return Body.newInstance(201, "刪除失敗");
 	}
 	@Override
-	public Body percentage() {
-		List<Map<String, Object>>list=dbFoodMapper.percentage();
+	public Body percentage(String sid) {
+		List<Map<String, Object>>list=dbFoodMapper.percentage(sid);
 		if(list.size()>0) {
 			long num=0;
 			Double dou=0.00;
@@ -132,5 +133,15 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 		}
 		return Body.newInstance(201, "今日尚未出售");
 		
+	}
+	@Override
+	public Body updown(String fid,String state) {
+		EntityWrapper<DbFood >wrapper=new EntityWrapper<>();
+		wrapper.eq("f_id", fid);
+		Integer count=dbFoodMapper.updateForSet("f_state='"+state+"'", wrapper);
+		if(count==1) {
+			return Body.newInstance();
+		}
+		return Body.newInstance(201, "操作失敗");
 	}
 }

@@ -31,7 +31,9 @@ public interface DbFoodService extends IService<DbFood> {
 
 	Body de(String fid);//刪除菜品
 
-	Body percentage();//出售百分比
+	Body percentage(String sid);//出售百分比
+
+	Body updown(String fid, String state);//上架下架
 
 
 }

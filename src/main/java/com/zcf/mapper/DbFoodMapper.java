@@ -5,6 +5,8 @@ import com.zcf.pojo.DbFood;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -16,5 +18,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2019-04-22
  */
 public interface DbFoodMapper extends BaseMapper<DbFood> {
-List<Map<String, Object>>percentage();
+List<Map<String, Object>>percentage(@Param("sid")String sid);
 }

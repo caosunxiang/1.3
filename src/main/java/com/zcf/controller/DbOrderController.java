@@ -47,10 +47,10 @@ public class DbOrderController {
 	 */
 	@PostMapping("/addorder")
 	public Body addorder(String table, BigDecimal subtotal, String uid, String sid, String sname, String sename,
-			String fid,String msg,String price) {
+			String fid,String msg,String price,String st) {
 		if (StringUtils.isEmpty(table) || StringUtils.isEmpty(uid) || StringUtils.isEmpty(sid)
 				|| StringUtils.isEmpty(sname) || StringUtils.isEmpty(sename) || subtotal == null
-				|| StringUtils.isEmpty(fid)) {
+				|| StringUtils.isEmpty(fid)||StringUtils.isEmpty(st)) {
 			return Body.BODY_451;
 		}
 		DbOrder dbOrder = new DbOrder();
@@ -64,7 +64,7 @@ public class DbOrderController {
 		dbOrder.setoSubtotal(subtotal);
 		dbOrder.setoTime(Hutool.parseDateToString());
 		dbOrder.setoTotal(dbOrder.getoServiceCharge().add(subtotal));
-		return dbOrderService.addorder(dbOrder, fid,msg,price);
+		return dbOrderService.addorder(dbOrder, fid,msg,price, st);
 	}
 
 	/**
@@ -121,11 +121,11 @@ public class DbOrderController {
 	 * @return
 	 */
 	@PostMapping("/over")
-	Body over(String openid) {
-		if (StringUtils.isEmpty(openid)) {
+	Body over(String sid) {
+		if (StringUtils.isEmpty(sid)) {
 			return Body.BODY_451;
 		}
-		return dbOrderService.over(openid);
+		return dbOrderService.over(sid);
 	}
 	/**
 	 * 查詢個人訂單
@@ -149,7 +149,7 @@ public class DbOrderController {
 		if(StringUtils.isEmpty(sid)) {
 			return Body.BODY_451;
 		}
-		return dbOrderService.getbyuid(sid);
+		return dbOrderService.getbysid(sid);
 	}
 	
 	/**
@@ -165,10 +165,10 @@ public class DbOrderController {
 	 */
 	@PostMapping("/toorder")
 	public Body addtoorder(String table, BigDecimal subtotal, String uid, String sid, String sname, String sename,
-			String fid,String  message,String price) {
+			String fid,String  message,String price,String st) {
 		if (StringUtils.isEmpty(table) || StringUtils.isEmpty(uid) || StringUtils.isEmpty(sid)
 				|| StringUtils.isEmpty(sname) || StringUtils.isEmpty(sename) || subtotal == null
-				|| StringUtils.isEmpty(fid)) {
+				|| StringUtils.isEmpty(fid)||StringUtils.isEmpty(st)) {
 			return Body.BODY_451;
 		}
 		DbOrder dbOrder = new DbOrder();
@@ -182,7 +182,7 @@ public class DbOrderController {
 		dbOrder.setoSubtotal(subtotal);
 		dbOrder.setoTime(Hutool.parseDateToString());
 		dbOrder.setoTotal(dbOrder.getoServiceCharge().add(subtotal));
-		return dbOrderService.addtoorder(dbOrder, fid,message,price);
+		return dbOrderService.addtoorder(dbOrder, fid,message,price,st);
 	}
 
 	/**

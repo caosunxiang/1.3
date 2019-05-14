@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface DbOrderService extends IService<DbOrder> {
 
-	Body addorder(DbOrder dbOrder,String fid,String msg,String price);//添加訂單
+	Body addorder(DbOrder dbOrder,String fid,String msg,String price,String st);//添加訂單
 
 	Body getone(String oid);//查询订单详情
 
@@ -31,7 +31,7 @@ public interface DbOrderService extends IService<DbOrder> {
 
 	Body getbysid(String sid);//查詢商家訂單
 
-	Body addtoorder(DbOrder dbOrder, String fid,String  message,String price);//加單
+	Body addtoorder(DbOrder dbOrder, String fid,String  message,String price,String st);//加單
 
 	Body table(String sid);//查看餐廳每桌消費情況
 

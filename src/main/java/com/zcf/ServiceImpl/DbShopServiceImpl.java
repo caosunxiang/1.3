@@ -161,7 +161,8 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 	public Body change(String sid,Integer verify1,Integer verify2) {
 		DbShop dbShop=dbShopMapper.selectById(sid);
 		if(dbShop!=null) {
-			if(dbShop.getsVerify()!=verify1) {
+			System.out.println(dbShop.getsVerify()+"				"+verify1);
+			if(!dbShop.getsVerify().equals(verify1)) {
 				return Body.newInstance(201, "驗證碼不正確");
 			}
 			dbShop.setsVerify(verify2);

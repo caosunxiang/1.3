@@ -67,7 +67,7 @@ public class DbCommentController {
 		comment.setcTime(otime);
 		comment.setcUserHead(head);
 		comment.setCommentToLine(cl);
-		comment.setcContent(ccontent);
+		comment.setcLineContent(ccontent);
 		return commentService.comadd(comment);
 	}
 

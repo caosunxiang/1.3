@@ -9,6 +9,7 @@ import com.zcf.common.utils.Hutool;
 import com.zcf.mapper.DbFoodMapper;
 import com.zcf.mapper.DbOrderFoodMapper;
 import com.zcf.mapper.DbOrderMapper;
+import com.zcf.mapper.DbStrolleyMapper;
 import com.zcf.mapper.DbUserDiscountsMapper;
 import com.zcf.service.DbOrderService;
 import com.zcf.utils.JsonUtils;
@@ -47,13 +48,16 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 	private DbFoodMapper dbFoodMapper;
 	@Autowired
 	private DbUserDiscountsMapper userDiscountsMapper;
+	@Autowired
+	private DbStrolleyMapper dbStrolleyMapper;
 
 	@Override
-	public Body addorder(DbOrder dbOrder, String fid,String msg,String price) {
+	public Body addorder(DbOrder dbOrder, String fid,String msg,String price,String st) {
 		// 分割字符串填入集合
 		List<String> list = StringHideUtils.divide(fid);
 		List<String> list1 =StringHideUtils.divide(msg);
 		List<String> list2 =StringHideUtils.divide(price);
+		List<String> list3 =StringHideUtils.divide(st);
 		// 添加订单
 		Integer count = dbOrderMapper.insert(dbOrder);
 		for (int i=0;i<list.size();i++) {
@@ -68,6 +72,7 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 			entity.setOfPrice(list2.get(i));
 			entity.setOfOrderid(dbOrder.getoId());
 			dbOrderFoodMapper.insert(entity);
+			dbStrolleyMapper.deleteById(list3.get(i));
 			dbFoodMapper.updateById(dbFood);
 		}
 		if (count == 1) {
@@ -136,7 +141,7 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 	public Body over(String openid) {
 		EntityWrapper<DbOrder> wrapper = new EntityWrapper<>();
 		wrapper.eq("order_to_shop", openid);
-		wrapper.eq("o_state", "1");
+		wrapper.ne("o_state", "0");
 		Integer count = dbOrderMapper.selectCount(wrapper);
 		if (count != 0) {
 			return Body.newInstance(count);
@@ -163,11 +168,12 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 	}
 
 	@Override
-	public Body addtoorder(DbOrder dbOrder, String fid,String  message,String price) {
+	public Body addtoorder(DbOrder dbOrder, String fid,String  message,String price,String st) {
 		// 分割字符串填入集合
 				List<String> list = StringHideUtils.divide(fid);
 				List<String> list1 =StringHideUtils.divide( message);
 				List<String> list2 =StringHideUtils.divide(price);
+				List<String> list3 =StringHideUtils.divide(st);
 				List<DbFood> dbFoods = new ArrayList<>();
 				// 添加订单
 				Integer count = dbOrderMapper.insert(dbOrder);
@@ -185,6 +191,7 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 					entity.setOfPrice(list2.get(i));
 					entity.setOfOrderid(dbOrder.getoId());
 					dbOrderFoodMapper.insert(entity);
+					dbStrolleyMapper.deleteById(list3.get(i));
 					dbFoodMapper.updateById(dbFood);
 				}
 		if (count == 1) {

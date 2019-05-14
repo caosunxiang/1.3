@@ -63,6 +63,7 @@ Body add(String name ,String sid) {
  * @param id
  * @return
  */
+@PostMapping("/de")
 Body de(Integer id) {
 	if (id==null) {
 		return Body.BODY_451;
@@ -78,13 +79,14 @@ Body de(Integer id) {
  * @return
  */
 @PostMapping("/up")
-Body up(String name ,String sid,Integer ftid) {
+Body up(String name ,String sid,Integer ftid,String state) {
 	if(StringUtils.isEmpty(sid)||StringUtils.isEmpty(name)||ftid==null) {
 		return Body.BODY_451;
 	}
 	DbFoodtype dbFoodtype=new DbFoodtype();
 	dbFoodtype.setFoodtypeToShop(sid);
 	dbFoodtype.setFtId(ftid);
+	dbFoodtype.setFtState(state);
 	dbFoodtype.setFtName(name);
 	return dbFoodtypeService.up(dbFoodtype);
 }

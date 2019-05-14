@@ -23,7 +23,10 @@
     </sql>
 <select id="percentage" resultType="java.util.Map">
 SELECT
-	f.f_id,f.f_name,COUNT(1) AS num ,(
+	f.f_id,
+	f.f_name,
+	COUNT(1) AS num,
+	(
 		SELECT
 			COUNT(1)
 		FROM
@@ -33,15 +36,17 @@ SELECT
 		WHERE
 			o.o_state = '1'
 		AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0
-	)  AS `all`
+		AND f.food_to_shop = #{sid}
+	) AS `all`
 FROM
 	`db_order` o
-LEFT JOIN
- `db_order_food` of ON of.of_orderid=o.o_id
-LEFT JOIN
-`db_food` f ON of.of_foodid=f.f_id
+LEFT JOIN `db_order_food` of ON of.of_orderid = o.o_id
+LEFT JOIN `db_food` f ON of.of_foodid = f.f_id
 WHERE
 	o.o_state = '1'
-AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0 GROUP BY of.of_foodid;
+AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0
+AND f.food_to_shop =#{sid}
+GROUP BY
+	of.of_foodid;
 </select>
 </mapper>

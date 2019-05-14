@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
+import com.zcf.common.utils.Hutool;
 import com.zcf.pojo.DbAdd;
 import com.zcf.service.DbAddService;
 
@@ -105,14 +106,14 @@ public class DbAddController {
 	 * @return
 	 */
 	@PostMapping("/add")
-	Body add(String aid, String name, String ename, BigDecimal price, String sid,String state) {
-		if(StringUtils.isEmpty(aid) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(name)
+	Body add(String name, String ename, BigDecimal price, String sid,String state) {
+		if( StringUtils.isEmpty(ename) || StringUtils.isEmpty(name)
 				|| StringUtils.isEmpty(sid)) {
 			return Body.BODY_451;
 		}
 		DbAdd add = new DbAdd();
 		add.setAddEnglish(ename);
-		add.setAddId(aid);
+		add.setAddId(Hutool.getId());
 		add.setAddName(name);
 		add.setAddPrice(price);
 		add.setAddShop(sid);

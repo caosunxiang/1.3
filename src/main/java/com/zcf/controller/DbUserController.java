@@ -85,7 +85,7 @@ public Body login(String uid) {
  */
 @PostMapping("/head")
 public Body  head(MultipartFile[] files) {
-	if(files!=null) {
+	if(files==null) {
 		return Body.BODY_451;
 	}
 	return  dbUserService.head(files);
