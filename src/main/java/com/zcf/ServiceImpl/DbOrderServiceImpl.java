@@ -171,7 +171,7 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 	public Body addtoorder(DbOrder dbOrder, String fid,String  message,String price,String st) {
 		// 分割字符串填入集合
 				List<String> list = StringHideUtils.divide(fid);
-				List<String> list1 =StringHideUtils.divide( message);
+				List<String> list1 =StringHideUtils.divide(message);
 				List<String> list2 =StringHideUtils.divide(price);
 				List<String> list3 =StringHideUtils.divide(st);
 				List<DbFood> dbFoods = new ArrayList<>();
