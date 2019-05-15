@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class DbOutlineServiceImpl extends ServiceImpl<DbOutlineMapper, DbOutline
 		}
 		return Body.newInstance(201, "沒有評論大綱");
 	}
+	
+	
 	@Override
 	public Body add(DbOutline dbOutline) {
 		Integer count=outlineMapper.insert(dbOutline);
@@ -52,6 +56,7 @@ public class DbOutlineServiceImpl extends ServiceImpl<DbOutlineMapper, DbOutline
 		}
 		return Body.newInstance(201, "修改失敗");
 	}
+	
 	@Override
 	public Body de(String lid) {
 		Integer count=outlineMapper.deleteById(lid);

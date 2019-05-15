@@ -44,6 +44,7 @@ public Body addud(DbUserDiscounts dbUserDiscounts) {
 		return Body.newInstance(201, "优惠券已不存在");
 	}
 }
+
 @Override
 public Body discount(String openid) {
 	EntityWrapper<DbUserDiscounts> wrapper=new EntityWrapper<>();

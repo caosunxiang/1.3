@@ -33,7 +33,6 @@ public class DbStrolleyServiceImpl extends ServiceImpl<DbStrolleyMapper, DbStrol
 		Integer count = strolleyMapper.insert(dbStrolley);
 		if (count == 1) {
 			return Body.newInstance(dbStrolley);
-
 		}
 		return Body.newInstance(201, "添加失敗");
 	}

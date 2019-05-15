@@ -17,5 +17,12 @@ public interface DbSetService extends IService<DbSet> {
 	Body getbyfid(String fid);
 
 	Body getall();
+	
+	Body add(String setId,String setName,String setEnglishName,String setState,String setShop);
 
+	Body del(String setId);
+	
+	Body upd(String setId,String setName,String setEnglishName,String setState,String setShop);
+	
+	
 }

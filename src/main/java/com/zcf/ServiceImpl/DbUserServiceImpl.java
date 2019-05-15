@@ -54,7 +54,7 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 
 	@Override
 	public Body login(String openid) {
-		DbUser user = selectById(openid);
+		DbUser user = selectById(openid);	
 		if (user != null) {
 			return Body.newInstance(user);
 		}
@@ -106,7 +106,6 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 			String head = UploadImgUtils.uploadFiles(files);
 			return Body.newInstance(head);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 return Body.newInstance(201, "上传失败");

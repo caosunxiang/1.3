@@ -137,4 +137,73 @@ LEFT JOIN `db_food` f ON f.f_id = of.of_foodid
 WHERE
 	o.o_strolley_table=#{table} AND o.order_to_shop=#{sid} AND o.o_state='0';
 	</select>
+
+
+
+<!-- 天数 -->
+
+<select id="todaycount" resultType="java.lang.Integer">
+
+select count(*) from db_order where to_days(o_time) = to_days(now());
+
+</select>
+
+<select id="oneday"  resultType="java.lang.Integer">
+
+SELECT count(*)FROM db_order WHERE TO_DAYS( NOW( ) ) - TO_DAYS( o_time) = 1;
+
+</select>
+
+<select id="towday"  resultType="java.lang.Integer">
+
+SELECT count(*)FROM db_order WHERE TO_DAYS( NOW( ) ) - TO_DAYS( o_time) = 2;
+
+</select>
+
+<select id="threeday"  resultType="java.lang.Integer">
+
+SELECT count(*)FROM db_order WHERE TO_DAYS( NOW( ) ) - TO_DAYS( o_time) = 3;
+
+</select>
+
+
+
+
+
+
+
+
+<!-- 小时 -->
+
+
+<select id="onehour" resultType="java.lang.Integer">
+
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-1 HOUR);
+
+</select>
+
+<select id="towhour" resultType="java.lang.Integer">
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-2 HOUR);
+</select>
+
+
+<select id="threehour" resultType="java.lang.Integer">
+
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-3 HOUR);
+</select>
+
+
+<select id="fourhour" resultType="java.lang.Integer">
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-4 HOUR);
+
+</select>
+
 </mapper>

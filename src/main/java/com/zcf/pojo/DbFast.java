@@ -22,8 +22,8 @@ public class DbFast extends Model<DbFast> {
     /**
      * 快捷搜索id
      */
-    @TableId(value = "f_id", type = IdType.AUTO)
-    private Integer fId;
+    @TableId(value = "f_id", type = IdType.NONE)
+    private String fId;
     /**
      * 快捷搜索名称
      */
@@ -31,34 +31,34 @@ public class DbFast extends Model<DbFast> {
     /**
      * 快捷点击次数
      */
-    private Integer fCount;
+    private String fCount;
 
 
-    public Integer getfId() {
-        return fId;
-    }
+    public String getfId() {
+		return fId;
+	}
 
-    public void setfId(Integer fId) {
-        this.fId = fId;
-    }
+	public void setfId(String fId) {
+		this.fId = fId;
+	}
 
-    public String getfName() {
-        return fName;
-    }
+	public String getfName() {
+		return fName;
+	}
 
-    public void setfName(String fName) {
-        this.fName = fName;
-    }
+	public void setfName(String fName) {
+		this.fName = fName;
+	}
 
-    public Integer getfCount() {
-        return fCount;
-    }
+	public String getfCount() {
+		return fCount;
+	}
 
-    public void setfCount(Integer fCount) {
-        this.fCount = fCount;
-    }
+	public void setfCount(String fCount) {
+		this.fCount = fCount;
+	}
 
-    @Override
+	@Override
     protected Serializable pkVal() {
         return this.fId;
     }

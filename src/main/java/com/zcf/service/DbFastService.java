@@ -15,5 +15,13 @@ import com.baomidou.mybatisplus.service.IService;
 public interface DbFastService extends IService<DbFast> {
 
 	Body getall();//查詢全部標籤
+	
+	Body add(String fId,String fName,String fCount);//增
+	
+	Body del(String fId);//删
+	
+	Body upd(String fId,String fName,String fCount);//改
+	
+	Body getone(String fId);//查
 
 }

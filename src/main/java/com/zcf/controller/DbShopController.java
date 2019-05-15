@@ -92,7 +92,6 @@ public class DbShopController {
 	Body getbypark(String sname) {
 		return dbShopService.getbypark(sname);
 	}
-
 	/**
 	 * 是否浪漫
 	 * 

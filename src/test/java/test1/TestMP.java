@@ -71,7 +71,4 @@ public class TestMP {
 		//6. 执行
 		ag.execute();
 	}
-	
-	
-	
 }

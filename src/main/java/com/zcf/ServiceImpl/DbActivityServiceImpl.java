@@ -30,7 +30,7 @@ public Body show() {
 	EntityWrapper<DbActivity>wrapper=new EntityWrapper<>();
 	wrapper.orderBy("a_id", false);
 	List<DbActivity>list=activityMapper.selectList(wrapper);
-	if(list.size()>0) {
+		if(list.size()>0) {
 		return Body.newInstance(list);
 	}
 	return Body.newInstance(201, "沒有更多活動信息");
@@ -43,6 +43,8 @@ public  Body addact(DbActivity activity) {
 	}
 	return Body.newInstance(201, "添加失敗");
 }
+
+
 @Override
 public Body getbyaid(Integer aid) {
 	Map<String , Object> map=activityMapper.getbyaid(aid);

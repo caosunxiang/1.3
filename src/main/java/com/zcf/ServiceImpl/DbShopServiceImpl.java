@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Entity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,11 +45,13 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		}
 		return Body.newInstance(dbShop);
 	}
+	
 	@Override
 	public Body getshop(String sid) {
 		EntityWrapper<DbShop> wrapper=new EntityWrapper<>();
 		wrapper.eq("s_id", sid);
 		DbShop dbShop=selectById(sid);
+	  
 		if(dbShop!=null) {
 			Integer hot=dbShop.getsHot();
 			dbShopMapper.updateForSet("s_hot="+hot, wrapper);
@@ -55,6 +59,7 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		}
 		return Body.newInstance(201, "没有符合条件的店铺");
 	}
+	
 	@Override
 	public Body userverify(Integer verify,String sid) {
 		DbShop dbShop=dbShopMapper.selectById(sid);
@@ -118,12 +123,14 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		}
 		return Body.newInstance(201, "查詢無果");
 	}
+	
 	@Override
 	public Body shop(List<Integer> fid,String name,BigDecimal ave1,BigDecimal ave2) {
 		List<Map<String, Object>> list=dbShopMapper.shop(fid, name, ave1, ave2);
 		for (Integer string : fid) {
 			DbFast dbFast=dbFastMapper.selectById(string);
-			Integer num =dbFast.getfCount();
+			//Integer num =dbFast.getfCount();
+			String num=dbFast.getfCount();
 			dbFast.setfCount(num+1);
 			dbFastMapper.updateById(dbFast);
 		}

@@ -96,8 +96,10 @@ public class DbFoodController {
 		dbFood.setfPrice(price);
 		dbFood.setfType(ftype);
 		dbFood.setfTypeName(ftname);
+		
 		return dbFoodService.addfood(dbFood);
 
+		
 	}
 	/**
 	 * 修改菜品名称

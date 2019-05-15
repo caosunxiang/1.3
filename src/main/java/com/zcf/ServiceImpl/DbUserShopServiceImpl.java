@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class DbUserShopServiceImpl extends ServiceImpl<DbUserShopMapper, DbUserShop> implements DbUserShopService {
 @Autowired
 private DbUserShopMapper userShopMapper;
+
 @Override
 public Body byopenid(String openid) {
 	EntityWrapper<DbUserShop> wrapper=new EntityWrapper<>();
@@ -47,6 +48,7 @@ public Body attention(DbUserShop dbUserShop) {
 	}
 	return Body.newInstance(201, "關注成功");
 }
+
 @Override
 public Body cancel(Map<String, Object> columnMap) {
 	Integer count=userShopMapper.deleteByMap(columnMap);
@@ -55,4 +57,5 @@ public Body cancel(Map<String, Object> columnMap) {
 	}
 	return Body.newInstance(201, "取消關注失敗");
 }
+
 }
