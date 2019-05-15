@@ -45,6 +45,7 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 			return Body.newInstance(201, "用户已存在");
 		}
 		Integer count = dbUserMapper.insert(user);
+		
 		if (count == 1) {
 			return Body.newInstance(user);
 		}

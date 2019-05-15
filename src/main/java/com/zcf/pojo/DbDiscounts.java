@@ -49,6 +49,10 @@ public class DbDiscounts extends Model<DbDiscounts> {
      */
     private BigDecimal dRestrict;
     /**
+     * 最多领取个数
+     * */
+    private Integer dMaximum;
+    /**
      * 商铺id
      */
     private String discountsToShop;
@@ -120,7 +124,15 @@ public class DbDiscounts extends Model<DbDiscounts> {
         this.dRestrict = dRestrict;
     }
 
-    public String getDiscountsToShop() {
+    public Integer getdMaximum() {
+		return dMaximum;
+	}
+
+	public void setdMaximum(Integer dMaximum) {
+		this.dMaximum = dMaximum;
+	}
+
+	public String getDiscountsToShop() {
         return discountsToShop;
     }
 

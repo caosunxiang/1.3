@@ -11,6 +11,7 @@
         <result column="d_starttime" property="dStarttime" />
         <result column="d_overtime" property="dOvertime" />
         <result column="d_restrict" property="dRestrict" />
+        <result column="d_maximum" property="dMaximum" />
         <result column="discounts_to_shop" property="discountsToShop" />
         <result column="ds_name" property="dsName" />
         <result column="ds_ename" property="dsEname" />
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        d_id, d_price, d_title, d_remark, d_starttime, d_overtime, d_restrict, discounts_to_shop, ds_name, ds_ename
+        d_id, d_price, d_title, d_remark, d_starttime, d_overtime, d_restrict, d_maximum, discounts_to_shop, ds_name, ds_ename
     </sql>
 <select id="getbyuid" resultMap="BaseResultMap">
 SELECT
