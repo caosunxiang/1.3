@@ -25,6 +25,8 @@
     <sql id="Base_Column_List">
         o_id, o_strolley_table, o_subtotal, o_service_charge, o_discounts, o_discounts_price, o_discounts_remark, o_state, o_total, o_time, order_to_user, order_to_shop, o_shop_name, o_shop_ename
     </sql>
+    
+    
 <select id="getone" resultType="java.util.Map">
 SELECT
 	f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s')   otime
@@ -56,10 +58,71 @@ WHERE
 	o.order_to_shop=#{sid}
 </select>
 
-<select id="ordercount" resultType="java.lang.Integer">
+
+<!-- 天数 -->
+
+<select id="todaycount" resultType="java.lang.Integer">
 
 select count(*) from db_order where to_days(o_time) = to_days(now());
 
+</select>
+
+<select id="oneday"  resultType="java.lang.Integer">
+
+SELECT count(*)FROM db_order WHERE TO_DAYS( NOW( ) ) - TO_DAYS( o_time) = 1;
 
 </select>
+
+<select id="towday"  resultType="java.lang.Integer">
+
+SELECT count(*)FROM db_order WHERE TO_DAYS( NOW( ) ) - TO_DAYS( o_time) = 2;
+
+</select>
+
+<select id="threeday"  resultType="java.lang.Integer">
+
+SELECT count(*)FROM db_order WHERE TO_DAYS( NOW( ) ) - TO_DAYS( o_time) = 3;
+
+</select>
+
+
+
+
+
+
+
+
+<!-- 小时 -->
+
+
+<select id="onehour" resultType="java.lang.Integer">
+
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-1 HOUR);
+
+</select>
+
+<select id="towhour" resultType="java.lang.Integer">
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-2 HOUR);
+</select>
+
+
+<select id="threehour" resultType="java.lang.Integer">
+
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-3 HOUR);
+</select>
+
+
+<select id="fourhour" resultType="java.lang.Integer">
+SELECT count(*)
+FROM db_order 
+WHERE o_time>DATE_ADD(NOW(),INTERVAL-4 HOUR);
+
+</select>
+
 </mapper>

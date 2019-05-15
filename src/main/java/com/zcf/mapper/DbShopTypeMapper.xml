@@ -12,5 +12,5 @@
     <sql id="Base_Column_List">
         st_id, st_name
     </sql>
-
+    
 </mapper>

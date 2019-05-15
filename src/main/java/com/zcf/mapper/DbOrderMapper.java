@@ -23,7 +23,17 @@ List<Map<String, Object> >getone(@Param("oid")String oid);
 List<Map<String, Object> >getbyuid(@Param("uid")String uid);
 List<Map<String, Object> >getbysid(@Param("sid")String sid);
 
+//小时
+int onehour();
+int towhour();
+int threehour();
+int fourhour();
 
-int ordercount();
+
+//天
+int todaycount();
+int oneday();
+int towday();
+int threeday();
 
 }
