@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> implements DbFoodService {
 	@Autowired
 	private DbFoodMapper dbFoodMapper;
-
 	@Override
 	public Body addfood(DbFood dbFood) {
 		Integer count = dbFoodMapper.insert(dbFood);
@@ -34,7 +33,6 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 			return Body.newInstance(dbFood);
 		}
 		return Body.newInstance(201, "添加失败");
-
 	}
 
 	@Override
@@ -67,6 +65,7 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 		return Body.newInstance(201, "查詢無果");
 	}
 
+
 	@Override
 	public Body recommend() {
 		EntityWrapper<DbFood> wrapper = new EntityWrapper<>();
@@ -78,6 +77,7 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 		}
 		return Body.newInstance(201, "查詢無果");
 	}
+	
 
 	@Override
 	public Body upfood(String fid, String name, String ename, BigDecimal price) {

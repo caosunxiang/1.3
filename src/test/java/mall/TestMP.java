@@ -21,7 +21,7 @@ public class TestMP {
 		GlobalConfig config = new GlobalConfig();
 		config.setActiveRecord(true) // 是否支持AR模式
 				.setAuthor("曹孙翔") // 作者
-				.setOutputDir("F:\\workspace\\dailian\\src\\main\\java") // 生成路径
+				.setOutputDir("C:\\Users\\hp\\git\\1\\src\\main\\java") // 生成路径
 				.setFileOverride(true) // 文件覆盖D:\\workspace_mp\\mp03\\src\\main\\java
 				.setIdType(IdType.AUTO) // 主键策略
 				.setServiceName("%sService") // 设置生成的service接口的名字的首字母是否为I
@@ -31,15 +31,15 @@ public class TestMP {
 		// 2. 数据源配置
 		DataSourceConfig dsConfig = new DataSourceConfig();
 		dsConfig.setDbType(DbType.MYSQL) // 设置数据库类型
-				.setDriverName("com.mysql.jdbc.Driver").setUrl("jdbc:mysql://localhost:3306/1.3").setUsername("root")
-				.setPassword("root");
+				.setDriverName("com.mysql.jdbc.Driver").setUrl("jdbc:mysql://localhost:3307/order").setUsername("root")
+				.setPassword("123456");
 
 		// 3. 策略配置
 		StrategyConfig stConfig = new StrategyConfig();
 		stConfig.setCapitalMode(true) // 全局大写命名
 				.setDbColumnUnderline(true) // 指定表名 字段名是否使用下划线
 				.setNaming(NamingStrategy.underline_to_camel).setInclude(
-						"db_add","db_comment","db_custom","db_discounts","db_food","db_foodtype","db_order","db_order_food","db_set","db_shop","db_shop_stype","db_shop_type","db_strolley","db_user","db_user_discounts","db_user_shop","db_outline","db_activity","db_fast","db_shop_fast"); // 数据库表映射到实体的命名策略
+						"db_zz"); // 数据库表映射到实体的命名策略
 //				.setTablePrefix("tbl_")
 		// 生成的表
 

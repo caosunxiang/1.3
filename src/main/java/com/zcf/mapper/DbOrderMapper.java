@@ -22,4 +22,8 @@ public interface DbOrderMapper extends BaseMapper<DbOrder> {
 List<Map<String, Object> >getone(@Param("oid")String oid);
 List<Map<String, Object> >getbyuid(@Param("uid")String uid);
 List<Map<String, Object> >getbysid(@Param("sid")String sid);
+
+
+int ordercount();
+
 }

@@ -32,6 +32,10 @@ public Body getbyfid(String fid) {
 	}
 	return Body.newInstance(201, "该商品没有设置配套");
 }
+
+
+
+
 @Override
 public Body getall() {
 	EntityWrapper<DbSet>wrapper=new EntityWrapper<>();
@@ -41,4 +45,41 @@ public Body getall() {
 	}
 	return Body.newInstance(201, "没有查询到结果");
 }
+
+@Override
+public Body add(String setId, String setName, String setEnglishName, String setState, String setShop) {
+
+	DbSet dbSet=new DbSet();
+	dbSet.setSetId(setId);
+	dbSet.setSetEnglishName(setEnglishName);
+	dbSet.setSetName(setName);
+	dbSet.setSetState(setState);
+	dbSet.setSetShop(setShop);
+	dbSetMapper.insert(dbSet);
+	return Body.BODY_200;
+}
+
+@Override
+public Body del(String setId) {
+Integer count=dbSetMapper.deleteById(setId);
+if(count==1){
+	return Body.BODY_200;
+}
+	
+	return Body.BODY_400;
+}
+
+@Override
+public Body upd(String setId, String setName, String setEnglishName, String setState, String setShop) {
+	DbSet dbSet=new DbSet();
+	dbSet.setSetId(setId);
+	dbSet.setSetEnglishName(setEnglishName);
+	dbSet.setSetName(setName);
+	dbSet.setSetState(setState);
+	dbSet.setSetShop(setShop);
+	dbSetMapper.updateById(dbSet);
+	return Body.BODY_200;
+}
+
+
 }

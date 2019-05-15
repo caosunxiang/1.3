@@ -49,7 +49,8 @@ public Body addorder(DbOrder dbOrder,String fid) {
 	fid=fid+",";
 	 char a[]=fid.toCharArray();
 	 Integer c=0;
-		Integer changeCount =0;
+	 Integer changeCount =0;
+	 
 	 for (int i = 0; i < a.length; i++) {
 		 if(a[i]==',') {
 			String string= fid.substring(c, i);
@@ -57,7 +58,7 @@ public Body addorder(DbOrder dbOrder,String fid) {
 			System.out.println(string);
 		 list.add(string);
 		 changeCount++;
-		 }
+		 }  
 	 }
 	 //添加订单
 	Integer count=dbOrderMapper.insert(dbOrder);
@@ -139,6 +140,8 @@ public Body over(String openid) {
 	}
 	return Body.newInstance(201, "沒有已完成的訂單");
 }
+
+
 @Override
 public Body getbyuid(String uid) {
 	List<Map<String, Object> >list=dbOrderMapper.getbyuid(uid);
@@ -147,6 +150,8 @@ public Body getbyuid(String uid) {
 	}
 	return Body.newInstance(201, "查詢無果");
 }
+
+
 @Override
 public Body getbysid(String sid) {
 	List<Map<String, Object> >list=dbOrderMapper.getbysid(sid);

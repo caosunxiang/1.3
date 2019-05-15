@@ -12,7 +12,7 @@
     <sql id="Base_Column_List">
         us_userid, us_shopid
     </sql>
-<select id="byopenid" resultType="java.util.Map">
+  <select id="byopenid" resultType="java.util.Map">
 SELECT
 	s.s_picture,
 	s.s_id,
@@ -24,4 +24,5 @@ LEFT JOIN db_shop s ON s.s_id = us.us_shopid
 WHERE
 	us.us_userid =#{uid}
 </select>
+
 </mapper>

@@ -55,4 +55,11 @@ LEFT JOIN db_order o ON o.o_id = of.of_orderid
 WHERE
 	o.order_to_shop=#{sid}
 </select>
+
+<select id="ordercount" resultType="java.lang.Integer">
+
+select count(*) from db_order where to_days(o_time) = to_days(now());
+
+
+</select>
 </mapper>

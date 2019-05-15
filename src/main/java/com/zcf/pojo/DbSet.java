@@ -20,7 +20,7 @@ public class DbSet extends Model<DbSet> {
     /**
      * 套配id
      */
-    @TableId(value = "set_id", type = IdType.AUTO)
+    @TableId(value = "set_id", type = IdType.NONE)
     private String setId;
     /**
      * 套配名称

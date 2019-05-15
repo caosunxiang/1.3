@@ -19,7 +19,12 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2019-04-22
  */
 public interface DbShopMapper extends BaseMapper<DbShop> {
-	List<Map<String, Object>> shop(@Param("fid") List<Integer> fid, @Param("name") String name, @Param("ave1") BigDecimal ave1,
+	List<Map<String, Object>> shop(@Param("fid") List<Integer> fid,
+			@Param("name") String name, @Param("ave1") BigDecimal ave1,
 			@Param("ave2") BigDecimal ave2);
+	
 	DbShop phone(@Param("phone")String phone);
+	
+	
+	
 }

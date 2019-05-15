@@ -49,7 +49,7 @@ public Body getbyuid(String uid) {
 public Body sidtouid(String sid,String uid) {
 	List<DbDiscounts>list=discountsMapper.sidtouid(sid, uid);
 	if(list.size()>0) {
-		return Body.newInstance(list); 
+		return Body.newInstance(list);
 	}
 	return Body.newInstance(201, "您尚未獲得該商家的優惠券");
 }

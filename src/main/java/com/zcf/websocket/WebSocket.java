@@ -54,7 +54,7 @@ public class WebSocket {
 		clients.put("admin" + adminId, this);
 		Key = "admin" + adminId;
 		addOnlineCount(); // 在线数加1
-		log.info("有新连接加入！当前在线人数为" + getOnlineCount() + "加入的管理员ID为:" + adminId);
+		//log.info("有新连接加入！当前在线人数为" + getOnlineCount() + "加入的管理员ID为:" + adminId);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class WebSocket {
 	public void onClose() {
 		clients.remove(Key); // 从set中删除
 		subOnlineCount(); // 在线数减1
-		log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
+		//log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class WebSocket {
 	 */
 	@OnMessage
 	public void onMessage(String message) {
-		log.info("控制器收到消息：{}",message);
+		//log.info("控制器收到消息：{}",message);
 		JSONObject jsonObject=JSONObject.fromObject(message);
     	send2User(message, "admin" +jsonObject.get("touser").toString());
 	}
@@ -92,7 +92,7 @@ public class WebSocket {
 			if (clients.get(key) != null) {
 				clients.get(key).sendMessage(message);
 			} else {
-				log.info("当前用户不在线");
+				//log.info("当前用户不在线");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -107,7 +107,7 @@ public class WebSocket {
 	 */
 	@OnError
 	public void onError(Session session, Throwable error) {
-		log.error(error.toString());
+		//log.error(error.toString());
 	}
 
 	/**
