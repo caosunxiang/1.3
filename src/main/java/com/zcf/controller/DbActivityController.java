@@ -40,6 +40,7 @@ public class DbActivityController {
 
 	/**
 	 * 添加活动
+	 * 
 	 * @param atitle
 	 * @param acon
 	 * @param afcon
@@ -50,11 +51,10 @@ public class DbActivityController {
 	 */
 	@PostMapping("/addact")
 	Body addact(String atitle, String acon, String afcon, String head, String as, String ad) {
-		if (StringUtils.isEmpty(atitle) || StringUtils.isEmpty(acon) || StringUtils.isEmpty(afcon)
-				||  StringUtils.isEmpty(as) || StringUtils.isEmpty(ad)) {
+		if (StringUtils.isEmpty(atitle) || StringUtils.isEmpty(afcon) || StringUtils.isEmpty(as)) {
 			return Body.BODY_451;
 		}
-		DbActivity activity=new DbActivity();
+		DbActivity activity = new DbActivity();
 		activity.setaContent(acon);
 		activity.setActivityToDiscounts(ad);
 		activity.setActivityToShop(as);
@@ -63,20 +63,24 @@ public class DbActivityController {
 		activity.setaTitle(atitle);
 		return activityService.addact(activity);
 	}
+
 	/**
 	 * 優惠詳情
+	 * 
 	 * @param aid
 	 * @return
 	 */
 	@PostMapping("/getbyaid")
 	Body getbyaid(Integer aid) {
-		if(aid==null) {
+		if (aid == null) {
 			return Body.BODY_451;
 		}
 		return activityService.getbyaid(aid);
 	}
+
 	/**
 	 * 查看商家優惠活動
+	 * 
 	 * @param sid
 	 * @return
 	 */

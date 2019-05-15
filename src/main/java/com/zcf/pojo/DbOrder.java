@@ -61,6 +61,10 @@ public class DbOrder extends Model<DbOrder> {
      */
     private String oTime;
     /**
+     * 就餐结束时间
+     * */
+    private String oOvertime;
+    /**
      * 订单关联用户
      */
     private String orderToUser;
@@ -157,7 +161,15 @@ public class DbOrder extends Model<DbOrder> {
         this.oTime = oTime;
     }
 
-    public String getOrderToUser() {
+    public String getoOvertime() {
+		return oOvertime;
+	}
+
+	public void setoOvertime(String oOvertime) {
+		this.oOvertime = oOvertime;
+	}
+
+	public String getOrderToUser() {
         return orderToUser;
     }
 
@@ -197,22 +209,11 @@ public class DbOrder extends Model<DbOrder> {
     }
 
     @Override
-    public String toString() {
-        return "DbOrder{" +
-        "oId=" + oId +
-        ", oStrolleyTable=" + oStrolleyTable +
-        ", oSubtotal=" + oSubtotal +
-        ", oServiceCharge=" + oServiceCharge +
-        ", oDiscounts=" + oDiscounts +
-        ", oDiscountsPrice=" + oDiscountsPrice +
-        ", oDiscountsRemark=" + oDiscountsRemark +
-        ", oState=" + oState +
-        ", oTotal=" + oTotal +
-        ", oTime=" + oTime +
-        ", orderToUser=" + orderToUser +
-        ", orderToShop=" + orderToShop +
-        ", oShopName=" + oShopName +
-        ", oShopEname=" + oShopEname +
-        "}";
-    }
+	public String toString() {
+		return "DbOrder [oId=" + oId + ", oStrolleyTable=" + oStrolleyTable + ", oSubtotal=" + oSubtotal
+				+ ", oServiceCharge=" + oServiceCharge + ", oDiscounts=" + oDiscounts + ", oDiscountsPrice="
+				+ oDiscountsPrice + ", oDiscountsRemark=" + oDiscountsRemark + ", oState=" + oState + ", oTotal="
+				+ oTotal + ", oTime=" + oTime + ", oOvertime=" + oOvertime + ", orderToUser=" + orderToUser
+				+ ", orderToShop=" + orderToShop + ", oShopName=" + oShopName + ", oShopEname=" + oShopEname + "]";
+	}
 }

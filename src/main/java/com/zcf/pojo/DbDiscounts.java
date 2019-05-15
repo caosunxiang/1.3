@@ -22,7 +22,7 @@ public class DbDiscounts extends Model<DbDiscounts> {
     /**
      * 优惠劵id
      */
-    @TableId(value = "d_id", type = IdType.AUTO)
+    @TableId(value = "d_id", type = IdType.NONE)
     private String dId;
     /**
      * 优惠券价格
@@ -48,6 +48,10 @@ public class DbDiscounts extends Model<DbDiscounts> {
      * 优惠券限制
      */
     private BigDecimal dRestrict;
+    /**
+     * 最多领取个数
+     * */
+    private Integer dMaximum;
     /**
      * 商铺id
      */
@@ -120,7 +124,15 @@ public class DbDiscounts extends Model<DbDiscounts> {
         this.dRestrict = dRestrict;
     }
 
-    public String getDiscountsToShop() {
+    public Integer getdMaximum() {
+		return dMaximum;
+	}
+
+	public void setdMaximum(Integer dMaximum) {
+		this.dMaximum = dMaximum;
+	}
+
+	public String getDiscountsToShop() {
         return discountsToShop;
     }
 

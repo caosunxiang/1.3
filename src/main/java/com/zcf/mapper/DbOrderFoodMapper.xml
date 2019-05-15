@@ -7,11 +7,13 @@
     <resultMap id="BaseResultMap" type="com.zcf.pojo.DbOrderFood">
         <result column="of_orderid" property="ofOrderid" />
         <result column="of_foodid" property="ofFoodid" />
+        <result column="of_remark" property="ofRemark" />
+        <result column="of_price" property="ofPrice" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        of_orderid, of_foodid
+        of_orderid, of_foodid, of_remark, of_price
     </sql>
 
 </mapper>

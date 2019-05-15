@@ -3,60 +3,141 @@
 <mapper namespace="com.zcf.mapper.DbOrderMapper">
 
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.zcf.pojo.DbOrder">
-        <id column="o_id" property="oId" />
-        <result column="o_strolley_table" property="oStrolleyTable" />
-        <result column="o_subtotal" property="oSubtotal" />
-        <result column="o_service_charge" property="oServiceCharge" />
-        <result column="o_discounts" property="oDiscounts" />
-        <result column="o_discounts_price" property="oDiscountsPrice" />
-        <result column="o_discounts_remark" property="oDiscountsRemark" />
-        <result column="o_state" property="oState" />
-        <result column="o_total" property="oTotal" />
-        <result column="o_time" property="oTime" />
-        <result column="order_to_user" property="orderToUser" />
-        <result column="order_to_shop" property="orderToShop" />
-        <result column="o_shop_name" property="oShopName" />
-        <result column="o_shop_ename" property="oShopEname" />
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.zcf.pojo.DbOrder">
+		<id column="o_id" property="oId" />
+		<result column="o_strolley_table" property="oStrolleyTable" />
+		<result column="o_subtotal" property="oSubtotal" />
+		<result column="o_service_charge" property="oServiceCharge" />
+		<result column="o_discounts" property="oDiscounts" />
+		<result column="o_discounts_price" property="oDiscountsPrice" />
+		<result column="o_discounts_remark" property="oDiscountsRemark" />
+		<result column="o_state" property="oState" />
+		<result column="o_total" property="oTotal" />
+		<result column="o_time" property="oTime" />
+		<result column="o_overtime" property="oOvertime" />
+		<result column="order_to_user" property="orderToUser" />
+		<result column="order_to_shop" property="orderToShop" />
+		<result column="o_shop_name" property="oShopName" />
+		<result column="o_shop_ename" property="oShopEname" />
+	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        o_id, o_strolley_table, o_subtotal, o_service_charge, o_discounts, o_discounts_price, o_discounts_remark, o_state, o_total, o_time, order_to_user, order_to_shop, o_shop_name, o_shop_ename
-    </sql>
-    
-    
-<select id="getone" resultType="java.util.Map">
-SELECT
-	f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s')   otime
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		o_id, o_strolley_table, o_subtotal, o_service_charge,
+		o_discounts,
+		o_discounts_price, o_discounts_remark, o_state, o_total,
+		o_time,
+		order_to_user, order_to_shop, o_shop_name, o_shop_ename,
+		o_overtime
+	</sql>
+	<select id="getone" resultType="java.util.Map">
+		SELECT
+		f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s') otime
+		FROM
+		db_food f
+		LEFT JOIN db_order_food of ON of.of_foodid = f.f_id
+		LEFT JOIN db_order
+		o ON o.o_id = of.of_orderid
+		WHERE
+		o.o_id =#{oid}
+	</select>
+	<select id="getbyuid" resultType="java.util.Map">
+		SELECT
+		f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s') otime
+		FROM
+		db_food f
+		LEFT JOIN db_order_food of ON of.of_foodid = f.f_id
+		LEFT JOIN db_order
+		o ON o.o_id = of.of_orderid
+		WHERE
+		o.order_to_user=#{uid}
+	</select>
+	<select id="getbysid" resultType="java.util.Map">
+		SELECT
+		f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s') otime
+		FROM
+		db_food f
+		LEFT JOIN db_order_food of ON of.of_foodid = f.f_id
+		LEFT JOIN db_order
+		o ON o.o_id = of.of_orderid
+		WHERE
+		o.order_to_shop=#{sid}
+	</select>
+	<select id="today" resultMap="BaseResultMap">
+		SELECT
+		o.order_to_shop,
+		o.order_to_user,
+		o.o_discounts,
+		o.o_discounts_price,
+		o.o_discounts_remark,
+		o.o_id,
+		o.o_service_charge,
+		o.o_shop_ename,
+		o.o_shop_name,
+		o.o_state,
+		o.o_strolley_table,
+		o.o_subtotal,
+		DATE_FORMAT(
+		o.o_time,
+		'%Y-%m-%d %k:%i:%s'
+		) AS o_time,
+		DATE_FORMAT(
+		o.o_overtime,
+		'%Y-%m-%d %k:%i:%s'
+		) AS o_overtime,
+		o.o_total
+		FROM
+		`db_order` o
+		WHERE
+		o.o_state = '1'
+		AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0;
+	</select>
+	<select id="finishone" resultType="java.util.Map">
+	SELECT
+	o.o_id,
+	o.o_strolley_table,
+	o.o_service_charge,
+	o.o_total,
+	o.o_time,
+	o.order_to_shop,
+	o.o_shop_name,
+	o.o_shop_ename,
+	of.of_foodid,
+	of.of_remark,
+	of.of_price,
+	f.f_name,
+	f.f_english_name
 FROM
-	db_food f
-LEFT JOIN db_order_food of ON of.of_foodid = f.f_id
-LEFT JOIN db_order o ON o.o_id = of.of_orderid
+	`db_order` o
+LEFT JOIN `db_order_food` of ON o.o_id = of.of_orderid
+LEFT JOIN `db_food` f ON f.f_id = of.of_foodid
 WHERE
-	o.o_id =#{oid}
-</select>
-<select id="getbyuid" resultType="java.util.Map">
+	o.o_id = #{oid};
+	</select>
+		<select id="bytable" resultType="java.util.Map">
 SELECT
-	f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s')   otime
+	o.o_id,
+	o.o_strolley_table,
+	o.o_service_charge,
+	o.o_total,
+	o.o_time,
+	o.order_to_shop,
+	o.o_shop_name,
+	o.o_shop_ename,
+	of.of_foodid,
+	of.of_remark,
+	of.of_price,
+	f.f_name,
+	f.f_english_name
 FROM
-	db_food f
-LEFT JOIN db_order_food of ON of.of_foodid = f.f_id
-LEFT JOIN db_order o ON o.o_id = of.of_orderid
+	`db_order` o
+LEFT JOIN `db_order_food` of ON o.o_id = of.of_orderid
+LEFT JOIN `db_food` f ON f.f_id = of.of_foodid
 WHERE
-	o.order_to_user=#{uid}
-</select>
-<select id="getbysid" resultType="java.util.Map">
-SELECT
-	f.*,o.*,DATE_FORMAT(o.o_time,'%Y-%m-%d %H:%i:%s')   otime
-FROM
-	db_food f
-LEFT JOIN db_order_food of ON of.of_foodid = f.f_id
-LEFT JOIN db_order o ON o.o_id = of.of_orderid
-WHERE
-	o.order_to_shop=#{sid}
-</select>
+	o.o_strolley_table=#{table} AND o.order_to_shop=#{sid} AND o.o_state='0';
+	</select>
+
 
 
 <!-- 天数 -->

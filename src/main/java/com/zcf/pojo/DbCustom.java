@@ -20,7 +20,7 @@ public class DbCustom extends Model<DbCustom> {
     /**
      * 菜品自定栏id
      */
-    @TableId(value = "c_id", type = IdType.AUTO)
+    @TableId(value = "c_id", type = IdType.NONE)
     private String cId;
     /**
      * 商品自定名称

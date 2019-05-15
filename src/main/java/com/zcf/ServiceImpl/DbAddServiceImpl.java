@@ -41,4 +41,28 @@ public Body getall() {
 	}
 	return Body.newInstance(201, "没有查到结果");
 }
+@Override
+public Body add(DbAdd add) {
+	Integer count=dbAddMapper.insert(add);
+	if(count==1) {
+		return Body.newInstance(add);
+	}
+	return Body.newInstance(201, "添加失敗");
+}
+@Override
+public Body de(String aid) {
+	Integer count=dbAddMapper.deleteById(aid);
+	if(count==1) {
+		return Body.BODY_200;
+	}
+	return Body.newInstance(201, "刪除失敗");
+}
+@Override
+public Body up(DbAdd add) {
+	Integer count=dbAddMapper.updateById(add);
+	if(count==1) {
+		return Body.BODY_200;
+	}
+	return Body.newInstance(201, "修改失敗");
+}
 }

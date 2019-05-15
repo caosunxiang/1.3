@@ -136,6 +136,8 @@ public class DbShopController {
 		dbShop.setsArea(area);
 		dbShop.setsAverage(ave);
 		dbShop.setsBusinessType(btype);
+		dbShop.setsType(type);
+		dbShop.setsTypeName(tname);
 		dbShop.setsCloseTime(colse);
 		dbShop.setsEmail(email);
 		dbShop.setsEnglishName(ename);
@@ -203,10 +205,26 @@ public class DbShopController {
 	 */
 	@PostMapping("/forget")
 	Body forget(String phone, Integer pwd) {
-		if(StringUtils.isEmpty(phone)||pwd!=null) {
+		if(StringUtils.isEmpty(phone)||pwd==null) {
 			return Body.BODY_451;
 		}
 		return dbShopService.forget(phone, pwd);
 	}
 	
+
+	/**
+	 * //修改驗證碼
+	 * @param sid
+	 * @param verify1
+	 * @param verify2
+	 * @return
+	 */
+	@PostMapping("/change")
+	Body change(String sid, Integer verify1, Integer verify2) {
+		if (StringUtils.isEmpty(sid)||verify1==null||verify2==null) {
+			return Body.BODY_451;
+		}
+		return dbShopService.change(sid, verify1, verify2);
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.zcf.common.utils;
 
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -409,8 +410,13 @@ public class Hutool {
 public static void main(String[] args) {
 	 int a=4563;
 	    int b=100;
-	    DecimalFormat df=new DecimalFormat("0.00");
-
+	    LocalDateTime end = LocalDateTime.now();
+	    DecimalFormat df=new DecimalFormat("yyyy-MM-dd HH:mm:ss");
+	    LocalDateTime time=parseStringToDate("2019-05-09 13:43:17");
+	    LocalDateTime time1=parseStringToDate("2019-05-09 13:42:16.0");
+	    Duration duration = Duration.between(time, time1);
+        System.out.println(end);
+        System.out.println(duration.toMinutes());
 	    System.out.println(df.format((float)a/b));
 	    System.out.println(df.format(a/(float)b));
 	    System.out.println(df.format((float)a/(float)b));

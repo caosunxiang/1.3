@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
+import com.zcf.pojo.DbCustom;
 import com.zcf.service.DbCustomService;
+import com.zcf.utils.IDUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,5 +49,73 @@ Body getbyfid(String fid) {
 @PostMapping("/getall")
 Body getall() {
 	return dbCustomService.getall();
+}
+/**
+//添加
+ * @param cid
+ * @param name
+ * @param ename
+ * @param sid
+ * @return
+ */
+@PostMapping("/add")
+Body add(String name,String ename,String sid) {
+	if(StringUtils.isEmpty(name)||StringUtils.isEmpty(sid)) {
+		return Body.BODY_451;
+	}
+	DbCustom custom=new DbCustom();
+	custom.setcEnglishName(ename);
+	custom.setcId(IDUtils.genItemId()+"");
+	custom.setcName(name);
+	custom.setShopCustom(sid);
+	return dbCustomService.add(custom);
+}
+
+/**
+ * 删除
+ * @param cid
+ * @return
+ */
+@PostMapping("/de")
+Body de(String cid) {
+	if(StringUtils.isEmpty(cid)) {
+		return Body.BODY_451;
+	}
+	return dbCustomService.de(cid);
+}
+/**
+//修改
+ * @param cid
+ * @param name
+ * @param ename
+ * @param sid
+ * @param state
+ * @return
+ */
+@PostMapping("/up")
+Body up(String cid,String name,String ename,String sid,String state) {
+	if(StringUtils.isEmpty(cid)||StringUtils.isEmpty(name)||StringUtils.isEmpty(sid)||StringUtils.isEmpty(state)) {
+		return Body.BODY_451;
+	}
+	DbCustom custom=new DbCustom();
+	custom.setcEnglishName(ename);
+	custom.setcId(cid);
+	custom.setcName(name);
+	custom.setShopCustom(sid);
+	custom.setcState(state);
+	return dbCustomService.up(custom);
+}
+
+/**
+ * 唯一查询
+ * @param cid
+ * @return
+ */
+@PostMapping("/getone")
+Body getone(String cid) {
+	if(StringUtils.isEmpty(cid)) {
+		return Body.BODY_451;
+	}
+	return dbCustomService.getone(cid);
 }
 }

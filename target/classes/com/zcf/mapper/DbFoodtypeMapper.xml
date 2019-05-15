@@ -6,12 +6,13 @@
     <resultMap id="BaseResultMap" type="com.zcf.pojo.DbFoodtype">
         <id column="ft_id" property="ftId" />
         <result column="ft_name" property="ftName" />
+        <result column="ft_state" property="ftState" />
         <result column="foodtype_to_shop" property="foodtypeToShop" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        ft_id, ft_name, foodtype_to_shop
+        ft_id, ft_name, foodtype_to_shop, ft_state
     </sql>
 
 </mapper>

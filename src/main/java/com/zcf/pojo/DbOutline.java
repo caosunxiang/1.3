@@ -20,7 +20,7 @@ public class DbOutline extends Model<DbOutline> {
     /**
      * 大纲id
      */
-    @TableId(value = "l_id", type = IdType.AUTO)
+    @TableId(value = "l_id", type = IdType.NONE)
     private String lId;
     /**
      * 大纲内容

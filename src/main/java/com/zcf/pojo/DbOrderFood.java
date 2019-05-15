@@ -25,6 +25,14 @@ public class DbOrderFood extends Model<DbOrderFood> {
      * 订单菜品id
      */
     private String ofFoodid;
+    /**
+     * 菜品备注
+     * */
+    private String ofRemark;
+    /**
+     * 菜品价格
+     * */
+    private String ofPrice;
 
 
     public String getOfOrderid() {
@@ -43,7 +51,23 @@ public class DbOrderFood extends Model<DbOrderFood> {
         this.ofFoodid = ofFoodid;
     }
 
-    @Override
+    public String getOfRemark() {
+		return ofRemark;
+	}
+
+	public void setOfRemark(String ofRemark) {
+		this.ofRemark = ofRemark;
+	}
+
+	public String getOfPrice() {
+		return ofPrice;
+	}
+
+	public void setOfPrice(String ofPrice) {
+		this.ofPrice = ofPrice;
+	}
+
+	@Override
     protected Serializable pkVal() {
         return null;
     }

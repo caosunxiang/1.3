@@ -1,7 +1,9 @@
 package com.zcf.ServiceImpl;
 
+import com.zcf.pojo.DbDiscounts;
 import com.zcf.pojo.DbUserDiscounts;
 import com.zcf.common.json.Body;
+import com.zcf.mapper.DbDiscountsMapper;
 import com.zcf.mapper.DbUserDiscountsMapper;
 import com.zcf.service.DbUserDiscountsService;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -22,14 +24,24 @@ import org.springframework.stereotype.Service;
 public class DbUserDiscountsServiceImpl extends ServiceImpl<DbUserDiscountsMapper, DbUserDiscounts> implements DbUserDiscountsService {
 @Autowired
 private DbUserDiscountsMapper discountsMapper;
+@Autowired
+private DbDiscountsMapper dbDiscountsMapper;
 @Override
 public Body addud(DbUserDiscounts dbUserDiscounts) {
-	DbUserDiscounts userDiscounts=discountsMapper.selectOne(dbUserDiscounts);
-	if(userDiscounts==null) {
-		discountsMapper.insert(dbUserDiscounts);
-		return Body.newInstance(200, "優惠券領取成功");
+	EntityWrapper<DbUserDiscounts> wrapper=new EntityWrapper<>();
+	wrapper.eq("ud_userid", dbUserDiscounts.getUdUserid());
+	wrapper.eq("ud_discountsid", dbUserDiscounts.getUdDiscountsid());
+	DbDiscounts dbDiscounts=dbDiscountsMapper.selectById(dbUserDiscounts.getUdDiscountsid());
+	if(dbDiscounts!=null) {
+		Integer count=discountsMapper.selectCount(wrapper);
+		if(count<dbDiscounts.getdMaximum()) {
+			discountsMapper.insert(dbUserDiscounts);
+			return Body.newInstance(200, "優惠券領取成功");
+		}else {
+			return Body.newInstance(201, "优惠券已超过上限");
+		}
 	}else {
-		return Body.newInstance(201, "您已領取過此優惠券");
+		return Body.newInstance(201, "优惠券已不存在");
 	}
 }
 

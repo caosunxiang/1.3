@@ -21,7 +21,7 @@ public class DbAdd extends Model<DbAdd> {
     /**
      * 加配id
      */
-    @TableId(value = "add_id", type = IdType.AUTO)
+    @TableId(value = "add_id", type = IdType.NONE)
     private String addId;
     private String addName;
     /**

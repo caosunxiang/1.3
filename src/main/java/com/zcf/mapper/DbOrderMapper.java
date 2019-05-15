@@ -22,7 +22,9 @@ public interface DbOrderMapper extends BaseMapper<DbOrder> {
 List<Map<String, Object> >getone(@Param("oid")String oid);
 List<Map<String, Object> >getbyuid(@Param("uid")String uid);
 List<Map<String, Object> >getbysid(@Param("sid")String sid);
-
+List<DbOrder>today();
+List<Map<String, Object> >finishone(@Param("oid")String oid);
+List< Map<String, Object>>bytable(@Param("table")String table,@Param("sid")String sid);
 //小时
 int onehour();
 int towhour();

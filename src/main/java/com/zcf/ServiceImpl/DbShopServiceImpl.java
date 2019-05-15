@@ -163,4 +163,22 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 				}
 				return Body.newInstance(201, "修改失敗");
 	}
+
+	@Override
+	public Body change(String sid,Integer verify1,Integer verify2) {
+		DbShop dbShop=dbShopMapper.selectById(sid);
+		if(dbShop!=null) {
+			System.out.println(dbShop.getsVerify()+"				"+verify1);
+			if(!dbShop.getsVerify().equals(verify1)) {
+				return Body.newInstance(201, "驗證碼不正確");
+			}
+			dbShop.setsVerify(verify2);
+			Integer count=dbShopMapper.updateById(dbShop);
+			if(count==1) {
+				return Body.newInstance(dbShop);
+			}
+		}
+		return Body.newInstance(201, "操作失敗");
+	}
+
 }

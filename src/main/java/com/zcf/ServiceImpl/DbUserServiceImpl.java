@@ -45,6 +45,7 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 			return Body.newInstance(201, "用户已存在");
 		}
 		Integer count = dbUserMapper.insert(user);
+		
 		if (count == 1) {
 			return Body.newInstance(user);
 		}
@@ -65,7 +66,7 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 		EntityWrapper<DbUser> uwrapper = new EntityWrapper<>();
 		uwrapper.eq("open_id", uid);
 		EntityWrapper<DbShop> swrapper = new EntityWrapper<>();
-		if(StringUtils.isEmpty(sname)) {
+		if(!StringUtils.isEmpty(sname)) {
 			swrapper.like("s_name", sname);
 		}
 		dbUserMapper.updateForSet("u_longitude='" + longitude + "',u_latitude='" + latitude + "'", uwrapper);

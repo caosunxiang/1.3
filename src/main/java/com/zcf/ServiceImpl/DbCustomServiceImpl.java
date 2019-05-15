@@ -42,4 +42,36 @@ public class DbCustomServiceImpl extends ServiceImpl<DbCustomMapper, DbCustom> i
 		}
 		return Body.newInstance(201,"没有结果");
 	}
+	@Override
+	public Body add(DbCustom custom) {
+		Integer count=dbCustomMapper.insert(custom);
+		if(count==1) {
+			return Body.newInstance(custom);
+		}
+		return Body.newInstance(201, "添加成功");
+	}
+	@Override
+	public Body de(String cid) {
+		Integer count=dbCustomMapper.deleteById(cid);
+		if(count==1) {
+			return Body.BODY_200;
+		}
+		return Body.newInstance(201, "刪除失敗");
+	}
+	@Override
+	public Body up(DbCustom custom) {
+		Integer count=dbCustomMapper.updateById(custom);
+		if(count==1) {
+			return Body.newInstance(custom);
+		}
+		return Body.newInstance(201, "修改失敗");
+	}
+	@Override
+	public Body getone(String cid) {
+		DbCustom dbCustom=dbCustomMapper.selectById(cid);
+		if(dbCustom!=null) {
+			return Body.newInstance(dbCustom);
+		}
+		return Body.newInstance(201, "查詢無果");
+	}
 }
