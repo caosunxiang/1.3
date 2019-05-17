@@ -170,4 +170,29 @@ public class DbFoodController {
 		}
 		return dbFoodService.updown(fid, state);
 	}
+	/**
+	 * 設置熱門
+	 * @param sid
+	 * @param fid
+	 * @return
+	 */
+	@PostMapping("/setrec")
+	Body setrec(String sid, String fid) {
+		if(StringUtils.isEmpty(fid)||StringUtils.isEmpty(sid)) {
+			return Body.BODY_400;
+		}
+		return dbFoodService.setrec(sid, fid);
+	}
+	/**
+	 * //取消熱門
+	 * @param fid
+	 * @return
+	 */
+	@PostMapping("/cancel")
+	Body cancel(String fid){
+		if(StringUtils.isEmpty(fid)) {
+			return Body.BODY_451;
+		}
+		return dbFoodService.cancel(fid);
+	}
 }

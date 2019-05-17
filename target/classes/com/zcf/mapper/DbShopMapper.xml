@@ -51,13 +51,17 @@
 		WHERE
 		1=1
 				and s.s_state <![CDATA[ <> ]]>1
+				<if test="fid!=null and fid.size()>0">
 			and f.f_id in
 			<foreach collection="fid" open="(" separator="," close=")"
 				item="fid">
 				#{fid}
 			</foreach>
+			</if>
 	<if test="name!=null and name!=''">
 			AND s.s_name LIKE CONCAT('%',#{name},'%')
+			or s.s_area LIKE CONCAT('%',#{name},'%')
+			or s.s_type_name LIKE CONCAT('%',#{name},'%')
 		</if>
 		<if test="ave1!=null and ave1!=''">
 			AND s.s_average BETWEEN #{ave1}

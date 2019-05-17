@@ -53,8 +53,8 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		DbShop dbShop=selectById(sid);
 	  
 		if(dbShop!=null) {
-			Integer hot=dbShop.getsHot();
-			dbShopMapper.updateForSet("s_hot="+hot, wrapper);
+			String hot=dbShop.getsHot();
+			dbShopMapper.updateForSet("s_hot='"+hot+"'", wrapper);
 			return Body.newInstance(dbShop);
 		}
 		return Body.newInstance(201, "没有符合条件的店铺");
@@ -180,5 +180,12 @@ public class DbShopServiceImpl extends ServiceImpl<DbShopMapper, DbShop> impleme
 		}
 		return Body.newInstance(201, "操作失敗");
 	}
-
+@Override
+public Body change(DbShop shop) {
+	Integer count=dbShopMapper.updateById(shop);
+	if(count==1) {
+		return Body.BODY_200;
+	}
+	return Body.newInstance(201, "修改失敗");
+}
 }

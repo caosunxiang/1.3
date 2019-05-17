@@ -92,6 +92,7 @@ public class DbShopController {
 	Body getbypark(String sname) {
 		return dbShopService.getbypark(sname);
 	}
+
 	/**
 	 * 是否浪漫
 	 * 
@@ -154,7 +155,68 @@ public class DbShopController {
 	}
 
 	/**
+	 * 修改商戶信息
+	 * 
+	 * @param name
+	 * @param ename
+	 * @param btype
+	 * @param type
+	 * @param tname
+	 * @param picture
+	 * @param phone
+	 * @param open
+	 * @param colse
+	 * @param longitude
+	 * @param latitude
+	 * @param ave
+	 * @param area
+	 * @param email
+	 * @param remark
+	 * @return
+	 */
+	@PostMapping("/changeshop")
+	public Body changeshop(String sid, String name, String ename, String btype, String type, String tname,
+			String picture, String phone, String open, String colse, String longitude, String latitude, BigDecimal ave,
+			String area, String email, String remark, String romance, String park, String hot, Integer score,
+			String state, String time) {
+		if (StringUtils.isEmpty(name) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(btype)
+				|| StringUtils.isEmpty(type) || StringUtils.isEmpty(tname) || StringUtils.isEmpty(picture)
+				|| StringUtils.isEmpty(phone) || StringUtils.isEmpty(open) || StringUtils.isEmpty(colse)
+				|| StringUtils.isEmpty(area) || StringUtils.isEmpty(email) || StringUtils.isEmpty(remark)
+				|| StringUtils.isEmpty(state) || StringUtils.isEmpty(park) || StringUtils.isEmpty(hot) || score == null
+				|| StringUtils.isEmpty(romance) || StringUtils.isEmpty(sid)||StringUtils.isEmpty(time)) {
+			return Body.BODY_451;
+		}
+		DbShop dbShop = new DbShop();
+		dbShop.setsState(state);
+		dbShop.setsPark(park);
+		dbShop.setsHot(hot);
+		dbShop.setsScore(score);
+		dbShop.setsRomance(romance);
+		dbShop.setsArea(area);
+		dbShop.setsAverage(ave);
+		dbShop.setsBusinessType(btype);
+		dbShop.setsType(type);
+		dbShop.setsTypeName(tname);
+		dbShop.setsCloseTime(colse);
+		dbShop.setsEmail(email);
+		dbShop.setsEnglishName(ename);
+		dbShop.setsId(sid);
+		dbShop.setsLatitude(latitude);
+		dbShop.setsLongitude(longitude);
+		dbShop.setsName(name);
+		dbShop.setsEnglishName(ename);
+		dbShop.setsOpenTime(open);
+		dbShop.setsPhone(phone);
+		dbShop.setsPicture(picture);
+		dbShop.setsRemark(remark);
+		dbShop.setsTime(time);
+		return dbShopService.change(dbShop);
+	}
+
+	/**
 	 * 查詢商鋪
+	 * 
 	 * @param fid
 	 * @param name
 	 * @param ave1
@@ -162,58 +224,60 @@ public class DbShopController {
 	 * @return
 	 */
 	@PostMapping("/shop")
-	Body shop(String  fid, String name, BigDecimal ave1, BigDecimal ave2) {
-		if (StringUtils.isEmpty(fid)|| StringUtils.isEmpty(name) || ave1 == null || ave2 == null) {
-			return Body.BODY_451;
+	Body shop(String fid, String name, BigDecimal ave1, BigDecimal ave2) {
+		List<Integer> list = new ArrayList<Integer>();
+		if (!StringUtils.isEmpty(fid)) {
+			fid = fid + ",";
+			char a[] = fid.toCharArray();
+			Integer c = 0;
+			Integer changeCount = 0;
+			for (int i = 0; i < a.length; i++) {
+				if (a[i] == ',') {
+					String string = fid.substring(c, i);
+					c = i + 1;
+					Integer num = Integer.parseInt(string);
+					System.out.println(string);
+					list.add(num);
+					changeCount++;
+				}
+			}
 		}
-		List<Integer > list=new ArrayList<Integer>();
-		fid=fid+",";
-		 char a[]=fid.toCharArray();
-		 Integer c=0;
-			Integer changeCount =0;
-		 for (int i = 0; i < a.length; i++) {
-			 if(a[i]==',') {
-				String string= fid.substring(c, i);
-				c=i+1;
-				Integer num= Integer.parseInt(string);
-				System.out.println(string);
-			 list.add(num);
-			 changeCount++;
-			 }
-		 }
 		return dbShopService.shop(list, name, ave1, ave2);
 	}
-	
+
 	/**
 	 * 後台登入
+	 * 
 	 * @param name
 	 * @param pwd
 	 * @return
 	 */
 	@PostMapping("/adlogin")
 	Body adlogin(String name, String pwd) {
-		if(StringUtils.isEmpty(name)||StringUtils.isEmpty(pwd)) {
+		if (StringUtils.isEmpty(name) || StringUtils.isEmpty(pwd)) {
 			return Body.BODY_451;
 		}
 		return dbShopService.adlogin(name, pwd);
 	}
+
 	/**
 	 * 忘記密碼
+	 * 
 	 * @param phone
 	 * @param pwd
 	 * @return
 	 */
 	@PostMapping("/forget")
 	Body forget(String phone, Integer pwd) {
-		if(StringUtils.isEmpty(phone)||pwd==null) {
+		if (StringUtils.isEmpty(phone) || pwd == null) {
 			return Body.BODY_451;
 		}
 		return dbShopService.forget(phone, pwd);
 	}
-	
 
 	/**
 	 * //修改驗證碼
+	 * 
 	 * @param sid
 	 * @param verify1
 	 * @param verify2
@@ -221,7 +285,7 @@ public class DbShopController {
 	 */
 	@PostMapping("/change")
 	Body change(String sid, Integer verify1, Integer verify2) {
-		if (StringUtils.isEmpty(sid)||verify1==null||verify2==null) {
+		if (StringUtils.isEmpty(sid) || verify1 == null || verify2 == null) {
 			return Body.BODY_451;
 		}
 		return dbShopService.change(sid, verify1, verify2);

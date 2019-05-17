@@ -41,5 +41,7 @@ public interface DbShopService extends IService<DbShop> {
 
 	Body change(String sid, Integer verify1, Integer verify2);//修改驗證碼
 
+	Body change(DbShop shop);//修改商鋪
+
 
 }

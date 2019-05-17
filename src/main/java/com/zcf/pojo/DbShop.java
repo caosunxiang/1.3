@@ -85,7 +85,7 @@ public class DbShop extends Model<DbShop> {
     /**
      * 商铺热门
      */
-    private Integer sHot;
+    private String sHot;
     /**
      * 平均消费
      */
@@ -242,11 +242,11 @@ public class DbShop extends Model<DbShop> {
 		this.sLatitude = sLatitude;
 	}
 
-	public Integer getsHot() {
+	public String getsHot() {
         return sHot;
     }
 
-    public void setsHot(Integer sHot) {
+    public void setsHot(String sHot) {
         this.sHot = sHot;
     }
 

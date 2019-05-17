@@ -81,7 +81,23 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 		}
 		return Body.newInstance(201, "查詢無果");
 	}
-	
+	@Override
+	public Body setrec(String sid,String fid) {
+		EntityWrapper<DbFood>wrapper=new EntityWrapper<>();
+		wrapper.eq("food_to_shop", sid);
+		wrapper.eq("f_recommend", 1);
+		Integer count=dbFoodMapper.selectCount(wrapper);
+		if(count==5) {
+			return Body.newInstance(201, "已經設置5個請講其他取消");
+		}
+		DbFood food=dbFoodMapper.selectById(fid);
+		food.setfRecommend(1);
+		Integer co=dbFoodMapper.updateById(food);
+		if(co==1) {
+			return Body.BODY_200;
+		}
+		return Body.newInstance(201, "修改錯誤");
+	}
 
 	@Override
 	public Body upfood(String fid, String name, String ename, BigDecimal price) {
@@ -143,5 +159,15 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 			return Body.newInstance();
 		}
 		return Body.newInstance(201, "操作失敗");
+	}
+	@Override
+	public Body cancel(String fid) {
+		EntityWrapper<DbFood>wrapper=new EntityWrapper<>();
+		wrapper.eq("f_id", fid);
+		Integer count=dbFoodMapper.updateForSet("f_recommend='0'", wrapper);
+		if(count==1) {
+			return Body.BODY_200;
+		}
+		return Body.newInstance(201, "修改失敗");
 	}
 }

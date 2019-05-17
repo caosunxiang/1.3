@@ -35,5 +35,9 @@ public interface DbFoodService extends IService<DbFood> {
 
 	Body updown(String fid, String state);//上架下架
 
+	Body setrec(String sid, String fid);//設置熱門
+
+	Body cancel(String fid);//取消熱門
+
 
 }
