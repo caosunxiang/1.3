@@ -205,5 +205,154 @@ FROM db_order
 WHERE o_time>DATE_ADD(NOW(),INTERVAL-4 HOUR);
 
 </select>
-
+<select id="sevenago" resultType="java.util.Map">
+SELECT
+	*
+FROM
+	(
+		SELECT
+			COUNT(1) AS seven
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+      AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+	) seven,
+	(
+		SELECT
+			COUNT(1) AS six
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+	) six,
+	(
+		SELECT
+			COUNT(1) AS five
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 4 DAY)
+	) five,
+	(
+		SELECT
+			COUNT(1) AS four
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 4 DAY)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+	) four,
+	(
+		SELECT
+			COUNT(1) AS three
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 2 DAY)
+	) three,
+	(
+		SELECT
+			COUNT(1) AS two
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 2 DAY)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+	) two,
+	(
+		SELECT
+			COUNT(1) AS one
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(CURDATE(), INTERVAL 0 DAY)
+	) one
+</select>
+<select id="sevenhour" resultType="java.util.Map">
+SELECT 
+	*
+FROM
+	(
+		SELECT
+			COUNT(1) AS seven
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 7 HOUR)
+      AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 6 HOUR)
+	) seven,
+	(
+		SELECT
+			COUNT(1) AS six
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 6 HOUR)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 5 HOUR)
+	) six,
+	(
+		SELECT
+			COUNT(1) AS five
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 5 HOUR)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 4 HOUR)
+	) five,
+	(
+		SELECT
+			COUNT(1) AS four
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 4 HOUR)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 3 HOUR)
+	) four,
+	(
+		SELECT
+			COUNT(1) AS three
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 3 HOUR)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 2 HOUR)
+	) three,
+	(
+		SELECT
+			COUNT(1) AS two
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 2 HOUR)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 1 HOUR)
+	) two,
+	(
+		SELECT
+			COUNT(1) AS one
+		FROM
+			db_order o
+		WHERE
+			o.o_time >= DATE_SUB(now(), INTERVAL 1 HOUR)
+ AND
+       o.o_time <![CDATA[ <]]> DATE_SUB(now(), INTERVAL 0 HOUR)
+	) one
+</select>
 </mapper>

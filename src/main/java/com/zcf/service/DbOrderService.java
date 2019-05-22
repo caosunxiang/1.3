@@ -42,6 +42,10 @@ public interface DbOrderService extends IService<DbOrder> {
 	Body getover(String sid);//查詢店鋪完成的訂單
 
 	Body bytable(String table, String sid);//按桌號查詢訂單詳情
+
+	Body sevenago();//查询七天前的订单
+
+	Body sevenhour();//查询七小时前的订单
 	
 
 

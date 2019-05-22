@@ -30,12 +30,14 @@ int onehour();
 int towhour();
 int threehour();
 int fourhour();
-
+//获取前七天的定单数
+Map<String , Integer> sevenago();
 
 //天
 int todaycount();
 int oneday();
 int towday();
 int threeday();
-
+//获取七小时钱的订单数
+Map<String, Integer>sevenhour();
 }

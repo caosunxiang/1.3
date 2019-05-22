@@ -242,4 +242,20 @@ public class DbOrderController {
 		}
 		return dbOrderService.bytable(table, sid);
 	}
+	/**
+	 * ;//查询七天前的订单
+	 * @return
+	 */
+	@PostMapping("/sevenago")
+	Body sevenago() {
+		return dbOrderService.sevenago();
+	}
+	/**
+	 * ;//查询七小时前的订单
+	 * @return
+	 */
+	@PostMapping("/sevenhour")
+	Body sevenhour() {
+		return dbOrderService.sevenhour();
+	}
 }

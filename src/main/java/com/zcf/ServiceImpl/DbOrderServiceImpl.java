@@ -271,5 +271,20 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 		}
 		return Body.newInstance(201, "尚無人員用餐");
 	}
-	
+	@Override
+	public  Body sevenago(){
+		Map<String, Integer> map=dbOrderMapper.sevenago();
+		if(map.size()>0) {
+			return Body.newInstance(map);
+			}
+		return Body.newInstance(201, "服务器内部问题");
+		}
+	@Override
+	public Body sevenhour() {
+		Map<String,Integer> map=dbOrderMapper.sevenhour();
+		if(map.size()>0) {
+			return Body.newInstance(map);
+		}
+	return Body.newInstance(201, "服务器内部问题");
+	}
 }
