@@ -47,7 +47,7 @@ public class DbFastServiceImpl extends ServiceImpl<DbFastMapper, DbFast> impleme
 		return Body.BODY_200;
 
 	}
-
+ 
 	@Override
 	public Body del(String fId) {
 		Integer count = dbFastMapper.deleteById(fId);
