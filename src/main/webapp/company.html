@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>查看房间</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<style>
+			.layui-table .laytable-cell-checkbox {
+				margin: 0px 20px;
+			}
+			
+			.demoTable button:nth-of-type(2) {
+				margin-left: 15px!important;
+			}
+		</style>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>查看房间</legend>
+			</fieldset>
+			<form class="layui-form">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">房间名</label>
+						<div class="layui-input-inline namebox">
+							<input type="text" name="nickname" lay-verify="roomName" placeholder="用户名" autocomplete="off" class="layui-input nickname" onblur="userlist();">
+						</div>
+
+						<label class="layui-form-label ">房间类型</label>
+						<div class="layui-input-inline namebox">
+							<select lay-filter="provSel" class="roomType">
+								<option value="0">请选择</option>
+								<option value="10">10元房</option>
+								<option value="20">20元房</option>
+								<option value="50">50元房</option>
+							</select>
+						</div>
+
+						<label class="layui-form-label"></label>
+						<div class="layui-input-inline namebox"></div>
+						<button class="layui-btn seek" lay-submit lay-filter="formDemo" id="search" type="button">搜索</button>
+
+					<!--</div>-->
+					<!--	<div class="layui-inline">
+						<label class="layui-form-label">VIP状态</label>
+						<div class="layui-input-inline">
+							<select name="quiz" lay-filter="status">
+								<option value=""></option>
+								<option value="N">普通用户</option>
+								<option value="Y">VIP用户</option>
+
+							</select>
+						</div>
+					</div>-->
+
+				</div>
+
+			</form>
+			<div class="layui-btn-group demoTable">
+				<!--<button type="button" class="layui-btn layui-btn-danger delet" data-type='getCheckData'>批量删除</button>
+				<button type="button" class="layui-btn layui-btn-danger xinzeng" lay-event="del">创建房间</button>-->
+			</div>
+			<table id="demo" lay-filter="test"></table>
+			<!--<div id="test1"></div>-->
+			<script type="text/javascript" src="js/jquery.min.js"></script>
+			<script src="js/common.js"></script>
+			<script src="layui/layui.js"></script>
+			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+			<script type="text/html" id="barDemo">
+				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">修改房间</a>
+				<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">删除房间</a>-->
+			</script>
+			<script>
+				var list;
+				var nickname = $('.nickname').val();
+				//				var phone;
+				var phone = $('.phone').val();
+				var laypage;
+				$(function() {
+					layui.use(['form', 'laypage'], function() {
+						userlist("", "");
+						form = layui.form;
+						laypage = layui.laypage;
+
+						form.on('select(nickname)', function(data) {
+							nickname = nickname;
+							console.log(nickname);
+							userlist($('.nickname'), $('.phone'));
+						});
+						/*form.on('select(phone)', function(data) {
+							 phone = data.value;
+							console.log(phone);
+							userlist($('.nickname'), $('.phone'), $('.address'));
+						});*/
+						form.on('select(phone)', function(data) {
+							phone = data.value;
+							console.log(phone);
+							userlist($('.nickname'), $('.phone'));
+						});
+
+					})
+
+					$("#search").click(function() {
+						var nickname = $(".nickname").val();
+						var phone = $(".phone").val();
+						userlist(nickname, phone);
+					})
+
+				})
+
+				function userlist(roomName, /* phone, */ roomType) {
+					var roomtype =$(".roomType").val();
+					$.ajax({
+						type: "POST", //提交方式 
+						url: baseurl + "/com/rooms", //路径 
+						dataType: 'json',
+						data: {
+							roomName: roomName,
+							/*phone: phone,*/
+							roomType: roomtype,
+							/*userType: userType,
+							vip: vip,*/
+						}, //数据，这里使用的是Json格式进行传输 
+						success: function(data) { //返回数据根据结果进行相应的处理 
+							console.log(data.data);
+							list = data.data;
+							layui.use('table', function() {
+								var table = layui.table;
+								//第一个实例
+								table.render({
+									elem: '#demo',
+									id: 'testReload',
+									data: list, //数据接口
+									page: true, //开启分页
+									totalRow: true, //开启合计行
+									limit: 10,
+									limits: [10],
+									cols: [
+										[{
+											checkbox: true,
+											LAY_CHECKED: false,
+											filter: 'test',
+											width: 300
+										}, {
+											field: 'roomId',
+											title: 'ID',
+											width: 270,
+										}, {
+											field: 'roomName',
+											title: '房间名',
+											width: 270,
+										}, {
+											field: 'roomType',
+											title: '房间类型',
+											width: 270,
+										}, {
+											field: 'roomNum',
+											title: '人数',
+											width: 270,
+										}, {
+											field: 'redbagNum',
+											title: '红包数',
+											width: 270,
+											//											templet: '#barDemo3',
+										}, {
+											title: '操作',
+											width: 263,
+											toolbar: '#barDemo'
+										}]
+									]
+								});
+
+								//批量删除
+								$(".delet").click(function() { //获取选中的数据
+									console.log(table.checkStatus("testReload"))
+									var idList = [];
+									var checkStatus = table.checkStatus("testReload"),
+										data = checkStatus.data;
+
+									if(data.length == 0) {
+										layer.msg('至少也得选一个吧', {
+											icon: 2
+										});
+										return;
+									}
+									for(var i = 0; i < data.length; i++) {
+										idList.push(data[i].roomId);
+									}
+									console.log(idList.join());
+									layer.confirm('确认要删除吗？' + idList.join(), function(index) {
+										$.ajax({
+											type: "post",
+											url: baseurl + "/com/deRoomLp",
+											data: {
+												"room_id": idList.join()
+											},
+											success: function(data) {
+												alert("Data Saved" + data.msg);
+											}
+										});
+										layer.msg('删除成功!', {
+											icon: 1
+										});
+										$(".layui-form-checked").not('.header').parents('tr').remove();
+									})
+								})
+
+								//新增
+								$(".xinzeng").click(function() { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+									layer.open({
+										type: 2,
+										title: '创建房间',
+										maxmin: true,
+										shadeClose: true, //点击遮罩关闭层
+										area: ['800px', '800px'],
+										content: 'addRoom.html' //?roomId=+ roomId
+									});
+								});
+
+								laypage.render({
+									elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+										,
+									count: data.data.total, //数据总数，从服务端得到
+									jump: function(obj, first) { //jump 跳转
+										//obj包含了当前分页的所有参数，比如：
+										console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+										console.log(obj.limit); //得到每页显示的条数
+
+										//首次不执行
+										if(!first) {
+											//do something
+											$.ajax({
+												type: "POST", //提交方式 
+												url: baseurl + "/com/users", //路径 
+												dataType: 'json',
+												data: {
+													//roomId: localStorage.getItem("roomId"),
+													nickname: nickname,
+													phone: phone,
+													address: address,
+													page: obj.curr
+												}, //数据，这里使用的是Json格式进行传输 
+												success: function(data) {
+													if(data.meta.code == 200) {
+														table.reload('testReload', {
+															data: data.data.list
+														});
+													}
+												}
+											})
+										}
+									}
+								});
+
+								//点击查看详情 跳出
+								table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+									var data = obj.data; //获得当前行数据
+
+									var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+									var tr = obj.tr; //获得当前行 tr 的DOM对象
+									var roomId = obj.data.roomId;
+									if(layEvent === 'query') { //删除
+										layer.open({
+											type: 2,
+											title: '房间详情',
+											maxmin: true,
+											shadeClose: true, //点击遮罩关闭层
+											area: ['800px', '800px'],
+											content: 'update.html?roomId=' + roomId
+										});
+
+									} else {
+										layer.confirm('确认要删除吗？' + roomId, function(index) {
+											$.ajax({
+												type: "post",
+												url: baseurl + "/com/deRoomLp",
+												data: {
+													roomId: roomId,
+												},
+												success: function(data) {
+													location.reload();
+												}
+											});
+
+										})
+
+									}
+								});
+
+							});
+						}
+					});
+				}
+			</script>
+			<!--<script type="text/html" id="barDemo2">
+				{{# if (d.user_type=== "read") { }}
+				<span>读者</span> {{# } else { }}
+				<span>作者</span> {{# } }}
+			</script>-->
+			<!--<script type="text/html" id="barDemo3">
+				{{# if (d.vip_status=== "N") { }}
+				<span>普通用户</span> {{# } else { }}
+				<span>VIP用户</span> {{# } }}
+			</script>-->
+
+	</body>
+
+</html>

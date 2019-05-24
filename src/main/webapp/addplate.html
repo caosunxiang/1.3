@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>一级板块</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>新建一级板块</legend>
+			</fieldset>
+
+			<form class="layui-form" style="margin-top: 100px;">
+				<div class="layui-form-item">
+					<label class="layui-form-label">板块名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="book_name" autocomplete="off" placeholder="请输入板块名称" class="layui-input plate_name" style="width: 300px;">
+					</div>
+				</div>
+			</form>
+
+			<div style="margin-left:200px;margin-top: 50px; ">
+				<button class="layui-btn layui-btn-lg layui-btn-normal" id="save">保存</button>
+			</div>
+		</div>
+		<script type="text/javascript " src="js/jquery.min.js "></script>
+		<script src="js/common.js "></script>
+		<script src="layui/layui.js "></script>
+		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+		<script>
+			$(function() {
+				layui.use(['element', 'form', "upload"], function() {
+					$("#save").click(function() {
+						var plate_name = $(".plate_name").val();
+						if(plate_name == '') {
+							return layer.msg('请填写板块名称');
+						}
+						$.ajax({
+							type: "POST", //提交方式 
+							url: baseurl + "/plate/addPlate", //路径 
+							dataType: 'json',
+							data: {
+								plate_name:$(".plate_name").val(),
+							}, //数据，这里使用的是Json格式进行传输 
+							success: function(data) { //返回数据根据结果进行相应的处理 
+								if(data.meta.code == 200) {
+									layer.msg('保存成功');
+
+								} else {
+									layer.msg('保存失败');
+								}
+							}
+						});
+					})
+
+				})
+			})
+		</script>
+	</body>
+
+</html>

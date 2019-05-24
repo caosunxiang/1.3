@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>后台管理系统</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body class="layui-layout-body">
+		<form class="layui-form">
+			<div class="layui-layout layui-layout-admin">
+				<div class="layui-header">
+					<div class="layui-logo">作家后台管理</div>
+					<!-- 头部区域（可配合layui已有的水平导航） -->
+					<ul class="layui-nav layui-layout-left">
+						<li class="layui-nav-item">
+							<a href="#">帐户余额：<span class="balance">2000</span></a>
+						</li>
+						<li class="layui-nav-item ">
+							<button type="button" class="layui-btn layui-btn-primary layui-btn-xs tixian">申请提现</button>
+						</li>
+
+					</ul>
+					<ul class="layui-nav layui-layout-right">
+
+						<li class="layui-nav-item ">
+
+							<a href="javascript:;"><span>欢迎</span> <span style=" color: white;" class="userName">贤心</span></a>
+							<dl class="layui-nav-child">
+								<dd>
+									<a class="changeuse">修改资料</a>
+								</dd>
+								<dd>
+									<a class="changepwd">修改密码</a>
+								</dd>
+
+							</dl>
+						</li>
+						<li class="layui-nav-item">
+							<a href="login.html">退出</a>
+						</li>
+					</ul>
+				</div>
+				<div class="layui-side layui-bg-black">
+					<div class="layui-side-scroll">
+						<ul class="layui-nav layui-nav-tree" lay-filter="test">
+							<li class="layui-nav-item layui-nav-itemed">
+								<a class="" href="javascript:;">作品管理</a>
+								<dl class="layui-nav-child">
+									<dd>
+										<a class="side-active" href="javascript:;" data-id="12" data-href="booktable.html">所有作品</a>
+									</dd>
+									<dd>
+										<a class="side-active" href="javascript:;" data-id="13" data-href="addbook.html">上传作品</a>
+									</dd>
+
+								</dl>
+							</li>
+
+							<li class="layui-nav-item">
+								<a class="" href="javascript:;">章节管理</a>
+								<dl class="layui-nav-child">
+									<dd>
+										<a class="side-active" href="javascript:;" data-id="14" data-href="chapter.html">所有草节</a>
+									</dd>
+									<dd>
+										<a class="side-active" href="javascript:;" data-id="15" data-href="addchapter.html">新建草稿</a>
+									</dd>
+								</dl>
+							</li>
+
+						</ul>
+					</div>
+				</div>
+				<div class="layui-body">
+					<div class="layui-tab layui-bg-gray" lay-filter="iframe-tab" lay-allowclose="true" style="margin:0;">
+						<ul class="layui-tab-title">
+							<li class="layui-this" lay-allowclose="false">首秀啊</li>
+						</ul>
+						<div class="layui-tab-content layui-iframe" style="padding:0;">
+							<div class="layui-tab-item layui-show">
+								<iframe frameborder="0" src="happy.html" class="tab-iframe"></iframe>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-footer">
+
+				</div>
+		</form>
+		</div>
+		<script src="layui/layui.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/common.js"></script>
+		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+		<script>
+			var layer;
+			$(function() {
+				$(".userName").text(localStorage.getItem("userName"));
+				if(localStorage.getItem("balance") == null) {
+					$(".balance").text(0)
+				} else {
+					$(".balance").text(localStorage.getItem("balance"));
+				}
+
+				layui.use(['element', 'layer'], function() {
+					var $ = layui.jquery,
+						element = layui.element;
+					layer = layui.layer;
+					//tab-iframe
+					$('.side-active').on('click', function() {
+						var id = $(this).attr('data-id');
+						var title = $(this).html();
+						var url = $(this).attr('data-href');
+						//判断是否存在
+						for(var i = 0; i < $('.tab-iframe').length; i++) {
+							if($('.tab-iframe').eq(i).attr('src') == url) {
+								element.tabChange('iframe-tab', id);
+								return;
+							}
+						};
+						//新增一个Tab项
+						res = element.tabAdd('iframe-tab', {
+							title: $(this).html(), //用于演示
+							content: '<iframe frameborder="0" src="' + url + '" class="tab-iframe"></iframe>',
+							id: id
+						})
+						element.tabChange('iframe-tab', id);
+					});
+
+					$(".tixian").click(function() {
+						layer.open({
+							type: 2,
+							title: '提现申请',
+							maxmin: true,
+							area: ['500px', '500px'],
+							content: 'apply.html',
+						});
+					})
+				});
+
+				$(".changeuse").click(function() {
+					//页面层
+					layer.open({
+						type: 2,
+						title: '修改个人资料',
+						maxmin: true,
+						area: ['900px', '700px'],
+						content: 'changeuserInfo.html',
+					});
+
+				})
+				$(".changepwd").click(function() {
+					//页面层
+					layer.open({
+						type: 2,
+						title: '修改密码',
+						maxmin: true,
+						area: ['500px', '500px'],
+						content: 'changepwd.html',
+					});
+
+				})
+
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>二级板块</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>新建二级板块</legend>
+			</fieldset>
+
+			<form class="layui-form" style="margin-top: 100px;">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label" style="width: 100px;margin-left: -20px;">选择一级板块</label>
+						<div class="layui-input-inline">
+							<select name="modules" lay-verify="required" lay-search="" id="xiala" lay-filter="test">
+								<option value="">请选择一级板块</option>
+
+							</select>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add">添加一级板块</button>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">板块名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="book_name" autocomplete="off" placeholder="请输入板块名称" class="layui-input plate_low_name" style="width: 500px;">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">板块简称</label>
+					<div class="layui-input-block">
+						<input type="text" name="book_name" autocomplete="off" placeholder="请输入板块名称" class="layui-input plate_simplename" style="width: 500px;">
+					</div>
+				</div>
+				<div class="layui-form-item layui-form-text ">
+					<label class="layui-form-label ">板块描述</label>
+					<div class="layui-input-block ">
+						<textarea placeholder="请输入二级板块描述 " name="book_desc" class="layui-textarea plate_desc"></textarea>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">板块类型</label>
+					<div class="layui-input-block">
+						<input type="radio" lay-filter="first" name="first_start" value="lable" title="标签" checked="">
+						<input type="radio" lay-filter="first" name="first_start" value="plate" title="板块">
+					</div>
+				</div>
+			</form>
+			<div class="layui-upload img" style="display: none;">
+				<button type="button" class="layui-btn" id="test1" style="margin-left: 110px;">上传图片</button>
+				<div class="layui-upload-list" style="margin-left: 110px;">
+					<img class="layui-upload-img" id="demo1" style="width: 200px;height: 300px;">
+					<p id="demoText"></p>
+				</div>
+			</div>
+			<div style="margin-left:300px;margin-top: 50px; ">
+				<button class="layui-btn layui-btn-lg layui-btn-normal" id="save">保存</button>
+			</div>
+		</div>
+		<script type="text/javascript " src="js/jquery.min.js "></script>
+		<script src="js/common.js "></script>
+		<script src="layui/layui.js "></script>
+		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+		<script>
+			var plate_low_name;
+			var plate_simplename;
+			var plate_desc;
+			var type = 'lable';
+			var plate_id;
+			var form;
+			$(function() {
+				layui.use(['element', 'form', "upload"], function() {
+					var $ = layui.jquery,
+						element = layui.element;
+					var upload = layui.upload;
+					form = layui.form;
+					$.ajax({
+						url: baseurl + '/plate/getPlateList',
+						dataType: 'json',
+						type: 'post',
+						data: '',
+						success: function(data) {
+							$.each(data.data, function(index, item) {
+								$('#xiala').append(new Option(item.plate_name, item.plate_id)); // 下拉菜单里添加元素
+							})
+							form.render(); //下拉菜单渲染 把内容加载进去
+						}
+					});
+
+					$("#add").click(function() {
+						layer.open({
+							type: 2,
+							title: '添加一级板块',
+							maxmin: true,
+							shadeClose: true, //点击遮罩关闭层
+							area: ['600px', '600px'],
+							content: 'addplate.html'
+						});
+
+					})
+					form.on('select(test)', function(data) {
+						console.log(data.elem); //得到select原始DOM对象
+						console.log(data.value); //得到被选中的值
+						console.log(data.othis); //得到美化后的DOM对象
+						plate_id = data.value;
+					});
+					form.on('radio(first)', function(data) {
+						console.log(data.value); //被点击的radio的value值
+						type = data.value;
+						if(type == 'lable') {
+							$(".img").css("display", "none");
+
+						} else {
+							$(".img").css("display", "");
+						}
+					});
+					//普通图片上传
+					uploadInst = upload.render({
+						elem: '#test1',
+						auto: false,
+						bindAction: "#save",
+						url: baseurl + "/plate_low/addPlate_low",
+						data: {
+							plate_low_name: plate_low_name,
+							plate_simplename: plate_simplename,
+							plate_desc: plate_desc,
+							type: type,
+							plate_id: plate_id,
+						},
+						before: function(obj) {
+							if($(".plate_low_name").val() == "" || $(".plate_simplename").val() == "" || $(".plate_desc").val() == "") {
+								return layer.msg('请填写完整信息');
+							}
+							this.data = {
+								plate_low_name: $(".plate_low_name").val(),
+								plate_simplename: $(".plate_simplename").val(),
+								plate_desc: $(".plate_desc").val(),
+								type: type,
+								plate_id: plate_id,
+							}
+							console.log(this.data);
+							var thisFile = $(".layui-upload-file").val();
+							if(thisFile == "") {
+								uoloads();
+								return;
+							}
+						},
+						choose: function(obj) {
+							//预读本地文件示例，不支持ie8
+							obj.preview(function(index, file, result) {
+								$('#demo1').attr('src', result); //图片链接（base64）
+							});
+						},
+						done: function(res) {
+							//如果上传失败
+							if(res.code > 0) {
+								return layer.msg('上传失败');
+							}
+							console.log(res);
+							//上传成功
+							if(res.meta.code == 200) {
+								return layer.msg('保存成功');
+							}
+						},
+						error: function() {
+							//演示失败状态，并实现重传
+							var demoText = $('#demoText');
+							demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+							demoText.find('.demo-reload').on('click',
+								function() {
+									uploadInst.upload();
+								});
+						}
+					});
+				})
+
+			})
+
+			function uoloads() {
+
+				$.ajax({
+					type: "POST", //提交方式 
+					url: baseurl + "/plate_low/addPlate_low", //路径 
+					dataType: 'json',
+					data: {
+						plate_low_name: $(".plate_low_name").val(),
+						plate_simplename: $(".plate_simplename").val(),
+						plate_desc: $(".plate_desc").val(),
+						type: type,
+						plate_id: plate_id,
+						//user_id: localStorage.getItem("userId"),
+					}, //数据，这里使用的是Json格式进行传输 
+					success: function(data) { //返回数据根据结果进行相应的处理 
+						if(data.meta.code == 200) {
+							return layer.msg('保存成功');
+
+						} else {
+							return layer.msg('保存失败');
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

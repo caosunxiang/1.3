@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>推荐作品</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>推荐作品</legend>
+			</fieldset>
+
+			<table id="demo" lay-filter="test"></table>
+
+			<script type="text/javascript" src="js/jquery.min.js"></script>
+			<script src="js/common.js"></script>
+			<script src="layui/layui.js"></script>
+			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+			<script type="text/html" id="barDemo">
+				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">取消推荐</a>
+			</script>
+			<script>
+				var list;
+				var form;
+				var layer;
+				$(function() {
+					pushlist();
+					layui.use(['form', 'layer'], function() {
+						form = layui.form;
+						layer = layui.layer;
+					})
+				})
+
+				function pushlist() {
+					$.ajax({
+						type: "POST", //提交方式 
+						url: baseurl + "/com/pushlist", //路径 
+						dataType: 'json',
+						data: {
+
+						}, //数据，这里使用的是Json格式进行传输 
+						success: function(data) { //返回数据根据结果进行相应的处理 
+							console.log(data.data);
+							list = data.data;
+							layui.use('table', function() {
+								var table = layui.table;
+								//第一个实例
+								table.render({
+									elem: '#demo',
+									height: 1000,
+									data: list, //数据接口
+									page: false,
+									width: 1280,
+									height: 500,
+									cols: [
+										[{
+											field: 'apid',
+											title: 'ID',
+											width: 180,
+
+										}, {
+											field: 'book_id',
+											title: '作品ID',
+											width: 180
+										}, {
+											field: 'book_name',
+											title: '作品名称',
+											width: 120
+										}, {
+											field: 'book_type',
+											title: '种类',
+											width: 80,
+											templet: '#barDemo3',
+
+										}, {
+											field: 'all_number',
+											title: '总字数',
+											width: 80
+										}, {
+											field: 'book_desc',
+											title: '作品描述',
+											width: 180,
+
+										}, {
+											field: 'createtime',
+											title: '创建时间',
+											width: 120,
+
+										}, {
+											field: 'vip_status',
+											title: '收费状态',
+											width: 100,
+											templet: '#barDemo4',
+										}, {
+											field: 'price',
+											title: '价格',
+											width: 80
+										}, {
+											title: '操作',
+											width: 120,
+											toolbar: '#barDemo'
+										}]
+									]
+								});
+								table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+									var data = obj.data; //获得当前行数据
+									var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+									var tr = obj.tr; //获得当前行 tr 的DOM对象
+									var book_id = obj.data.book_id;
+									var apid = obj.data.apid;
+									if(layEvent === 'del') {
+										layer.confirm('真的取消此作品吗', function(index) {
+											$.ajax({
+												type: "POST", //提交方式 
+												url: baseurl + "/com/delpush", //路径 
+												dataType: 'json',
+												data: {
+													apid: apid,
+												}, //数据，这里使用的是Json格式进行传输 
+												success: function(data) { //返回数据根据结果进行相应的处理 
+													console.log(data.meta.code);
+													if(data.meta.code == 200) {
+														layer.msg('取消成功', {
+															icon: 1
+														});
+														obj.del();
+
+													} else if(data.meta.code == 500) {
+														layer.msg('取消失败', {
+															icon: 5
+														});
+													}
+												}
+											})
+										})
+									}
+								});
+							});
+						}
+					});
+				}
+			</script>
+
+			<script type="text/html" id="barDemo3">
+				{{# if (d.book_type=== "end") { }}
+				<span>完结</span> {{# } else { }}
+				<span>连载</span> {{# } }}
+			</script>
+			<script type="text/html" id="barDemo4">
+				{{# if (d.vip_status=== "free") { }}
+				<span>免费</span> {{# } else if(d.vip_status=== "vip") { }}
+				<span>会员</span> {{# } else { }}
+				<span>购买</span> {{# } }}
+			</script>
+	</body>
+
+</html>

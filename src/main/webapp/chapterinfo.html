@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>章节详情</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>章节详情</legend>
+			</fieldset>
+
+			<form class="layui-form" action="">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">选择作品</label>
+						<div class="layui-input-inline">
+							<select name="modules" lay-verify="required" lay-search="" id="xiala" lay-filter="test">
+								<option value="">请选择</option>
+
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">文章标题</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入文章标题" class="layui-input chapter_title">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">章节位置</label>
+					<div class="layui-input-block">
+						<input type="number" name="level" lay-verify="required" placeholder="请输入章节位置" autocomplete="off" class="layui-input level" style="width: 300px;">
+					</div>
+				</div>
+
+				<div class="layui-form-item layui-form-text">
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">上传方式</label>
+							<div class="layui-input-inline">
+								<select name="quiz" lay-filter="type">
+									<option value="">请选择</option>
+									<option value="1" selected="selected">上传文字</option>
+									<option value="2">上传TXT文件</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item layui-form-text content">
+						<label class="layui-form-label">章节内容</label>
+						<div class="layui-input-block">
+							<textarea placeholder="请输入章节内容" class="layui-textarea chapter_content" style="width: 800px;height: auto;min-height: 500px;"></textarea>
+						</div>
+					</div>
+					<button type="button" class="layui-btn txt" id="test3" style="margin-left: 110px;display: none;"><i class="layui-icon"></i>上传文件</button>
+					<div style=" margin-left: 500px; ">
+						<button type="button" class="layui-btn layui-btn-lg layui-btn-normal " id="save">保存草稿</button>
+					</div>
+
+			</form>
+			</div>
+
+			<script src="layui/layui.js "></script>
+			<script type="text/javascript" src="js/jquery.min.js"></script>
+			<script src="js/common.js"></script>
+			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+			<script>
+				var chapter_id;
+				var chapter_title;
+				var level;
+				var chapter_content;
+				var form;
+				var book_id;
+				var type;
+				var chapter_status;
+				$(function() {
+					chapter_id = getQueryString("chapter_id");
+					layui.use(['element', 'form', "upload"], function() {
+						var $ = layui.jquery,
+							element = layui.element;
+						form = layui.form;
+						var upload = layui.upload;
+						$.ajax({
+							url: baseurl + '/book/getBookLisyBySelfchoose',
+							dataType: 'json',
+							type: 'post',
+							data: {
+								user_id: localStorage.getItem("userId"),
+								//user_id: localStorage.getItem("userId"),
+							},
+							success: function(data) {
+
+								$.each(data.data, function(index, item) {
+									$('#xiala').append(new Option(item.book_name, item.book_id)); // 下拉菜单里添加元素
+								})
+								form.render(); //下拉菜单渲染 把内容加载进去
+								getChapterInfo(chapter_id);
+							}
+						});
+
+						form.on('select(type)', function(data) {
+							type = data.value;
+							console.log(type);
+							if(type == 1) {
+								$(".content").css("display", "");
+								$(".txt").css("display", "none");
+							} else {
+								$(".content").css("display", "none");
+								$(".txt").css("display", "");
+							}
+
+						});
+						form.on('select(test)', function(data) {
+
+							console.log(data.value); //得到被选中的值
+
+							book_id = data.value;
+						});
+						upload.render({
+							elem: '#test3',
+							url: baseurl + "/chapter/updateChapterTXT",
+							auto: false,
+							bindAction: "#save",
+							accept: 'file', //普通文件
+							data: {
+								chapter_id: chapter_id,
+								chapter_title: chapter_title,
+								level: level,
+								book_id: book_id,
+
+							},
+							before: function(obj) {
+								this.data = {
+									chapter_id: chapter_id,
+									chapter_title: $(".chapter_title").val(),
+									level: $(".level").val(),
+									book_id: book_id,
+								}
+								if(chapter_status == "pass" || chapter_status == "apply") {
+									return layer.msg('该章节已被审核通过或者在审核中，不能修改!', {
+										icon: 5
+									});
+								}
+								console.log(this.data);
+								var thisFile = $(".layui-upload-file").val();
+								if(thisFile == "") {
+									uploadChapter(book_id);
+								}
+							},
+							choose: function(obj) {
+								//预读本地文件示例，不支持ie8
+								obj.preview(function(index, file, result) {
+									//图片链接（base64）
+								});
+							},
+							done: function(res) {
+								//如果上传失败
+								if(res.code > 0) {
+									return layer.msg('保存失败');
+								}
+								console.log(res);
+								//上传成功
+								if(res.meta.code == 200) {
+									return layer.msg('保存成功');
+								}
+							},
+							error: function() {
+								//演示失败状态，并实现重传
+								var demoText = $('#demoText');
+								demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+								demoText.find('.demo-reload').on('click', function() {
+									uploadInst.upload();
+								});
+							}
+						});
+
+					});
+
+				})
+
+				function getChapterInfo(chapter_id) {
+					$.ajax({
+						type: "POST", //提交方式 
+						url: baseurl + "/chapter/getChapterInfo", //路径 
+						dataType: 'json',
+						data: {
+							chapter_id: chapter_id,
+							user_id: localStorage.getItem("userId"),
+							//book_id: book_id,
+							//user_id: localStorage.getItem("userId"),
+						}, //数据，这里使用的是Json格式进行传输 
+						success: function(data) { //返回数据根据结果进行相应的处理 
+							if(data.meta.code == 200) {
+								var chapter = data.data;
+								chapter_title = chapter.chapter_title;
+								level = chapter.level;
+								book_id = chapter.book_id;
+								chapter_content = chapter.chapter_content;
+								chapter_status = chapter.chapter_status;
+								$(".chapter_title").val(chapter.chapter_title);
+								$(".level").val(chapter.level);
+								$(".chapter_content").val(chapter.chapter_content);
+								$('#xiala').find("option[value=" + book_id + "]").attr("selected", true);
+								form.render();
+
+							} else {
+								return layer.msg('获取失败');
+							}
+						}
+					});
+
+				}
+
+				function uploadChapter(book_id) {
+					$.ajax({
+						type: "POST", //提交方式 
+						url: baseurl + "/chapter/updateChapter", //路径 
+						dataType: 'json',
+						data: {
+							chapter_id: chapter_id,
+							chapter_title: $(".chapter_title").val(),
+							level: $(".level").val(),
+							chapter_content: $(".chapter_content").val(),
+							book_id: book_id,
+							//user_id: localStorage.getItem("userId"),
+						}, //数据，这里使用的是Json格式进行传输 
+						success: function(data) { //返回数据根据结果进行相应的处理 
+							if(data.meta.code == 200) {
+								return layer.msg('保存成功');
+								form.reload();
+
+							} else {
+								return layer.msg('保存失败');
+							}
+						}
+					});
+				}
+			</script>
+	</body>
+
+</html>

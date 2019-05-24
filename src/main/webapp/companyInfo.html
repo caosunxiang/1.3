@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>详细信息</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>详细信息</legend>
+			</fieldset>
+
+			<form class="layui-form" action="">
+				<div class="layui-form-item">
+					<label class="layui-form-label">公司ID</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input balance" disabled="disabled">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">公司名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input userName">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">公司电话</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input phone">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">公司地址</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input bookcoin">
+					</div>
+				</div>
+                
+                
+				<div class="layui-form-item">
+					<label class="layui-form-label">公司详情</label>
+					<div class="layui-input-block">
+						<textarea type="text" name="title" lay-verify="title" autocomplete="off" placeholder="用户描述" class="layui-input des" style="width: 500px;height: 100px;" disabled="disabled"></textarea>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/common.js"></script>
+		<script src="layui/layui.js"></script>
+		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+		<script>
+			var layer;
+			var user_id;
+			$(function() {
+				var user_id = getQueryString("user_id");
+				layui.use(['element', 'layer'], function() {
+					var $ = layui.jquery,
+						element = layui.element;
+					layer = layui.layer;
+
+				});
+				$.ajax({
+					type: "POST", //提交方式 
+					url: baseurl + "/company/", //路径 
+					dataType: 'json',
+					data: {
+						userid: user_id,
+						//user_id: localStorage.getItem("userId"),
+					}, //数据，这里使用的是Json格式进行传输 
+					success: function(data) { //返回数据根据结果进行相应的处理 
+						if(data.meta.code == 200) {
+							var user = data.data;
+							if(user.userName == null || user.userName.trim().length < 1) {
+								$(".userName").val("暂无");
+							} else {
+								$(".userName").val(user.userName);
+							}
+							if(user.sex == null || user.sex.trim().length < 1) {
+								$(".sex").val("暂无");
+							} else {
+								$(".sex").val(user.sex);
+							}
+							if(user.phone == null || user.phone.trim().length < 1) {
+								$(".phone").val("暂无");
+							} else {
+								$(".phone").val(user.phone);
+							}
+							if(user.userOpenid == null || user.userOpenid.trim().length < 1) {
+								$(".userOpenid").val("暂无");
+							} else {
+								$(".userOpenid").val(user.userOpenid);
+							}
+							if(user.userType == 'read') {
+								$(".userType").val("读者");
+							} else {
+								$(".userType").val("作者");
+							}
+							if(user.VipStatus == 'Y') {
+								$(".VipStatus").val("VIP用户");
+							} else {
+								$(".VipStatus").val("普通用户");
+							}
+							if(user.des == null || user.des.trim().length < 1) {
+								$(".des").val("暂无");
+							} else {
+								$(".des").val(user.des);
+							}
+
+						} else {
+							layer.msg('获取信息失败');
+						}
+					}
+				});
+				$.ajax({
+					type: "POST", //提交方式 
+					url: baseurl + "/com/getbalanceALL", //路径 
+					dataType: 'json',
+					data: {
+						userId: user_id,
+						//user_id: localStorage.getItem("userId"),
+					}, //数据，这里使用的是Json格式进行传输 
+					success: function(data) { //返回数据根据结果进行相应的处理 
+						if(data.meta.code == 200) {
+							var list = data.data;
+							if(list.length < 1) {
+								$(".Integral").val("0");
+								$(".balance").val("0");
+								$(".bookcoin").val("0");
+							} else if(list.length == 3) {
+								for(var i = 0; i < list.length; i++) {
+									if(list[i].type == 'Integral') {
+										$(".Integral").val(list[i].balance);
+
+									} else if(list[i].type == 'balance') {
+										$(".balance").val(list[i].balance);
+									} else {
+										$(".bookcoin").val(list[i].balance);
+									}
+								}
+							} else if(list.length == 1) {
+								if(list[0].type == 'Integral') {
+									$(".Integral").val(list[0].balance);
+									$(".balance").val("0");
+									$(".bookcoin").val("0");
+								} else if(list[0].type == 'balance') {
+									$(".balance").val(list[0].balance);
+									$(".bookcoin").val("0");
+									$(".Integral").val("0");
+								} else {
+									$(".bookcoin").val(list[0].balance);
+									$(".Integral").val("0");
+									$(".balance").val("0");
+								}
+							} else {
+								if(list[0].type == 'Integral') {
+									$(".Integral").val(list[0].balance);
+									if(list[1].type == 'balance') {
+										$(".balance").val(list[1].balance);
+										$(".bookcoin").val("0");
+									} else {
+										$(".balance").val("0");
+										$(".bookcoin").val(list[1].balance);
+									}
+
+								} else if(list[0].type == 'balance') {
+									$(".balance").val(list[0].balance);
+									if(list[1].type == 'bookcoin') {
+										$(".Integral").val("0");
+										$(".bookcoin").val(list[1].balance);
+									} else {
+										$(".Integral").val(list[1].balance);
+										$(".bookcoin").val("0");
+									}
+
+								} else {
+									$(".bookcoin").val(list[0].balance);
+									if(list[1].type == 'Integral') {
+										$(".balance").val("0");
+										$(".Integral").val(list[1].balance);
+									} else {
+										$(".Integral").val("0");
+										$(".balance").val(list[1].balance);
+									}
+
+								}
+							}
+
+						}
+					}
+				});
+			})
+		</script>
+	</body>
+
+</html>

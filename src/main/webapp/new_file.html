@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="layui/layui.all.js"></script>
+		<link href="layui/css/layui.css" rel="stylesheet" type="text/css" />
+	</head>
+
+	<body>
+		<div>
+			<div>
+				<input type="text" id="elem_container" />
+
+			</div>
+
+		</div>
+		<script >
+			$(document).ready(function(){
+				init_date();				
+			});
+			function init_date(){
+				var laydate=layui.laydate;
+				
+				laydate.render({
+					
+					elem:'#elem_container'
+				});
+			}
+			
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>广告位</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>文字广告位：</legend>
+			</fieldset>
+			<table id="demo1" lay-filter="test1"></table>
+
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>图片广告位：</legend>
+			</fieldset>
+			<button type="button" class="layui-btn layui-btn-primary add">添加图片广告</button>
+			<table id="demo2" lay-filter="test2"></table>
+		</div>
+		<script type="text/html" id="barDemo1">
+			<a class="layui-btn layui-btn-xs" lay-event="edit1">编辑</a>
+
+		</script>
+		<script type="text/html" id="barDemo2">
+
+			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		</script>
+		<script type="text/html" id="barDemo3">
+			<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="get1">查看图片</a>
+
+		</script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/common.js"></script>
+		<script src="layui/layui.js"></script>
+		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+		<script>
+			var layer;
+			var table;
+			$(function() {
+				layui.use(['element', 'layer', "table"],
+					function() {
+						var $ = layui.jquery,
+							element = layui.element;
+						layer = layui.layer;
+						table = layui.table;
+						getAdByType1();
+						getAdByType();
+					});
+
+				$(".add").click(function() {
+					layer.open({
+						type: 2,
+						title: '添加图片广告位',
+						maxmin: true,
+						shadeClose: true, //点击遮罩关闭层
+						area: ['800px', '800px'],
+						content: 'adimg.html'
+					});
+				})
+
+			})
+
+			function getAdByType1() {
+				$.ajax({
+					type: "POST", //提交方式					
+					url: baseurl + "/com/getAdByType", //路径
+					dataType: 'json',
+					data: {
+						type: "adCharacter",
+					}, //数据，这里使用的是Json格式进行传输 
+					success: function(data) { //返回数据根据结果进行相应的处理 
+						console.log(data.data);
+						var list = data.data;
+						//第一个实例
+						table.render({
+							elem: '#demo1',
+							height: 315,
+							data: list, //数据接口
+							page: false,
+							width: 1160,
+							height: 100,
+							cols: [
+								[{
+									field: 'adid',
+									title: 'ID',
+									width: 200,
+
+								}, {
+									field: 'adcontent',
+									title: '文字内容',
+									width: 200
+								}, {
+									field: 'book_id',
+									title: '书ID',
+									width: 200
+
+								}, {
+									field: 'book_name',
+									title: '书名',
+									width: 150
+
+								}, {
+									field: 'penName',
+									title: '作者笔名',
+									width: 142
+
+								}, {
+									field: 'addtime',
+									title: '添加时间',
+									width: 142
+
+								}, {
+									title: '操作',
+									width: 118,
+									toolbar: '#barDemo1'
+								}]
+							]
+
+						})
+
+						table.on('tool(test1)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+							var data = obj.data; //获得当前行数据
+							var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							var tr = obj.tr; //获得当前行 tr 的DOM对象
+							var adid = obj.data.adid;
+							if(layEvent === 'edit1') { //删除
+
+								layer.open({
+									type: 2,
+									title: '编辑图片广告',
+									maxmin: true,
+									shadeClose: true, //点击遮罩关闭层
+									area: ['900px', '800px'],
+									content: 'adCharacter.html?adid=' + adid,
+								});
+
+							}
+						})
+
+					}
+				})
+
+			}
+
+			function getAdByType() {
+				$.ajax({
+					type: "POST", //提交方式					
+					url: baseurl + "/com/getAdByType", //路径
+					dataType: 'json',
+					data: {
+						type: "adImg",
+					}, //数据，这里使用的是Json格式进行传输 
+					success: function(data) { //返回数据根据结果进行相应的处理 
+						console.log(data.data);
+						var list = data.data;
+						if(data.meta.code == 200) {
+							table.render({
+								elem: '#demo2',
+								height: 315,
+								data: list, //数据接口
+								page: false,
+								width: 1160,
+								height: 500,
+								cols: [
+									[{
+										field: 'adid',
+										title: 'ID',
+										width: 200,
+
+									}, {
+										field: 'adimg',
+										title: '广告图片',
+										width: 120,
+										toolbar: '#barDemo3'
+									}, {
+										field: 'book_id',
+										title: '书ID',
+										width: 200
+
+									}, {
+										field: 'book_name',
+										title: '书名',
+										width: 150
+
+									}, {
+										field: 'penName',
+										title: '作者笔名',
+										width: 132
+
+									}, {
+										field: 'addtime',
+										title: '添加时间',
+										width: 149
+
+									},{
+										field: 'lowType',
+										title: '排序',
+										width: 90
+
+									}, {
+										title: '操作',
+										width: 110,
+										toolbar: '#barDemo2'
+									}]
+								]
+
+							})
+							table.on('tool(test2)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+								var data = obj.data; //获得当前行数据
+								var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+								var tr = obj.tr; //获得当前行 tr 的DOM对象
+								var adid = obj.data.adid;
+								var adimg = obj.data.adimg;
+								if(layEvent ==='del') { //删除
+									layer.confirm('真的删除此广告吗', function(index) {
+										$.ajax({
+											type: "POST", //提交方式 
+											url: baseurl + "/com/deleteAd", //路径 
+											dataType: 'json',
+											data: {
+												adid: adid,
+											}, //数据，这里使用的是Json格式进行传输 
+											success: function(data) { //返回数据根据结果进行相应的处理 
+												console.log(data.meta.code);
+												if(data.meta.code == 200) {
+													layer.msg('删除成功', {
+														icon: 1
+													});
+													obj.del();
+												} else if(data.meta.code == 500) {
+													layer.msg('删除失败！', {
+														icon: 5
+													});
+												}
+											}
+										})
+										layer.close(index);
+									});
+
+								} else if(layEvent === 'get1') {
+									layer.photos({
+										photos: {
+											"data": [ //相册包含的图片，数组格式
+												{
+													"alt": "广告图片",
+													"pid": 666, //图片id
+													"src": adimg, //原图地址
+													"thumb": adimg //缩略图地址
+												}
+											],
+										},
+										anim: 3 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+									});
+
+								}
+							})
+
+						}
+					}
+				})
+			}
+		</script>
+	</body>
+
+</html>

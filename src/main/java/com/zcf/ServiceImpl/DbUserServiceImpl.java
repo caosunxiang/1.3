@@ -45,7 +45,6 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 			return Body.newInstance(201, "用户已存在");
 		}
 		Integer count = dbUserMapper.insert(user);
-		
 		if (count == 1) {
 			return Body.newInstance(user);
 		}
@@ -98,7 +97,7 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 		   if(list.size()>0) {
 			   return Body.newInstance(list);
 		   }
-		   return Body.newInstance(201, "没有符合条件的商铺");
+		   return Body.newInstance(201, "沒有符合條件的商鋪");
 	}
 @Override
 	public Body  head(MultipartFile[] files) {
