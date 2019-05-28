@@ -11,6 +11,7 @@ import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
 import com.zcf.pojo.DbUser;
 import com.zcf.service.DbUserService;
+import com.zcf.utils.CodetoOpenid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,7 @@ public Body register(String uid,String uname,String uhead,String uarea,String pi
 	if(StringUtils.isEmpty(uid)||StringUtils.isEmpty(uname)||StringUtils.isEmpty(uhead)||StringUtils.isEmpty(uarea)) {
 		return Body.BODY_451;
 	}
+	uid=CodetoOpenid.getSessionByCode(uid);
 	DbUser user=new DbUser();
 	user.setOpenId(uid);
 	user.setuArea(uarea);
@@ -76,6 +78,7 @@ public Body login(String uid) {
 	if(StringUtils.isEmpty(uid)) {
 		return Body.BODY_451;
 	}
+	uid=CodetoOpenid.getSessionByCode(uid);
 	return dbUserService.login(uid);
 }
 /**
