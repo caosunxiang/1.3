@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.zcf.utils.MyException;
+import com.zcf.common.json.Body;
+import com.zcf.common.utils.JsonUtils;
 
 /**
  * @author chenkang
@@ -22,12 +23,14 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
 			Exception ex) {
-		response.setHeader("content-type", "text/html;charset=UTF-8");
+
 		PrintWriter writer = null;
 		try {
+			response.setHeader("content-type", "text/html;charset=UTF-8");
 			writer = response.getWriter();
-			if (ex instanceof MyException) {
-				outScript(writer, ex);
+			if (isAjax(request)) {
+				response.setHeader("content-type", "application/json;charset=UTF-8");
+				writer.println(JsonUtils.beanToJson(Body.newInstance(201, ex.toString())));
 			} else {
 				outScript(writer, ex);
 			}
@@ -44,10 +47,20 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 		return null;
 	}
 
+	/**
+	 * 是否是Ajax请求
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static boolean isAjax(HttpServletRequest request) {
+		return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+	}
+
 	private void outScript(PrintWriter writer, Exception ex) {
 		writer.println("<script>");
 		writer.println("history.back();");
-		writer.println(String.format("top.layer.msg('%s');", ex.getMessage()));
+		writer.println(String.format("alert('%s');", ex.getMessage()));
 		writer.println("</script>");
 	}
 }

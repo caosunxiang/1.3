@@ -11,3 +11,4 @@ public abstract class JsonRuntimeException extends RuntimeException {
 
 	public abstract Body getBody();
 }
+
