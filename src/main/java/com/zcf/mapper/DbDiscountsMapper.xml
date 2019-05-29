@@ -36,7 +36,7 @@ SELECT
 		d.*
 	FROM
 db_discounts d
-LEFT JOIN db_user_discounts ud ON d.d_id=ud.ud_discountsid
+LEFT JOIN db_user_discounts ud ON d.d_id=ud.ud_discountsid 
 WHERE d.discounts_to_shop=#{sid} AND ud.ud_userid=#{uid}
 </select>
 </mapper>

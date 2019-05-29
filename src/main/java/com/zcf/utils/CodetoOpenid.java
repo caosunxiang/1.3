@@ -14,20 +14,22 @@ public static String getSessionByCode(String code) {
     String url = requestUrl + "?appid=" + appId + "&secret=" + appSecret + "&js_code=" + code + "&grant_type="  
             + grantType;
     // 发送请求  
-    String data = HttpUtils.sendGet(url, null);  
+    System.out.println(url);
+    String data = HttpUtils.sendGet(url, null);
     Map<String, String> json = null;
-    try {  
+    try {
         json = JsonUtils.readValue(data);
-    } catch (Exception e) {  
-        e.printStackTrace();  
-    }  
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     // 形如{"session_key":"6w7Br3JsRQzBiGZwvlZAiA==","openid":"oQO565cXXXXXEvc4Q_YChUE8PqB60Y"}的字符串
     return json.get("openid");
 }  
 
 
 public static void main(String[] args) {
-	
+	String code="0332Aj6F1EiLY60lxy4F16Ln6F12Aj6Z";
+	System.out.println(getSessionByCode(code));
 }
 }  
 

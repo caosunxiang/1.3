@@ -50,7 +50,7 @@
 		LEFT JOIN db_fast f ON f.f_id = sf_fastid
 		WHERE
 		1=1
-				and s.s_state <![CDATA[ <> ]]>1
+				and s.s_state <![CDATA[ <> ]]>0
 				<if test="fid!=null and fid.size()>0">
 			and f.f_id in
 			<foreach collection="fid" open="(" separator="," close=")"
