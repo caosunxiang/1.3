@@ -63,14 +63,14 @@
 			<script src="js/common.js"></script>
 			<script src="layui/layui.js"></script>
 			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
-			<script type="text/html" id="barDemo">
+			<!--  <script type="text/html" id="barDemo">
 				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">修改用户</a>
 				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">删除用户</a>
 				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">审核</a>
-			</script>
+			</script>-->
 			<script>
 				var list;
-				var nickname = $('#userName').val();
+				var name = $('#userName').val();
 				//				var phone;
 				//+var phone = $('.phone').val();
 				var laypage;
@@ -80,8 +80,8 @@
 						form = layui.form;
 						laypage = layui.laypage;
 
-						form.on('select(userName)', function(data) {
-							userName = userName;
+						form.on('select(name)', function(data) {
+							name = name;
 							console.log(userName);
 							userlist($('#userName'));
 						});
@@ -99,22 +99,22 @@
 					})
 
 					$("#search").click(function() {
-						var userName = $("#userName").val();
+						var name = $("#userName").val();
 						//var phone = $(".phone").val();
-						userlist(userName);
+						userlist(name);
 						
 					})
 
 				})
 
-				function userlist() {
+				function userlist(name) {
                   
 					$.ajax({
-						type: "GET", //提交方式 
-						url: baseurl+"/dbInterval/pageall",//+userName, //baseurl + "/com/users", //路径 
-						/*dataType: 'json'
+						type: "post", //提交方式 
+						url: baseurl+"/dbUser/getall",//+userName, //baseurl + "/com/users", //路径 
+						/*dataType: 'json'*/
 						data: {
-							
+							name:name
 						}, //数据，*///这里使*/用的是Json格式进行传输 
 						success: function(data) { //返回数据根据结果进行相应的处理 
 							list = data.data;
@@ -133,27 +133,22 @@
 									cols: [
 										[
 											{
-												field: 'intervalid',
+												field: 'openId',
 												title: 'ID',
 												width: 450,
 
 											}, {
-												field: 'lowest',
+												field: 'uName',
 												title: '最低价',
 												width: 450,
 											}, {
-												field: 'userPhone',
-												title: '用户手机号',
+												field: 'uHead',
+												title: '用户頭像',
 												width: 450,
 											}, {
-												field: 'userIntime',
+												field: 'uArea',
 												title: '注册时间',
 												width: 450,
-											}, {
-										
-												title: '操作',
-												width: 450,
-												toolbar: '#barDemo',
 											}
 										]
 									]

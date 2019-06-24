@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>客户购买商品凭证</title>
+		<title>商家所有訂單</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
@@ -21,7 +21,7 @@
 				}
 			</style>
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>查看客户上传产品凭证
+				<legend>商家所有訂單
 				</legend>
 			</fieldset>
 			<form class="layui-form">
@@ -29,10 +29,11 @@
 					<div class="layui-inline">
 						<label class="layui-form-label ">认证状态</label>
 						<div class="layui-input-inline namebox">
-							<select lay-filter="provSel" class="status">
-								<option value=''>认证列表</option>
-								<option value='0'>未审核</option>
-								<option value='1'>已通过</option>
+							<select lay-filter="provSel" class="state">
+								<option value=''>結賬類型</option>
+								<option value='0'>未結賬</option>
+								<option value='1'>前台結賬</option>
+								<option value='2'>服務員結賬</option>
 							</select>
 						</div>
 						<label class="layui-form-label"></label>
@@ -56,14 +57,27 @@
 		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 		<script type="text/html" id="barDemo">
 
-			<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">确认审核通过
-				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query1">设置等待时间
-					<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query2">设置投放时间
-						<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query1">已发款-->
+			<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">-->
+				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query1">查看詳情
+					<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query2">设置投放时间
+						<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query1">已发款-->
 		</script>
+		<script type="text/html" id="typeBar">
+		    	 {{#  if(parseInt(d.oState) == "0"){ }}
+			     	未結賬
+			    {{#  }else if(parseInt(d.oState)=="1"){ }}
+			     	前台付款
+			    {{#  }else if(parseInt(d.oState)=="2"){ }}
+			     	服務員結賬
+			    {{#  }else if(parseInt(d.oState)=="3"){ }}
+			      	已過期
+			     {{# }else { }}
+			      	未知
+	     		{{# } }}
+			 </script>
 		<script>
 			var list;
-			var type = $('.status').val();
+			var type = $('.state').val();
 			//				var phone;
 			//				var phone = $('.phone').val();
 			var laypage;
@@ -74,27 +88,27 @@
 					laypage = layui.laypage;
 
 					form.on('select(type)', function(data) {
-						var status = $('.status').val();
-						console.log(status);
-						userlist($('.status'));
+						var state = $('.state').val();
+						console.log(state);
+						userlist($('.state'));
 					});
 				})
 
 				$("#search").click(function() {
-					var type = $(".status").val();
-					userlist(status);
+					var state = $(".state").val();
+					userlist(state);
 				})
 
 			})
 
-			function userlist(status) {
-				var status = $(".status").val();
+			function userlist(state) {
+				var state = $(".state").val();
 				$.ajax({
 					type: "post", //提交方式 
-					url: baseurl + "/myproduct/listProduct", //baseurl + "/com/users", //路径 
+					url: baseurl + "/dbOrder/getallover", //baseurl + "/com/users", //路径 
 					dataType: 'json',
 					data: {
-						status: status,
+						state: state,
 					}, //数据，这里使用的是Json格式进行传输 
 					success: function(data) { //返回数据根据结果进行相应的处理 
 						list = data.data;
@@ -118,50 +132,55 @@
 //											width: 300
 //										},
 										{
-											field: 'id',
+											field: 'oId',
 											title: 'ID',
 											width: 200,
 										}, {
-											field: 'userId',
-											title: '用户ID',
+											field: 'oStrolleyTable',
+											title: '桌號',
 											width: 200,
 										}, {
-											field: 'phone',
-											title: '手机号',
+											field: 'oSubtotal',
+											title: '商品總價',
 											width: 150,
 										}, {
-											field: 'contractNum',
-											title: '合同号 ',
+											field: 'oDiscountsPrice',
+											title: '優惠金額 ',
 											width: 200,
 										}, {
-											field: 'child',
-											title: '邀请人手机号 ',
-											width: 150,
+											field: 'oServiceCharge',
+											title: '小費 ',
+											width: 200,
 										}, {
-										
-											field: 'billOfCredit',
-											title: '上款凭证 ',
+											field: 'oTotal',
+											title: '實付金額 ',
 											width: 250,
 											}, {
-											field: 'number',
-											title: '购买数量',
-											width: 100,
-										}, {
-												field: 'waitTime',
-											title: '等待时间 ',
-											width: 100,
-										}, {
-											field: 'outTime',
-											title: '抛出时间 ',
-											width: 100,
-										}, {
-											field: 'type',
-											title: '审核状态',
+											field: 'oState',
+											title: '訂單狀態 ',
 											width: 150,
+											templet:'#typeBar',
+											sort:true,
+										},{
+												field: 'orderToShop',
+												title: '商鋪id',
+												width: 100,
+											}, {
+											field: 'oShopName',
+											title: '店鋪名',
+											width: 100,
 										}, {
-											field: 'createtime',
-											title: '创建时间 ',
-											width: 200,
+												field: 'oTime',
+											title: '下單時間 ',
+											width: 100,
+										}, {
+											field: 'oOvertime',
+											title: '結束時間 ',
+											width: 100,
+										}, {
+											field: 'orderToUser',
+											title: '用戶微信號',
+											width: 150,
 										}, {
 											title: '操作',
 											width: 350,
@@ -176,7 +195,9 @@
 
 								var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 								var tr = obj.tr; //获得当前行 tr 的DOM对象
-								var id = obj.data.id;
+								var sid = obj.data.orderToShop;
+								var id = obj.data.oId;
+								var table = obj.data.oStrolleyTable;
 								if(layEvent === 'query') { //删除
 									layer.confirm('确定通过审核吗？', function(index) {
 										$.ajax({
@@ -193,11 +214,11 @@
 								} else if(layEvent === 'query1') { //等待时间
 									layer.open({
 										type: 2,
-										title: '产品等待时间',
+										title: '訂單詳情',
 										maxmin: true,
 										shadeClose: true, //点击遮罩关闭层
 										area: ['800px', '800px'],
-										content: 'waitTime.html?id=' + id //?userId=+ userId
+										content: 'waitTime.html?sid=' + sid +'&table='+table+'&id='+id//?userId=+ userId
 									});
 								} else if(layEvent === 'query2') { //投放时间
 									layer.open({

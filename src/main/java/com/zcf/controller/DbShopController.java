@@ -178,13 +178,13 @@ public class DbShopController {
 	public Body changeshop(String sid, String name, String ename, String btype, String type, String tname,
 			String picture, String phone, String open, String colse, String longitude, String latitude, BigDecimal ave,
 			String area, String email, String remark, String romance, String park, String hot, Integer score,
-			String state, String time,Integer verify) {
+			String state,Integer verify) {
 		if (StringUtils.isEmpty(name) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(btype)
 				|| StringUtils.isEmpty(type) || StringUtils.isEmpty(tname) || StringUtils.isEmpty(picture)
 				|| StringUtils.isEmpty(phone) || StringUtils.isEmpty(open) || StringUtils.isEmpty(colse)
 				|| StringUtils.isEmpty(area) || StringUtils.isEmpty(email) || StringUtils.isEmpty(remark)
 				|| StringUtils.isEmpty(state) || StringUtils.isEmpty(park) || StringUtils.isEmpty(hot) || score == null
-				|| StringUtils.isEmpty(romance) || StringUtils.isEmpty(sid)||StringUtils.isEmpty(time)||verify == null) {
+				|| StringUtils.isEmpty(romance) || StringUtils.isEmpty(sid)||verify == null) {
 			return Body.BODY_451;
 		}
 		DbShop dbShop = new DbShop();
@@ -210,7 +210,7 @@ public class DbShopController {
 		dbShop.setsPhone(phone);
 		dbShop.setsPicture(picture);
 		dbShop.setsRemark(remark);
-		dbShop.setsTime(time);
+		dbShop.setsTime(Hutool.parseDateToString());
 		dbShop.setsVerify(verify);
 		return dbShopService.change(dbShop);
 	}

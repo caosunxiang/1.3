@@ -90,5 +90,17 @@ Body up(String name ,String sid,Integer ftid,String state) {
 	dbFoodtype.setFtName(name);
 	return dbFoodtypeService.up(dbFoodtype);
 }
+/**
+ * 唯一查询
+ * @param ftid
+ * @return
+ */
+@PostMapping("/getone")
+Body getone(Integer ftid) {
+	if(ftid==null) {
+		return Body.BODY_451;
+	}
+	return dbFoodtypeService.getone(ftid);
+}
 }
 

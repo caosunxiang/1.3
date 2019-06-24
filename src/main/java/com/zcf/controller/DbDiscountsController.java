@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
+import com.zcf.pojo.DbDiscounts;
 import com.zcf.service.DbDiscountsService;
+import com.zcf.utils.IDUtils;
+
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +38,7 @@ public class DbDiscountsController {
 	 * @return
 	 */
 	@PostMapping("/getbysid")
-	Body getbysid(String sid) {
+	public	Body getbysid(String sid) {
 		return dbDiscountsService.getbysid(sid);
 	}
 
@@ -45,7 +49,7 @@ public class DbDiscountsController {
 	 * @return
 	 */
 	@PostMapping("/getbyuid")
-	Body getbyuid(String uid) {
+	public	Body getbyuid(String uid) {
 		if (StringUtils.isEmpty(uid)) {
 			return Body.BODY_451;
 		}
@@ -60,10 +64,83 @@ public class DbDiscountsController {
 	 * @return
 	 */
 	@PostMapping("/sidtouid")
-	Body sidtouid(String sid, String uid) {
+	public	Body sidtouid(String sid, String uid) {
 		if (StringUtils.isEmpty(uid) || StringUtils.isEmpty(sid)) {
 			return Body.BODY_451;
 		}
 		return dbDiscountsService.sidtouid(sid, uid);
+	}
+
+	/**
+	 * 查询全部
+	 * 
+	 * @return
+	 */
+	@PostMapping("/getall")
+	public	Body getall() {
+		return dbDiscountsService.getall();
+	}
+
+	/**
+	 * 删除
+	 * 
+	 * @param did
+	 * @return
+	 */
+	@PostMapping("/de")
+	public	Body de(String did) {
+		if (StringUtils.isEmpty(did)) {
+			return Body.BODY_451;
+		}
+		return dbDiscountsService.de(did);
+	}
+
+	/**
+	 * 添加优惠券
+	 * @param dPrice
+	 * @param dTitle
+	 * @param dRemark
+	 * @param dStarttime
+	 * @param dOvertime
+	 * @param dRestrict
+	 * @param dMaximum
+	 * @param discountsToShop
+	 * @param dsName
+	 * @param dsEname
+	 * @return
+	 */
+	@PostMapping("/adddis")
+	public	Body adddis(BigDecimal dPrice, String dTitle, String dRemark, String dStarttime, String dOvertime,
+			BigDecimal dRestrict, Integer dMaximum, String discountsToShop, String dsName, String dsEname) {
+		if (StringUtils.isEmpty(dTitle) || StringUtils.isEmpty(dRemark) || StringUtils.isEmpty(dStarttime)
+				|| StringUtils.isEmpty(dOvertime) || StringUtils.isEmpty(discountsToShop) || StringUtils.isEmpty(dsName)
+				|| StringUtils.isEmpty(dsEname) || dPrice==null||dRestrict==null||dMaximum==null) {
+                   return Body.BODY_451;
+		}
+		DbDiscounts dbDiscounts=new DbDiscounts();
+		dbDiscounts.setdId(IDUtils.genItemId()+"");
+		dbDiscounts.setDiscountsToShop(discountsToShop);
+		dbDiscounts.setdMaximum(dMaximum);
+		dbDiscounts.setdOvertime(dOvertime);
+		dbDiscounts.setdPrice(dPrice);
+		dbDiscounts.setdRemark(dRemark);
+		dbDiscounts.setdRestrict(dRestrict);
+		dbDiscounts.setDsEname(dsEname);
+		dbDiscounts.setDsName(dsName);
+		dbDiscounts.setdStarttime(dStarttime);
+		dbDiscounts.setdTitle(dTitle);
+		return dbDiscountsService.adddis(dbDiscounts);
+	}
+	/**
+	 * 唯一查詢
+	 * @param did
+	 * @return
+	 */
+	@PostMapping("/getone")
+	public Body getone(String did) {
+		if(StringUtils.isEmpty(did)) {
+			return Body.BODY_451;
+		}
+		return dbDiscountsService.getone(did);
 	}
 }

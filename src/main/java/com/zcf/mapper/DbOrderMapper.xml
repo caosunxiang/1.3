@@ -91,15 +91,47 @@
 		`db_order` o
 		WHERE
 		o.o_state = '1'
-		AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0;
+		AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0
+		AND o.order_to_shop = #{sid};
 	</select>
 	<select id="finishone" resultType="java.util.Map">
 	SELECT
+	IFNULL(o.o_id,' ')o_id,
+    IFNULL(o.o_discounts,' ')o_discounts,
+    IFNULL(o.o_discounts_price,' ')o_discounts_price,
+    IFNULL(o.o_discounts_remark,' ')o_discounts_remark,
+	IFNULL(o.o_strolley_table,' ')o_strolley_table,
+	IFNULL(o.o_service_charge,' ')o_service_charge,
+	IFNULL(o.o_total,' ')o_total,
+	IFNULL(o.o_time,' ')o_time,
+	IFNULL(o.order_to_shop,' ')order_to_shop,
+	IFNULL(o.o_shop_name,' ')o_shop_name,
+	IFNULL(o.o_shop_ename,' ')o_shop_ename,
+	IFNULL(of.of_foodid,' ')of_foodid,
+	IFNULL(of.of_remark,' ')of_remark,
+	IFNULL(of.of_price,' ')of_price,
+	IFNULL(f.f_name,' ')f_name,
+	IFNULL(f.f_english_name,' ')f_english_name
+FROM
+	`db_order` o
+LEFT JOIN `db_order_food` of ON o.o_id = of.of_orderid
+LEFT JOIN `db_food` f ON f.f_id = of.of_foodid
+WHERE
+	o.o_id = #{oid};
+	</select>
+		<select id="bytable" resultType="java.util.Map">
+SELECT
 	o.o_id,
 	o.o_strolley_table,
+	  IFNULL(o.o_discounts,' ')o_discounts,
+    IFNULL(o.o_discounts_price,' ')o_discounts_price,
+    IFNULL(o.o_discounts_remark,' ')o_discounts_remark,
 	o.o_service_charge,
 	o.o_total,
-	o.o_time,
+	DATE_FORMAT(
+		o.o_time,
+		'%Y-%m-%d %k:%i:%s'
+		) AS o_time,
 	o.order_to_shop,
 	o.o_shop_name,
 	o.o_shop_ename,
@@ -113,9 +145,14 @@ FROM
 LEFT JOIN `db_order_food` of ON o.o_id = of.of_orderid
 LEFT JOIN `db_food` f ON f.f_id = of.of_foodid
 WHERE
-	o.o_id = #{oid};
+	o.o_strolley_table=#{table} AND o.order_to_shop=#{sid} AND o.o_state='0';
 	</select>
-		<select id="bytable" resultType="java.util.Map">
+			<select id="websocket" resultType="java.math.BigDecimal">
+SELECT o_total from 
+db_order WHERE
+o_state='0' and order_to_shop=#{sid} and o_strolley_table=#{table}
+	</select>
+		<select id="byalltable" resultType="java.util.Map">
 SELECT
 	o.o_id,
 	o.o_strolley_table,
@@ -135,9 +172,8 @@ FROM
 LEFT JOIN `db_order_food` of ON o.o_id = of.of_orderid
 LEFT JOIN `db_food` f ON f.f_id = of.of_foodid
 WHERE
-	o.o_strolley_table=#{table} AND o.order_to_shop=#{sid} AND o.o_state='0';
+	o.o_strolley_table=#{table} AND o.order_to_shop=#{sid} AND o.o_id=#{oid};
 	</select>
-
 
 
 <!-- 天数 -->

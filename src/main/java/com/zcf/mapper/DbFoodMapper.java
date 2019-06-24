@@ -1,5 +1,6 @@
 package com.zcf.mapper;
 
+import com.zcf.pojo.DbActivity;
 import com.zcf.pojo.DbFood;
 
 import java.util.List;
@@ -19,4 +20,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface DbFoodMapper extends BaseMapper<DbFood> {
 List<Map<String, Object>>percentage(@Param("sid")String sid);
+List<DbActivity>rand();
 }

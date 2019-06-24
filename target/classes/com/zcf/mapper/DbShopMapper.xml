@@ -8,6 +8,7 @@
 		<id column="s_id" property="sId" />
 		<result column="s_name" property="sName" />
 		<result column="s_english_name" property="sEnglishName" />
+		<result column="s_table" property="sTable" />
 		<result column="s_business_type" property="sBusinessType" />
 		<result column="s_type" property="sType" />
 		<result column="s_type_name" property="sTypeName" />
@@ -32,7 +33,7 @@
 
 	<!-- 通用查询结果列 -->
 	<sql id="Base_Column_List">
-		s_id, s_name, s_english_name, s_business_type, s_type,
+		s_id, s_name, s_english_name,s_table, s_business_type, s_type,
 		s_type_name,
 		s_picture, s_state, s_verify, s_score, s_phone,
 		s_open_time,

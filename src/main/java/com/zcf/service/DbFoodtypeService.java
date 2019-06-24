@@ -22,4 +22,6 @@ public interface DbFoodtypeService extends IService<DbFoodtype> {
 
 	Body up(DbFoodtype dbFoodtype);//修改
 
+	Body getone(Integer ftid);//唯一查询
+
 }

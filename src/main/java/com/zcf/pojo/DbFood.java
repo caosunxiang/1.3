@@ -24,6 +24,10 @@ public class DbFood extends Model<DbFood> {
     @TableId(value = "f_id", type = IdType.NONE)
     private String fId;
     /**
+     * 伪id
+     * */
+    private String id;
+    /**
      * 食品名称
      */
     private String fName;
@@ -73,7 +77,15 @@ public class DbFood extends Model<DbFood> {
         this.fId = fId;
     }
 
-    public String getfName() {
+    public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getfName() {
         return fName;
     }
 

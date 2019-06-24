@@ -37,9 +37,8 @@ public class DbFastServiceImpl extends ServiceImpl<DbFastMapper, DbFast> impleme
 	}
 
 	@Override
-	public Body add(String fId, String fName, String fCount) {
+	public Body add( String fName, String fCount) {
 		DbFast dbFast = new DbFast();
-		dbFast.setfId(fId);
 		dbFast.setfName(fName);
 		dbFast.setfCount(fCount);
 		dbFastMapper.insert(dbFast);
@@ -49,7 +48,7 @@ public class DbFastServiceImpl extends ServiceImpl<DbFastMapper, DbFast> impleme
 	}
  
 	@Override
-	public Body del(String fId) {
+	public Body del(Integer fId) {
 		Integer count = dbFastMapper.deleteById(fId);
 		if (count == 1) {
 			return Body.BODY_200;
@@ -58,7 +57,7 @@ public class DbFastServiceImpl extends ServiceImpl<DbFastMapper, DbFast> impleme
 	}
 
 	@Override
-	public Body upd(String fId, String fName, String fCount) {
+	public Body upd(Integer fId, String fName, String fCount) {
 		DbFast dbFast = new DbFast();
 		dbFast.setfId(fId);
 		dbFast.setfName(fName);
@@ -68,7 +67,7 @@ public class DbFastServiceImpl extends ServiceImpl<DbFastMapper, DbFast> impleme
 	}
 
 	@Override
-	public Body getone(String fId) {
+	public Body getone(Integer fId) {
 		DbFast dbFast = dbFastMapper.selectById(fId);
 		if (dbFast != null) {
 			return Body.newInstance(dbFast);

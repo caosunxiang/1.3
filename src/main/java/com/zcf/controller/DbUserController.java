@@ -93,5 +93,14 @@ public Body  head(MultipartFile[] files) {
 	}
 	return  dbUserService.head(files);
 }
+/**
+ * 用戶查詢
+ * @param name
+ * @return
+ */
+@PostMapping("/getall")
+Body getall(String name) {
+	return dbUserService.getall(name);
+}
 }
 

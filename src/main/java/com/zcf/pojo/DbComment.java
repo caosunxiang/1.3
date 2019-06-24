@@ -36,6 +36,10 @@ public class DbComment extends Model<DbComment> {
      */
     private String cReply;
     /**
+     * 评论置顶
+     * */
+    private String cUp;
+    /**
      * 评论时间
      */
     private String cTime;
@@ -55,6 +59,10 @@ public class DbComment extends Model<DbComment> {
      * 评价关联用户
      */
     private String commentToUser;
+    /**
+     * 评论关联名称
+     * */
+    private String cUserName;
     /**
      * 评价用户头像
      */
@@ -114,6 +122,14 @@ public class DbComment extends Model<DbComment> {
 		this.cReply = cReply;
 	}
 
+	public String getcUp() {
+		return cUp;
+	}
+
+	public void setcUp(String cUp) {
+		this.cUp = cUp;
+	}
+
 	public String getcTime() {
         return cTime;
     }
@@ -154,7 +170,15 @@ public class DbComment extends Model<DbComment> {
         this.commentToUser = commentToUser;
     }
 
-    public String getcUserHead() {
+    public String getcUserName() {
+		return cUserName;
+	}
+
+	public void setcUserName(String cUserName) {
+		this.cUserName = cUserName;
+	}
+
+	public String getcUserHead() {
         return cUserHead;
     }
 

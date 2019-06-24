@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>修改分类 </title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<link rel="stylesheet" href="static/css/style.css">
+		<style>
+			.color {
+				color: red;
+			}
+			
+			.aa {
+				margin-left: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				<legend>详细信息</legend>
+			</fieldset>
+			<form class="layui-form" action="" enctype="multipart/form-data">
+				<div class="layui-form-item">
+					<label class="layui-form-label">分类名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="title" lay-verify="required|title" autocomplete="off" placeholder="请输入分类名称" class="layui-input book_name" id="name">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">状态</label>
+				<div class="layui-input-block">
+							<select lay-filter="termNm" name="state" id="state">
+								<option value="1">启动</option>
+								<option value="2">禁用</option>
+							</select>
+						</div>
+					</div>
+			<div class="layui-form-item">
+					<label class="layui-form-label">商铺</label>
+				<div class="layui-input-block">
+							<select lay-filter="termNm" name="discountsToShop" id="discountsToShop">
+								<option value="0">请选择</option>
+							</select>
+						</div>
+					</div>
+			</form>
+		<div style="width: 216px; margin: 0px auto;">
+			<!-- layui 2.2.5 新增 -->
+			<button class="layui-btn layui-btn-fluid" id="save" onclick="getallplate()">修改保存</button>
+		</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/common.js"></script>
+		<script src="layui/layui.js"></script>
+		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
+		<script>
+			var form;
+			var id = "";
+			$(function() {
+				sid = getQueryString("sid");
+				layui.use(['element', 'form', 'upload', 'layer'], function() {
+					var $ = layui.jquery,
+						element = layui.element;
+					form = layui.form;
+					upload = layui.upload;
+					layer = layui.layer;
+					$.post(baseurl + "/dbShop/shop",function(data){
+						tr="";
+						list=data.data;
+						for (var i = 0; i < list.length; i++) {
+							tr+="<option value='"+list[i].s_id+"'>"+list[i].s_name+"</option>";
+						}
+						$("#discountsToShop").append(tr);
+						form.render('select');
+					})
+					$.ajax({
+						type: "post",
+						url: baseurl + "/dbFoodtype/getone",
+						data: {
+							ftid: sid
+						},
+						success: function(data) {
+							console.log(data)
+							$("#name").val(data.data.ftName);
+							id=data.data.ftId;
+							$("#state").val(data.data.ftState);
+							$("#discountsToShop").val(data.data.foodtypeToShop);
+						}
+					});
+					});
+			})
+
+
+			function getallplate() {
+				layui.use('form',
+					function() {
+						form = layui.form;
+						$.ajax({
+							type: "POST", //提交方式 
+							url: baseurl + "/dbFoodtype/add", //路径 
+							data: {
+								sid:$("#discountsToShop").val(),
+								name:$("#name").val(),
+								ftid:id,
+								state:$("#state").val()
+							},
+							//数据，这里使用的是Json格式进行传输 
+							success: function(data) { //返回数据根据结果进行相应的处理 
+								console.log(data)
+								if (data.meta.code == 200) {
+									//alert('修改成功');
+									layer.alert('修改成功', function() {
+										window.parent.location.reload();
+									});
+								} else {
+									if (data.meta.msg == '失败了！') {
+										layer.alert(data.meta.msg);
+									} else {
+										layer.alert("修改失败");
+									}
+								}
+							}
+						});
+					})
+			}
+		</script>
+	</body>
+
+</html>

@@ -49,9 +49,9 @@ public Body three() {
 	return Body.newInstance(201, "服務器內部錯誤");
 }
 @Override
-public Body upone(String str) {
+public Body upone(String str,String id) {
 	EntityWrapper<DbSystemLayout>wrapper=new EntityWrapper<>();
-	wrapper.eq("slid", 1);
+	wrapper.eq("slid", id);
 	Integer count=layoutMapper.updateForSet("slcontent='"+str+"'", wrapper);
 	if(count==1) {
 		return Body.BODY_200;
@@ -86,5 +86,13 @@ public Body getall() {
 		return Body.newInstance(list);
 	}
 	return Body.newInstance(201, "服務器內部錯誤");
+}
+@Override
+public Body getone(Integer slid) {
+	DbSystemLayout layout=layoutMapper.selectById(slid);
+	if(layout!=null) {
+		return Body.newInstance(layout);
+	}
+	return Body.newInstance(201, "失败");
 }
 }

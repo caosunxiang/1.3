@@ -164,25 +164,13 @@ public class DbOrderController {
 	 * @return
 	 */
 	@PostMapping("/toorder")
-	public Body addtoorder(String table, BigDecimal subtotal, String uid, String sid, String sname, String sename,
+	public Body addtoorder(String oid,
 			String fid,String  message,String price,String st) {
-		if (StringUtils.isEmpty(table) || StringUtils.isEmpty(uid) || StringUtils.isEmpty(sid)
-				|| StringUtils.isEmpty(sname) || StringUtils.isEmpty(sename) || subtotal == null
-				|| StringUtils.isEmpty(fid)||StringUtils.isEmpty(st)) {
+		if (StringUtils.isEmpty(oid)
+				|| StringUtils.isEmpty(fid)) {
 			return Body.BODY_451;
 		}
-		DbOrder dbOrder = new DbOrder();
-		dbOrder.setoId(IDUtils.genItemId() + "");
-		dbOrder.setOrderToShop(sid);
-		dbOrder.setOrderToUser(uid);
-		dbOrder.setoServiceCharge(subtotal.multiply(new BigDecimal(0.1)));
-		dbOrder.setoShopEname(sename);
-		dbOrder.setoShopName(sname);
-		dbOrder.setoStrolleyTable(table);
-		dbOrder.setoSubtotal(subtotal);
-		dbOrder.setoTime(Hutool.parseDateToString());
-		dbOrder.setoTotal(dbOrder.getoServiceCharge().add(subtotal));
-		return dbOrderService.addtoorder(dbOrder, fid,message,price,st);
+		return dbOrderService.addtoorder(oid, fid,message,price,st);
 	}
 
 	/**
@@ -202,8 +190,8 @@ public class DbOrderController {
 	 * @return
 	 */
 	@PostMapping("/today")
-	Body today() {
-		return dbOrderService.today(); 
+	Body today(String sid) {
+		return dbOrderService.today(sid); 
 	}
 	/**
 	 * //查詢已完成訂單詳情
@@ -257,5 +245,53 @@ public class DbOrderController {
 	@PostMapping("/sevenhour")
 	Body sevenhour() {
 		return dbOrderService.sevenhour();
+	}
+	/**
+	 * 查詢所有的訂單
+	 * @param state
+	 * @return
+	 */
+	@PostMapping("/getallover")
+	Body getallover(String state) {
+		return dbOrderService.getallover(state);
+	}
+	/**
+	 * 查詢訂單詳情
+	 * @param table
+	 * @param sid
+	 * @param oid
+	 * @return
+	 */
+	@PostMapping("/byalltable")
+	Body byalltable(String table, String sid, String oid) {
+		if(StringUtils.isEmpty(table)||StringUtils.isEmpty(sid)||StringUtils.isEmpty(oid)) {
+			return Body.BODY_451;
+		}
+		return dbOrderService.byalltable(table, sid, oid);
+	}
+	/**
+	 * 每桌状态
+	 * @param sid
+	 * @param num
+	 * @return
+	 */
+	@PostMapping("/stable")
+	Body table(String sid, Integer num) {
+		if (StringUtils.isEmpty(sid)||num==null) {
+			return Body.BODY_451;
+		}
+		return dbOrderService.table(sid,num);
+	}
+	/**
+	 * 删除商家id
+	 * @param sid
+	 * @return
+	 */
+	@PostMapping("/deover")
+	Body deover(String sid) {
+		if(StringUtils.isEmpty(sid)) {
+			return Body.BODY_451;
+		}
+		return dbOrderService.deover(sid);
 	}
 }

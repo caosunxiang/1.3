@@ -32,7 +32,7 @@ import net.sf.json.JSONObject;
 public class WebSocket {
 
 	// 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
-	private static int onlineCount = 0;
+	private static volatile int onlineCount = 0;
 
 	// 用来存放每个客户端对应的MyWebSocket对象。可以使用Map来存放(遍历的用set)，其中Key可以为用户标识
 	private static Map<String, WebSocket> clients = new ConcurrentHashMap<String, WebSocket>();
@@ -54,7 +54,7 @@ public class WebSocket {
 		clients.put("admin" + adminId, this);
 		Key = "admin" + adminId;
 		addOnlineCount(); // 在线数加1
-		//log.info("有新连接加入！当前在线人数为" + getOnlineCount() + "加入的管理员ID为:" + adminId);
+		log.info("有新连接加入！当前在线人数为" + getOnlineCount() + "加入的管理员ID为:" + adminId);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class WebSocket {
 	 */
 	@OnMessage
 	public void onMessage(String message) {
-		//log.info("控制器收到消息：{}",message);
+		log.info("控制器收到消息：{}",message);
 		JSONObject jsonObject=JSONObject.fromObject(message);
     	send2User(message, "admin" +jsonObject.get("touser").toString());
 	}
@@ -92,7 +92,7 @@ public class WebSocket {
 			if (clients.get(key) != null) {
 				clients.get(key).sendMessage(message);
 			} else {
-				//log.info("当前用户不在线");
+				log.info("当前用户不在线");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

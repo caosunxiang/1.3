@@ -91,4 +91,42 @@ public class DbActivityController {
 		}
 		return activityService.getbysid(sid);
 	}
+	/**
+	 * 删除
+	 * @param aid
+	 * @return
+	 */
+	@PostMapping("/de")
+	Body de(Integer aid) {
+		if(aid==null) {
+			return Body.BODY_451;
+		}
+		return activityService.de(aid);
+	}
+	/**
+	 * 绑定
+	 * @param aid
+	 * @param did
+	 * @return
+	 */
+	@PostMapping("/up")
+	Body up(String aid, String did) {
+		if(StringUtils.isEmpty(aid)||StringUtils.isEmpty(did)) {
+			return Body.BODY_451;
+		}
+		return activityService.up(aid, did);
+	}
+	/**
+	 * 附近优惠
+	 * @param longitude
+	 * @param latitude
+	 * @return
+	 */
+	@PostMapping("/near")
+	Body near(String longitude, String latitude) {
+		if(StringUtils.isEmpty(longitude)||StringUtils.isEmpty(latitude)) {
+			return Body.BODY_451;
+		}
+		return activityService.near(longitude, latitude);
+	}
 }

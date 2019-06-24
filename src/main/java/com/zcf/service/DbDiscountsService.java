@@ -20,4 +20,11 @@ public interface DbDiscountsService extends IService<DbDiscounts> {
 
 	Body sidtouid(String sid, String uid);
 
+	Body getall();
+
+	Body de(String did);
+
+	Body adddis(DbDiscounts dbDiscounts);
+	Body getone(String did);
+
 }

@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>充值记录</title>
+		<title>活動記錄</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
@@ -21,52 +21,33 @@
 		</style>
 		<div class="container">
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>充值记录</legend>
+				<legend>活動記錄</legend>
 			</fieldset>
 			<form class="layui-form">
-				<div class="layui-form-item">
-					<div class="layui-inline">
-
-						<label class="layui-form-label ">充值日期</label>
-						<div class="layui-input-inline namebox">
-							<input type="text" class="layui-input addtime" id="test1">
-
-						</div>
-
-						<label class="layui-form-label"></label>
-						<div class="layui-input-inline namebox"></div>
-						<button class="layui-btn seek" lay-submit lay-filter="formDemo" id="search" type="button">搜索</button>
-
-					</div>
-
-				</div>
+			
 
 			</form>
-			<div class="layui-btn-group demoTable">
-				<button type="button" class="layui-btn layui-btn-danger delet" data-type='getCheckData'>批量删除</button>
-			</div>
+				<div class="layui-btn-group demoTable">
+			<button type="button" class="layui-btn layui-btn-danger xinzeng" >添加新的活动</button>
+		</div>
 			<table id="demo" lay-filter="test"></table>
 		</div>
+	
 			<!--<div id="test1"></div>-->
+			<script type="text/html" id="imgTpl">
+			<img style="display: inline-block;width: 100%;height: 100%;" src={{d.s_picture}} />
+		</script>
 			<script type="text/javascript" src="js/jquery.min.js"></script>
 			<script src="js/common.js"></script>
 			<script src="layui/layui.js"></script>
 			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 			<script type="text/html" id="barDemo">
-				<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">删除记录</a>
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="up">添加优惠券</button>
+			<a class="layui-btn layui-btn-danger layui-btn-xs " lay-event="del">删除活动</a>
 			</script>
 			<script>
-				//时间控件
-				layui.use('laydate', function() {
-					var laydate = layui.laydate;
-					//执行一个laydate实例
-					laydate.render({
-						elem: '#test1' //指定元素
-					});
-				});
-
 				var list;
-				var addtime = $('.addtime').val();
+				//var addtime = $('.addtime').val();
 				//				var phone;
 				//				var phone = $('.phone').val();
 				var laypage;
@@ -76,27 +57,23 @@
 						form = layui.form;
 						laypage = layui.laypage;
 
-						form.on('select(addtime)', function(data) {
-							var addtime = $('.addtime').val();
-							console.log(addtime);
-							userlist($('.addtime'));
+						form.on('select()', function() {
+							userlist();
 						});
 					})
 
 					$("#search").click(function() {
-						var addtime = $(".addtime").val();
-						userlist(addtime);
+						userlist();
 					})
 
 				})
-
-				function userlist(addtime) {
+             
+				function userlist() {
 					$.ajax({
 						type: "POST", //提交方式 
-						url: baseurl + "/com/queryjilvLp", //路径 
+						url: baseurl + "/dbActivity/show", //路径 
 						dataType: 'json',
 						data: {
-							add_time: addtime,
 						}, //数据，这里使用的是Json格式进行传输 
 						success: function(data) { //返回数据根据结果进行相应的处理 
 							console.log(data.data);
@@ -114,35 +91,30 @@
 									limits: [10],
 									cols: [
 										[{
-											checkbox: true,
-											LAY_CHECKED: false,
-											filter: 'test',
-											width: 300
-										}, {
-											field: 'logId',
+											field: 'aId',
 											title: 'ID',
 											width: 250,
 
 										}, {
-											field: 'nickname',
-											title: '用户名',
+											field: 'aTitle',
+											title: '活动标题',
 											width: 250,
 										}, {
-											field: 'moneyBefor',
-											title: '充值前 ',
+											field: 'aFcontent',
+											title: '活动内容',
 											width: 201,
 										}, {
-											field: 'moneyAfter',
-											title: '充值后 ',
+											field: 'aContent',
+											title: '活动描述 ',
 											width: 240,
 										}, {
-											field: 'changeMoney',
-											title: '充值金额',
+											field: 'aHead',
+											title: '图片',
 											width: 240,
-											//											templet: '#barDemo3',
+											templet: '#imgTpl',
 										}, {
-											field: 'addTime',
-											title: '充值时间 ',
+											field: 'activityToShop',
+											title: '关联的商铺',
 											width: 230,
 										}, {
 											title: '操作',
@@ -190,14 +162,15 @@
 								$(".xinzeng").click(function() { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
 									layer.open({
 										type: 2,
-										title: '创建房间',
+										title: '创建新活动',
 										maxmin: true,
 										shadeClose: true, //点击遮罩关闭层
 										area: ['800px', '800px'],
 										content: 'addRoom.html' //?roomId=+ roomId
 									});
 								});
-
+								
+							
 								laypage.render({
 									elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
 										,
@@ -239,24 +212,24 @@
 
 									var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 									var tr = obj.tr; //获得当前行 tr 的DOM对象
-									var logId = obj.data.logId;
-									if(layEvent === 'query') { //删除
-										layer.open({
-											type: 2,
-											title: '房间详情',
-											maxmin: true,
-											shadeClose: true, //点击遮罩关闭层
-											area: ['800px', '800px'],
-											content: 'update.html?roomId=' + roomId
-										});
-
+									var logId = obj.data.aId;
+									var sid= obj.data.activityToShop;
+									if(layEvent === 'up') { //删除
+											layer.open({
+												type: 2,
+												title: '添加优惠券',
+												maxmin: true,
+												shadeClose: true, //点击遮罩关闭层
+												area: ['800px', '800px'],
+												content: 'company.html?sid='+sid+'&aid='+logId //?roomId=+ roomId
+											})
 									} else {
 										layer.confirm('确认要删除吗？' + logId, function(index) {
 											$.ajax({
 												type: "post",
-												url: baseurl + "/com/delogLp",
+												url: baseurl + "/dbActivity/de",
 												data: {
-													logId: logId,
+													aid: logId,
 												},
 												success: function(data) {
 													layer.msg('删除成功!', {

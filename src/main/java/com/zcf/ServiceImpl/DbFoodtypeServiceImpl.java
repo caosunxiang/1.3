@@ -61,4 +61,12 @@ public Body up(DbFoodtype dbFoodtype) {
 	}
 	return Body.newInstance(201, "修改失敗");
 }
+@Override
+public Body getone(Integer ftid) {
+	DbFoodtype dbFoodtype=dbFoodtypeMapper.selectById(ftid);
+	if(dbFoodtype!=null) {
+		return Body.newInstance(dbFoodtype);
+	}
+	return Body.newInstance(201,"查询无果");
+}
 }

@@ -38,7 +38,7 @@ public class TestMP {
 		StrategyConfig stConfig = new StrategyConfig();
 		stConfig.setCapitalMode(true) // 全局大写命名
 				.setDbColumnUnderline(true) // 指定表名 字段名是否使用下划线
-				.setNaming(NamingStrategy.underline_to_camel).setInclude("db_system_layout"); // 数据库表映射到实体的命名策略
+				.setNaming(NamingStrategy.underline_to_camel).setInclude("db_code"); // 数据库表映射到实体的命名策略
 //				.setTablePrefix("tbl_")
 		// 生成的表
 

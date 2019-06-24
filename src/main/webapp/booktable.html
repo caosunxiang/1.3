@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>所有作品</title>
+		<title>所有菜品</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
@@ -12,43 +12,15 @@
 	<body>
 		<div class="container">
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>所有作品</legend>
+				<legend>所有菜品</legend>
 			</fieldset>
 			<form class="layui-form">
 				<div class="layui-form-item">
 					<div class="layui-inline">
-						<label class="layui-form-label">作品种类</label>
+						<label class="layui-form-label">店铺</label>
 						<div class="layui-input-inline">
-							<select name="quiz" lay-filter="type">
-								<option value=""></option>
-								<option value="end">完结</option>
-								<option value="serialization">连载</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="layui-inline">
-						<label class="layui-form-label">作品状态</label>
-						<div class="layui-input-inline">
-							<select name="quiz" lay-filter="status">
-								<option value=""></option>
-								<option value="draft">草稿</option>
-								<option value="apply">申请中</option>
-								<option value="pass">申请通过</option>
-								<option value="refuse">拒绝通过</option>
-
-							</select>
-						</div>
-					</div>
-
-					<div class="layui-inline">
-						<label class="layui-form-label">作品类型</label>
-						<div class="layui-input-inline">
-							<select name="quiz" lay-filter="vip">
-								<option value=""></option>
-								<option value="free">免费</option>
-								<option value="vip">vip阅读</option>
-								<option value="price">购买阅读</option>
+							<select name="shop" lay-filter="status" value="请先选择店铺" id="sid">
+							<option value="">请选择店铺</option>
 							</select>
 						</div>
 					</div>
@@ -56,143 +28,115 @@
 				</div>
 
 			</form>
+					<div class="layui-btn-group demoTable">
+			<button type="button" class="layui-btn layui-btn-danger xinzeng"
+				lay-event="xinzeng">发布新分类</button>
+		</div>
 			<table id="demo" lay-filter="test"></table>
 			<div id="test1"></div>
+			<script type="text/html" id="typeBar">
+		    	 {{#  if(parseInt(d.ftState) == "0"){ }}
+			     	禁用
+			    {{#  }else if(parseInt(d.ftState)=="1"){ }}
+			     	启用
+			    {{#  }else if(parseInt(d.oState)=="2"){ }}
+			     	服務員結賬
+			    {{#  }else if(parseInt(d.oState)=="3"){ }}
+			      	已過期
+			     {{# }else { }}
+			      	未知
+	     		{{# } }}
+			 </script>
 			<script type="text/javascript" src="js/jquery.min.js"></script>
 			<script src="js/common.js"></script>
 			<script src="layui/layui.js"></script>
 			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 			<script type="text/html" id="barDemo">
-				<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
-				<a class="layui-btn layui-btn-xs  layui-btn-warm" lay-event="apply">申请</a>
-				<a class="layui-btn layui-btn-xs" lay-event="cancle">撤销申请</a>
+				<!--<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">添加</a>-->
+				<a class="layui-btn layui-btn-xs  layui-btn-warm" lay-event="apply">查看菜品</a>
+				<a class="layui-btn layui-btn-xs" lay-event="cancle">修改</a>
 				<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 			</script>
 			<script>
 				var list;
 				var book_type;
-				var book_status;
+				var shop;
 				var vip_status;
 				var laypage;
 				$(function() {
-					getBookLisyBySelf("", "", "");
 					layui.use(['form', 'laypage'], function() {
 						var form = layui.form;
 						laypage = layui.laypage;
-						form.on('select(type)', function(data) {
+						$.post(baseurl +"/dbShop/shop",function(data){
+							tr="";
+							list=data.data;
+							for (var i = 0; i < list.length; i++) {
+								tr+="<option value='"+list[i].s_id+"'>"+list[i].s_name+"</option>";
+							}
+							$("#sid").append(tr);
+							form.render('select');
+									getBookLisyBySelf("");
+							})
+
+						/*form.on('select(type)', function(data) {
 							book_type = data.value;
 							console.log(book_type)
 							getBookLisyBySelf(book_type, book_status, vip_status);
-						});
+						});*/
 						form.on('select(status)', function(data) {
-							book_status = data.value;
-							console.log(book_status);
-							getBookLisyBySelf(book_type, book_status, vip_status);
+							shop = data.value;
+							console.log(shop);
+							getBookLisyBySelf(shop);
 						});
-						form.on('select(vip)', function(data) {
+					/*	form.on('select(vip)', function(data) {
 							vip_status = data.value;
 							console.log(vip_status);
 							getBookLisyBySelf(book_type, book_status, vip_status);
-						});
-
+						});*/
 					})
 				})
 
-				function getBookLisyBySelf(book_type, book_status, vip_status) {
+				function getBookLisyBySelf(shop) {
 					$.ajax({
 						type: "POST", //提交方式 
-						url: baseurl + "/book/getBookLisyBySelf", //路径 
+						url: baseurl + "/dbFoodtype/getall", //路径 
 						dataType: 'json',
 						data: {
-							user_id: localStorage.getItem("userId"),
-							book_type: book_type,
-							book_status: book_status,
-							vip_status: vip_status,
+							sid:shop
 						}, //数据，这里使用的是Json格式进行传输 
 						success: function(data) { //返回数据根据结果进行相应的处理 
-							console.log(data.data.list);
-							list = data.data.list;
+							console.log(data.data);
+							list = data.data;
 							layui.use('table', function() {
 								var table = layui.table;
 								//第一个实例
 								table.render({
-									elem: '#demo',
-									id: 'testReload',
-									data: list, //数据接口
-									limit: 10,
-									limits: [10],
-									cols: [
+									elem : '#demo',
+									id : 'testReload',
+									data : list, //数据接口
+									page : true, //开启分页
+									totalRow : true, //开启合计行
+									limit : 10,
+									limits : [ 10 ],cols: [
 										[{
-											field: 'book_id',
+											field: 'ftId',
 											title: 'ID',
 											width: 180,
 
 										}, {
-											field: 'book_name',
-											title: '作品名称',
+											field: 'ftName',
+											title: '分类名称',
 											width: 120
 										}, {
-											field: 'platelist',
-											title: '作品类型',
+											field: 'ftState',
+											title: '状态',
+											templet:'#typeBar',
+											sort:true,
 											width: 150
 										}, {
-											field: 'book_type',
-											title: '种类',
+											field: 'foodtypeToShop',
+											title: '商铺代码',
 											width: 80,
-											templet: '#barDemo3',
-
-										}, {
-											field: 'all_number',
-											title: '总字数',
-											width: 80
-										}, {
-											field: 'book_status',
-											title: '作品状态',
-											width: 100,
-											templet: '#barDemo2',
-										}, {
-											field: 'book_desc',
-											title: '作品描述',
-											width: 180,
-
-										}, {
-											field: 'book_notice',
-											title: '作品公告',
-											width: 120
-										}, {
-											field: 'createtime',
-											title: '创建时间',
-											width: 120,
-
-										}, {
-											field: 'vip_status',
-											title: '收费状态',
-											width: 100,
-											templet: '#barDemo4',
-										}, {
-											field: 'price',
-											title: '价格',
-											width: 80
-										}, {
-											field: 'edited',
-											title: '责编',
-											width: 80
-										}, {
-											field: 'read_num',
-											title: '阅读数',
-											width: 80
-										}, {
-											field: 'fabulous',
-											title: '点赞数',
-											width: 80
-										}, {
-											field: 'reward',
-											title: '打赏',
-											width: 80
-										}, {
-											field: 'buy_num',
-											title: '购买量',
-											width: 80
 										}, {
 											title: '操作',
 											width: 220,
@@ -203,7 +147,7 @@
 								laypage.render({
 									elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
 										,
-									count: data.data.total, //数据总数，从服务端得到
+								//	count: data.data.total, //数据总数，从服务端得到
 									jump: function(obj, first) {
 										//obj包含了当前分页的所有参数，比如：
 										console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
@@ -214,14 +158,10 @@
 											//do something
 											$.ajax({
 												type: "POST", //提交方式 
-												url: baseurl + "/book/getBookLisyBySelf", //路径 
+												url: baseurl + "/dbFoodtype/getall", //路径 
 												dataType: 'json',
 												data: {
-													user_id: localStorage.getItem("userId"),
-													book_type: book_type,
-													book_status: book_status,
-													vip_status: vip_status,
-													pageNum: obj.curr
+													sid: shop
 												}, //数据，这里使用的是Json格式进行传输 
 												success: function(data) {
 													if(data.meta.code == 200) {
@@ -234,47 +174,47 @@
 										}
 									}
 								});
+								$(".xinzeng")
+								.click(
+										function() { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+											layer
+													.open({
+														type : 2,
+														title : '发布快捷搜素',
+														maxmin : true,
+														shadeClose : true, //点击遮罩关闭层
+														area : [
+																'800px',
+																'800px' ],
+														content : 'bookInfo.html',
+													});
+										});
 								table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
 									var data = obj.data; //获得当前行数据
 									var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 									var tr = obj.tr; //获得当前行 tr 的DOM对象
-									var book_id = obj.data.book_id;
-									var book_status = obj.data.book_status;
+									var id = obj.data.ftId;
+									var ftype = obj.data.ftId;
+									var ftname=obj.data.ftName;
+									//新增
 									if(layEvent === 'apply') { //申请
-										//do somehing
-										$.ajax({
-											type: "POST", //提交方式 
-											url: baseurl + "/book/applyBook", //路径 
-											dataType: 'json',
-											data: {
-												book_id: book_id,
-											}, //数据，这里使用的是Json格式进行传输 
-											success: function(data) { //返回数据根据结果进行相应的处理 
-												console.log(data.meta.code);
-												if(data.meta.code == 200) {
-													layer.msg('已提交审核', {
-														icon: 1
-													});
-													obj.update({
-														book_status: 'apply',
-
-													});
-												} else if(data.meta.code == 666) {
-													layer.msg('该书已被审核通过，不能提交审核！', {
-														icon: 5
-													});
-												}
-											}
-										})
+										layer.open({
+											type: 2,
+											title: '添加菜品',
+											maxmin: true,
+											shadeClose: true, //点击遮罩关闭层
+											area: ['1000px', '800px'],
+											content: 'setWithl.html?sid=' + shop+'&ftype='+ftype+'&ftName='+ftname
+										});
 									} else if(layEvent === 'del') { //删除
 
-										layer.confirm('真的删除此作品吗', function(index) {
+										layer.confirm('真的删除此分类吗', function(index) {
 											$.ajax({
 												type: "POST", //提交方式 
-												url: baseurl + "/book/deletBook", //路径 
+												url: baseurl + "/book/de", //路径 
 												dataType: 'json',
 												data: {
-													book_id: book_id,
+													id: id,
 												}, //数据，这里使用的是Json格式进行传输 
 												success: function(data) { //返回数据根据结果进行相应的处理 
 													console.log(data.meta.code);
@@ -283,8 +223,8 @@
 															icon: 1
 														});
 														obj.del();
-													} else if(data.meta.code == 888) {
-														layer.msg('该书已被审核通过，无法删除！', {
+													} else  {
+														layer.msg('无法删除！', {
 															icon: 5
 														});
 													}
@@ -293,40 +233,22 @@
 											layer.close(index);
 										});
 									} else if(layEvent === 'cancle') { //撤销申请
-										//do something
-										$.ajax({
-											type: "POST", //提交方式 
-											url: baseurl + "/book/cancleBook", //路径 
-											dataType: 'json',
-											data: {
-												book_id: book_id,
-											}, //数据，这里使用的是Json格式进行传输 
-											success: function(data) { //返回数据根据结果进行相应的处理 
-												console.log(data.meta.code);
-												if(data.meta.code == 200) {
-													layer.msg('撤销成功', {
-														icon: 1
-													});
-													obj.update({
-														book_status: 'draft',
-
-													});
-												} else if(data.meta.code == 888) {
-													layer.msg('该书不是审核状态，不能取消审核！', {
-														icon: 5
-													});
-												}
-											}
-										})
-									} else if(layEvent === 'edit') {
-										
 										layer.open({
 											type: 2,
-											title: '作品详情',
+											title: '分类详情',
 											maxmin: true,
 											shadeClose: true, //点击遮罩关闭层
 											area: ['1000px', '800px'],
-											content: 'bookinfo.html?book_id=' + book_id
+											content: 'bookup.html?sid=' + id
+										});
+									} else if(layEvent === 'edit') {
+										layer.open({
+											type: 2,
+											title: '查看食品',
+											maxmin: true,
+											shadeClose: true, //点击遮罩关闭层
+											area: ['1000px', '800px'],
+											content: 'setWithl.html?sid=' + shop+'&ftype='+ftype
 										});
 									}
 								});

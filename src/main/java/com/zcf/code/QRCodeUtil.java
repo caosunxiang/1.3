@@ -133,7 +133,8 @@ public class QRCodeUtil {
 		String filename = new Random().nextInt(99999999) + "";
 		String file = filename + ".jpg";
 		ImageIO.write(image, FORMAT_NAME, new File(destPath + "/" + file));
-		log.info("http://172.16.1.164:8082/files/images" + "/" + file);
+		log.info("http://127.0.0.1:6058/files/images" + "/" + file);
+		System.out.println(file);
 		return file;
 	}
 
@@ -262,9 +263,10 @@ public class QRCodeUtil {
 	public static void main(String[] args) throws Exception {
 		String id = "123456789";
 		String num = "3";
-		String text = "http://172.16.1.164:8082/airtime/liaotian/test.html?id=" + id + "&num=" + num;
-		System.out.println(QRCodeUtil.encode(text, "D:/QMDownload/SoftMgr/timg.jpg", "C:/read/files/images", true));
-		QRCodeUtil.encode(text, "D:/QMDownload/SoftMgr/timg.jpg", "C:/read/files/images", true);
+		String text = "http://127.0.0.1:8080/1.3/index.html?id=" + id + "&num=" + num;
+		QRCodeUtil.encode(text, "C:/read/files/images", false);
+		System.out.println();
+		QRCodeUtil.encode(text,  "C:/read/files/images", false);
 	}
 
 }

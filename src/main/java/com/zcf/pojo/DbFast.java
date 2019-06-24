@@ -22,8 +22,8 @@ public class DbFast extends Model<DbFast> {
     /**
      * 快捷搜索id
      */
-    @TableId(value = "f_id", type = IdType.NONE)
-    private String fId;
+    @TableId(value = "f_id", type = IdType.AUTO)
+    private Integer fId;
     /**
      * 快捷搜索名称
      */
@@ -34,11 +34,11 @@ public class DbFast extends Model<DbFast> {
     private String fCount;
 
 
-    public String getfId() {
+    public Integer getfId() {
 		return fId;
 	}
 
-	public void setfId(String fId) {
+	public void setfId(Integer fId) {
 		this.fId = fId;
 	}
 

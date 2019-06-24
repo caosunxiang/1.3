@@ -3,12 +3,16 @@ package com.zcf.ServiceImpl;
 import com.zcf.pojo.DbComment;
 import com.zcf.pojo.DbOutline;
 import com.zcf.common.json.Body;
+import com.zcf.common.result.PageResult;
+import com.zcf.common.result.ResultVo;
 import com.zcf.mapper.DbCommentMapper;
 import com.zcf.mapper.DbOutlineMapper;
 import com.zcf.service.DbCommentService;
+import com.zcf.vo.in.PageVo;
 import com.alipay.api.internal.util.StringUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,14 +51,23 @@ public Body comadd(DbComment comment) {
 	return Body.newInstance(201, "添加失敗");
 }
 @Override
-public Body getbysid(String sid) {
+public ResultVo getbysid(String sid,PageVo pv) {
+	if (pv.getPage() != null && pv.getPageSize() != null) {
+		PageHelper.startPage(pv.getPage(), pv.getPageSize());
+	}
 	EntityWrapper< DbComment>wrapper=new EntityWrapper<>();
 	wrapper.eq("comment_to_shop", sid);
+	wrapper.orderBy("c_up", false);
 	List<DbComment> list=commentMapper.selectList(wrapper);
-	if(list.size()>0) {
-		return Body.newInstance(list);
-	}
-	return Body.newInstance(201, "沒有更多評論了");
+	// 自动分页"
+			PageResult result = PageResult.result(list);
+			// 返回的vo
+			ResultVo resultVo = new ResultVo();
+			// 返回总条数
+			resultVo.setTotal(result.getTotal());
+			// 返回结果集合
+			resultVo.setList(result.getRows());
+		return resultVo;
 }
 @Override
 public Body getbyuid(String uid) {
@@ -95,5 +108,20 @@ public Body remark(String cid,String remark) {
 		return Body.BODY_200;
 	}
 	return Body.newInstance(201, "回復失敗");
+}
+@Override
+public Body cup(String  cid,String cup) {
+	EntityWrapper<DbComment> wrapper=new EntityWrapper<>();
+	wrapper.eq("c_id", cid);
+	if(cup.equals("1")) {
+		cup="0";
+	}else {
+		cup="1";
+	}
+	Integer count=commentMapper.updateForSet("c_up='"+cup+"'", wrapper);
+	if(count==1) {
+		return Body.BODY_200;
+	}
+	return Body.newInstance(201, "置顶失败");
 }
 }

@@ -20,8 +20,8 @@ SELECT
 	s.*
 FROM
 	db_food f
-LEFT JOIN db_set_food sf ON sf.sf_foodid = f.f_id
-LEFT JOIN db_set s ON s.set_id = sf.sf_setid
+RIGHT JOIN db_set_food sf ON sf.sf_foodid = f.f_id
+RIGHT JOIN db_set s ON s.set_id = sf.sf_setid
 WHERE
 	f.f_id = #{fid};
 </select>

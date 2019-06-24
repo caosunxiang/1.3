@@ -39,5 +39,9 @@ public interface DbFoodService extends IService<DbFood> {
 
 	Body cancel(String fid);//取消熱門
 
+	Body getclassify(String sid);//查询
+
+	Body getall();//菜品咨询
+
 
 }

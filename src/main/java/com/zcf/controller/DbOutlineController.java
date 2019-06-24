@@ -61,11 +61,11 @@ Body add(String lcontent) {
  * @return
  */
 @PostMapping("/up")
-Body up(String lid, String lcontent) {
-	if(StringUtils.isEmpty(lid)||StringUtils.isEmpty(lcontent)) {
+Body up(String lid, String lcontent,Integer lNum) {
+	if(StringUtils.isEmpty(lid)||StringUtils.isEmpty(lcontent)||lNum==null) {
 		return Body.BODY_451;
 	}
-	return dbOutlineService.up(lid, lcontent);
+	return dbOutlineService.up(lid, lcontent,lNum);
 }
 
 /**
@@ -91,6 +91,18 @@ Body bysid(String sid) {
 		return Body.BODY_451;
 	}
 	return dbOutlineService.bysid(sid);
+}
+/**
+ * 唯一查詢
+ * @param lid
+ * @return
+ */
+@PostMapping("/getone")
+Body getone(String lid) {
+	if(StringUtils.isEmpty(lid)) {
+		return Body.BODY_451;
+	}
+	return dbOutlineService.getone(lid);
 }
 }
 

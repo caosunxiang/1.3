@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>查看用户银行卡号</title>
+		<title>查看提示</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
@@ -21,21 +21,10 @@
 				}
 			</style>
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>查看用户银行卡号</legend>
+				<legend>查看提示</legend>
 			</fieldset>
 			<form class="layui-form">
-				<div class="layui-form-item">
-					<div class="layui-inline">
-						<label class="layui-form-label">用户手机号</label>
-						<div class="layui-input-inline namebox">
-							<input id="phone" name="phone" placeholder="用户手机号" autocomplete="off" class="layui-input phone">
-						</div>
-
-						<label class="layui-form-label"></label>
-						<div class="layui-input-inline namebox"></div>
-						<button class="layui-btn seek" lay-submit lay-filter="formDemo" id="search" type="button">搜索</button>
-					</div>
-				</div>
+				
 
 			</form>
 			<!--<div class="layui-btn-group demoTable">
@@ -49,8 +38,8 @@
 		<script src="layui/layui.js"></script>
 		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 		<script type="text/html" id="barDemo">
-			<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query1">封账号
-			<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">设置管理员-->
+			<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query1">修改内容
+			<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">设置管理员-->
 			<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">删除用户</a>-->
 		</script>
 		<script>
@@ -58,7 +47,7 @@
 			var laypage;
 			$(function() {
 				layui.use(['form', 'laypage'], function() {
-					userlist("", "");
+					userlist();
 					form = layui.form;
 					laypage = layui.laypage;
 
@@ -70,14 +59,13 @@
 				})
 			})
 
-			function userlist(phone) {
+			function userlist() {
 
 				$.ajax({
 					type: "post", //提交方式 
-					url: baseurl + "/bankCard/checkUser", //baseurl + "/com/users", //路径 
+					url: baseurl + "/dbSystemLayout/getall", //baseurl + "/com/users", //路径 
 					dataType: 'json',
 					data: {
-						phone: $(".phone").val()
 						/*,address: address,*/
 						/*userType: userType,
 						vip: vip,*/
@@ -97,33 +85,21 @@
 								limits: [10],
 								cols: [
 									[{
-										field: 'id',
+										field: 'slid',
 										title: 'ID',
 										width: 200,
 									}, {
-										field: 'userId',
-										title: '用户ID',
+										field: 'slname',
+										title: '位置',
 										width: 200,
 									}, {
-										field: 'bankNumber',
-										title: '银行卡号',
+										field: 'slcontent',
+										title: '内容',
 										width: 400,
 									}, {
-										field: 'bankName',
-										title: '银行名称',
-										width: 355,
-									}, {
-										field: 'username',
-										title: '姓名',
-										width: 150,
-									}, {
-										field: 'phone',
-										title: '手机号',
-										width: 200,
-									}, {
-										field: 'time',
-										title: '上传时间',
-										width: 200,
+										title: '操作',
+										width: 263,
+										toolbar: '#barDemo'
 									}]
 								]
 							});
@@ -131,24 +107,20 @@
 							//点击查看详情 跳出
 							table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
 								var data = obj.data; //获得当前行数据
-
 								var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 								var tr = obj.tr; //获得当前行 tr 的DOM对象
-								var phone = obj.data.phone;
-								if(layEvent === 'query') { //删除
-									layer.confirm('确认设置该成员为管理员吗？', function(index) {
-										$.ajax({
-											type: "post",
-											url: baseurl + "/user/changeRole",
-											data: {
-												phone: phone,
-											},
-											success: function() {
-												location.reload();
-											}
-										});
-									})
-								} else if(layEvent === 'query1') { //删除
+								var slid = obj.data.slid;
+								if(layEvent === 'query1') { //删除
+									layer.open({
+										type: 2,
+										title: '弹窗信息',
+										maxmin: true,
+										shadeClose: true, //点击遮罩关闭层
+										area: ['800px', '800px'],
+										content: 'sys.html?slid=' + slid
+									});
+
+								}  else if(layEvent === 'query') { //删除
 									layer.confirm('确认封该账号吗？', function(index) {
 										$.ajax({
 											type: "post",

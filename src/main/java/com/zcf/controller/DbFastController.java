@@ -46,11 +46,11 @@ public class DbFastController {
 	 * @return
 	 */
 	@PostMapping("/add")
-	Body add(String fId, String fName, String fCount) {
-		if (StringUtils.isEmpty(fId) || StringUtils.isEmpty(fName) || StringUtils.isEmpty(fCount)) {
+	Body add(String fName, String fCount) {
+		if ( StringUtils.isEmpty(fName) || StringUtils.isEmpty(fCount)) {
 			return Body.BODY_451;
 		}
-		return dbFastService.add(fId, fName, fCount);
+		return dbFastService.add( fName, fCount);
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class DbFastController {
 	 * @return
 	 */
 	@PostMapping("/del")
-	Body del(String fId) {
-		if (StringUtils.isEmpty(fId)) {
+	Body del(Integer fId) {
+		if (fId==null) {
 			return Body.BODY_451;
 		}
 		return dbFastService.del(fId);
@@ -75,8 +75,8 @@ public class DbFastController {
 	 * @return
 	 */
 	@PostMapping("/upd")
-	Body upd(String fId, String fName, String fCount) {
-		if (StringUtils.isEmpty(fId) || StringUtils.isEmpty(fName) || StringUtils.isEmpty(fCount)) {
+	Body upd(Integer fId, String fName, String fCount) {
+		if (fId==null|| StringUtils.isEmpty(fName) || StringUtils.isEmpty(fCount)) {
 			return Body.BODY_451;
 		}
 		return dbFastService.upd(fId, fName, fCount);
@@ -88,8 +88,8 @@ public class DbFastController {
 	 * @return
 	 */
 	@PostMapping("/getone")
-	Body get(String fId) {
-		if (StringUtils.isEmpty(fId)) {
+	Body get(Integer fId) {
+		if (fId==null) {
 			return Body.BODY_400;
 		}
 		return dbFastService.getone(fId);

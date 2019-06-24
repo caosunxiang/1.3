@@ -31,11 +31,11 @@ public interface DbOrderService extends IService<DbOrder> {
 
 	Body getbysid(String sid);//查詢商家訂單
 
-	Body addtoorder(DbOrder dbOrder, String fid,String  message,String price,String st);//加單
+	Body addtoorder(String oid, String fid,String  message,String price,String st);//加單
 
 	Body table(String sid);//查看餐廳每桌消費情況
 
-	Body today();//計算當天總交易額和平均交易額
+	Body today(String sid);//計算當天總交易額和平均交易額
 
 	Body finish(String oid);//查詢已完成訂單
 
@@ -46,6 +46,14 @@ public interface DbOrderService extends IService<DbOrder> {
 	Body sevenago();//查询七天前的订单
 
 	Body sevenhour();//查询七小时前的订单
+
+	Body getallover(String state);//查詢所有的訂單
+
+	Body byalltable(String table, String sid, String oid);//詳情
+
+	Body table(String sid, Integer num);//查看哪一桌有订单
+
+	Body deover(String sid);//充值订单
 	
 
 

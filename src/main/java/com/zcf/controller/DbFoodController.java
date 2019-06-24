@@ -11,7 +11,9 @@ import com.zcf.common.utils.Hutool;
 import com.zcf.pojo.DbFood;
 import com.zcf.service.DbFoodService;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,9 +82,9 @@ public class DbFoodController {
 	 * @return
 	 */
 	@PostMapping("/addfood")
-	public Body addfood( String name, String ename, BigDecimal price, String pic, String ftype,
+	public Body addfood(String id, String name, String ename, BigDecimal price, String pic, String ftype,
 			String ftname, String sid) {
-		if ( StringUtils.isEmpty(name) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(pic)
+		if (  StringUtils.isEmpty(id) ||StringUtils.isEmpty(name) || StringUtils.isEmpty(ename) || StringUtils.isEmpty(pic)
 				|| StringUtils.isEmpty(ftype) || StringUtils.isEmpty(ftname) || StringUtils.isEmpty(sid)||price==null) {
 			return Body.BODY_451;
 
@@ -90,6 +92,7 @@ public class DbFoodController {
 		DbFood dbFood=new DbFood();
 		dbFood.setfEnglishName(ename);
 		dbFood.setfId(Hutool.getId());
+		dbFood.setId(id);
 		dbFood.setfName(name);
 		dbFood.setFoodToShop(sid);
 		dbFood.setfPicture(pic);
@@ -194,5 +197,25 @@ public class DbFoodController {
 			return Body.BODY_451;
 		}
 		return dbFoodService.cancel(fid);
+	}
+	/**
+	 * 查询封装菜品信息对象
+	 * @param sid
+	 * @return
+	 */
+	@PostMapping("/getclassify")
+	Body getclassify(String sid) {
+		if(StringUtils.isEmpty(sid)) {
+			return Body.BODY_451;
+		}
+		return dbFoodService.getclassify(sid);
+	}
+	/**
+	 * 菜品咨询
+	 * @return
+	 */
+	@PostMapping("/getall")
+	Body getall() {
+		return dbFoodService.getall();
 	}
 }

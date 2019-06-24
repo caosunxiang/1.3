@@ -75,7 +75,6 @@
 						userlist("");
 						form = layui.form;
 						laypage = layui.laypage;
-
 						form.on('select(addtime)', function(data) {
 							var addtime = $('.addtime').val();
 							console.log(addtime);
@@ -158,7 +157,6 @@
 									var idList = [];
 									var checkStatus = table.checkStatus("testReload"),
 										data = checkStatus.data;
-
 									if(data.length == 0) {
 										layer.msg('至少也得选一个吧', {
 											icon: 2

@@ -3,6 +3,7 @@ package com.zcf.mapper;
 import com.zcf.common.json.Body;
 import com.zcf.pojo.DbOrder;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +23,11 @@ public interface DbOrderMapper extends BaseMapper<DbOrder> {
 List<Map<String, Object> >getone(@Param("oid")String oid);
 List<Map<String, Object> >getbyuid(@Param("uid")String uid);
 List<Map<String, Object> >getbysid(@Param("sid")String sid);
-List<DbOrder>today();
+List<DbOrder>today(@Param("sid")String sid);
 List<Map<String, Object> >finishone(@Param("oid")String oid);
 List< Map<String, Object>>bytable(@Param("table")String table,@Param("sid")String sid);
+BigDecimal websocket(@Param("table")String table,@Param("sid")String sid);
+List<Map<String, Object>>byalltable(@Param("oid")String oid, @Param("table")String table,@Param("sid")String sid);
 //小时
 int onehour();
 int towhour();

@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>所有草稿</title>
+		<title>評論列表</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
@@ -12,26 +12,10 @@
 	<body>
 		<div class="container">
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>所有章节</legend>
+				<legend>評論列表</legend>
 
 			</fieldset>
 			<form class="layui-form">
-				<div class="layui-form-item">
-					<div class="layui-inline">
-						<label class="layui-form-label">作品种类</label>
-						<div class="layui-input-inline">
-							<select name="quiz" lay-filter="status">
-								<option value=""></option>
-								<option value="draft">草稿</option>
-								<option value="apply">申请中</option>
-								<option value="pass">通过</option>
-								<option value="refuse">未通过</option>
-							</select>
-						</div>
-					</div>
-
-				</div>
-
 			</form>
 			<table id="demo" lay-filter="test"></table>
 			<div id="test1"></div>
@@ -40,10 +24,7 @@
 			<script src="layui/layui.js"></script>
 			<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 			<script type="text/html" id="barDemo">
-				<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
-				<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="apply">申请</a>
-				<a class="layui-btn layui-btn-xs" lay-event="cancle">撤销</a>
-				<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
 			</script>
 			<script>
 				var list;
@@ -55,29 +36,27 @@
 						laypage = layui.laypage;
 						form = layui.form;
 
-						form.on('select(status)', function(data) {
-							chapter_status = data.value;
-							console.log(chapter_status);
-							getChapterByDraft(chapter_status);
+						form.on('select(status)', function() {
+							
+							getChapterByDraft();
 
 						});
 
 					})
 				})
 
-				function getChapterByDraft(chapter_status) {
+				function getChapterByDraft() {
 					$.ajax({
 						type: "POST", //提交方式 
-						url: baseurl + "/chapter/getChapterByDraft", //路径 
+						url: baseurl + "/dbComment/getbysid", //路径 
 						dataType: 'json',
 						data: {
 							//user_id: localStorage.getItem("userId"),
-							user_id: localStorage.getItem("userId"),
-							chapter_status: chapter_status,
+							sid:  getQueryString("sid")
 						}, //数据，这里使用的是Json格式进行传输 
 						success: function(data) { //返回数据根据结果进行相应的处理 
-							console.log(data.data.list);
-							list = data.data.list;
+							console.log(data);
+							list = data.data;
 							layui.use(['table', 'form'], function() {
 								var table = layui.table;
 
@@ -90,59 +69,52 @@
 									limits: [10],
 									cols: [
 										[{
-											field: 'chapter_id',
+											field: 'cId',
 											title: 'ID',
 											width: 200,
 
 										}, {
-											field: 'chapter_title',
-											title: '章节标题',
+											field: 'cContent',
+											title: '內容',
 											width: 200
 										}, {
-											field: 'chapter_status',
-											title: '章节类型',
+											field: 'cScore',
+											title: '評分',
 											width: 100,
-											templet: '#barDemo3',
 
 										}, {
-											field: 'book_id',
-											title: '作品ID',
+											field: 'cReply',
+											title: '回復',
 											width: 200
 
 										}, {
-											field: 'book_name',
-											title: '作品名称',
+											field: 'cTime',
+											title: '評論時間',
 											width: 200
 										}, {
-											field: 'book_type',
-											title: '作品种类',
+											field: 'cOrderTable',
+											title: '桌號',
 											width: 100,
-											templet: '#barDemo2',
 										}, {
-											field: 'createtime',
-											title: '创建时间',
-											width: 150,
+											field: 'cUserName',
+											title: '評論人',
+											width: 90,
 
 										}, {
-											field: 'vip_status',
-											title: '收费状态',
+											field: 'cShopName',
+											title: '評論商鋪',
 											width: 130,
-											templet: '#barDemo4',
 										}, {
-											field: 'price',
-											title: '价格',
-											width: 90
-										}, {
-											title: '操作',
-											width: 220,
-											toolbar: '#barDemo'
+											field: 'cLineContent',
+											title: '快捷評論',
+											width: 150
 										}]
 									]
 								});
 								laypage.render({
 									elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
 										,
-									count: data.data.total, //数据总数，从服务端得到
+									count: data.data, //数据总数，从服务端得到
 									jump: function(obj, first) {
 										//obj包含了当前分页的所有参数，比如：
 										console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。

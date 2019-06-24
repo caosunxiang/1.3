@@ -19,16 +19,33 @@
     </sql>
 <select id="getbyaid" resultType="java.util.Map">
 SELECT
-	a.*, s.s_name,
-	s.s_area,
-	s.s_phone,
-	d.d_id,
-	d.d_remark,
-	d.d_title
+	IFNULL(a.a_id, ' ') a_id,
+	IFNULL(a.a_title, ' ') a_title,
+	IFNULL(a.a_fcontent, ' ') a_fcontent,
+	IFNULL(a.a_content, ' ') a_content,
+	IFNULL(a.a_head, ' ') a_head,
+	IFNULL(a.activity_to_shop, ' ') activity_to_shop,
+	IFNULL(a.activity_to_discounts,' ') activity_to_discounts,
+	IFNULL(s.s_name, ' ') s_name,
+	IFNULL(s.s_area, ' ') s_area,
+	IFNULL(s.s_phone, ' ') s_phone,
+	IFNULL(d.d_id, ' ') d_id,
+	IFNULL(d.d_remark, ' ') d_remark,
+	IFNULL(d.d_title, ' ') d_title
 FROM
 	db_activity a
 LEFT JOIN db_shop s ON a.activity_to_shop = s.s_id
 LEFT JOIN db_discounts d ON a.activity_to_discounts = d.d_id
-WHERE a.a_id=#{aid}
+WHERE
+	a.a_id = #{aid}
 </select>
+<select id="near" resultType="java.util.Map">
+SELECT
+	a.*, s.s_latitude,
+	s.s_longitude
+FROM
+	db_activity a
+LEFT JOIN db_shop s ON a.activity_to_shop = s.s_id
+</select>
+
 </mapper>

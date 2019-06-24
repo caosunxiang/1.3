@@ -22,4 +22,11 @@ public interface DbActivityService extends IService<DbActivity> {
 
 	Body getbysid(String sid);//查看商家優惠活動
 
+	Body de(Integer aid);//删除活动
+
+	Body up(String aid, String did);//绑定
+
+	Body near(String longitude, String latitude);//附近优惠
+	
+
 }

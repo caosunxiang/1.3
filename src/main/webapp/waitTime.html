@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>修改天数</title>
+		<title>訂單詳情</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 		<link rel="stylesheet" href="layui/css/layuibtn.css">
@@ -26,56 +26,24 @@
 
 	<body>
 		<div class="container">
+			<style>
+				.layui-table .laytable-cell-checkbox {
+					margin: 0px 20px;
+				}
+				
+				.demoTable button:nth-of-type(2) {
+					margin-left: 15px!important;
+				}
+			</style>
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>修改天数</legend>
+				<legend>訂單詳情</legend>
 			</fieldset>
 
 			<form class="layui-form" action="">
-				<!--<div class="layui-form-item">
-					<label class="layui-form-label">房间id</label>
-					<div class="layui-input-block">
-						<input type="text" name="id" lay-verify="id" autocomplete="off" placeholder="id" class="layui-input id" readonly="true" style="color: #ccc;">
-					</div>
-				</div>-->
+				
 
-				<div class="layui-form-item">
-					<label class="layui-form-label">天数</label>
-					<div class="layui-input-block">
-						<input type="text" name="waitTime" lay-verify="waitTime" autocomplete="off" placeholder="请输入天数" class="layui-input waitTime">
-					</div>
-				</div>
-				<style type="text/css">
-					.fileimg {
-						margin-left: 0;
-						margin-top: 0;
-						width: 100px;
-						z-index: 1;
-					}
-					
-					.filename {
-						margin-left: 15px;
-						color: #B2B2B2;
-						margin-top: 6x;
-					}
-					
-					#fileimg {
-						width: 100px;
-						height: 38px!important;
-						overflow: hidden;
-						height: 100px;
-						opacity: 0;
-						position: absolute;
-						top: 0;
-						left: 0;
-						z-index: 10;
-						margin: 0;
-						padding: 0;
-					}
-				</style>
-				<div class="layui-form-item">
-					<button type="button" class="layui-btn" onclick="settijiao()">提交</button>
-					<button type="button" class="layui-btn" id="quxiao">取消</button>
-				</div>
+			
+				
 				<!--<div class="layui-form-item">
 					<label class="layui-form-label">上传头像</label>
 					<div class="layui-input-block">
@@ -94,65 +62,165 @@
 -->
 			</form>
 		</div>
-
+<table id="demo" lay-filter="test"></table>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script src="js/common.js"></script>
 		<script src="layui/layui.js"></script>
 		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 		<script>
-			//$(function() {	
-			layui.use(['element', 'layer'], function() {
-				var $ = layui.jquery,
-					element = layui.element;
-				layer = layui.layer;
+			var list;
+			/*var type = $('.state').val();*/
+			//				var phone;
+			//				var phone = $('.phone').val();
+			var laypage;
+			$(function() {
+				layui.use(['form', 'laypage'], function() {
+					userlist("");
+					form = layui.form;
+					laypage = layui.laypage;
 
-			});
-			var id = getQueryString("id");
+					/*form.on('select(type)', function(data) {
+						var state = $('.state').val();
+						console.log(state);
+						userlist($('.state'));
+					});*/
+				})
 
-//			$.ajax({
-//				type: "post",
-//				url: baseurl + "/myproduct/one",
-//				data: {
-//					id: id
-//				},
-//				success: function(data) {
-//					console.log(data)
-//					$(".id").val(data.data.id);
-//					$(".taitTime").val(data.data.waitTime);
-//					//					$(".phone").val(data.data.phone);
-//					//					$(".content").val(data.data.content);
-//				}
-//			});
+				$("#search").click(function() {
+				//	var state = $(".state").val();
+					userlist();
+				})
 
-			$("#quxiao").click(function() {
-				window.parent.location.reload();
 			})
 
-			function settijiao() {
-//				var fd = new FormData();
-//				fd.append('id', id)
-//				fd.append('waitTime', $(".waitTime").val());
-				console.log($(".waitTime").val());
-				console.log( getQueryString("id"));
+			function userlist() {
+				//var state = $(".state").val();
+					var sid = getQueryString("sid");
+					var oid = getQueryString("id");
+					var table = getQueryString("table");
 				$.ajax({
-					type: "post",
-					url: baseurl + "/myproduct/creat",
+					type: "post", //提交方式 
+					url: baseurl + "/dbOrder/byalltable", //baseurl + "/com/users", //路径 
+					dataType: 'json',
 					data: {
-						id: getQueryString("id"),
-						waitTime:$(".waitTime").val()
-					},
-					success: function(data) {
-						console.log(data)
-						if(data.meta.code == 200) {
-							//alert('修改成功');
-							layer.alert('设置天数成功', function() {
-								window.parent.location.reload();
+						table: table,
+						oid:oid,
+						sid:sid
+					}, //数据，这里使用的是Json格式进行传输 
+					success: function(data) { //返回数据根据结果进行相应的处理 
+						list = data.data;
+						layui.use('table', function() {
+							var table = layui.table;
+							//第一个实例
+							table.render({
+								elem: '#demo',
+								id: 'testReload',
+								data: list, //数据接口
+								page: true, //开启分页
+								totalRow: true, //开启合计行
+								limit: 10,
+								limits: [10],
+								cols: [
+									[
+//									{
+//											checkbox: true,
+//											LAY_CHECKED: false,
+//											filter: 'test',
+//											width: 300
+//										},
+										{
+											field: 'o_id',
+											title: 'ID',
+											width: 200,
+										}, {
+											field: 'o_strolley_table',
+											title: '桌號',
+											width: 200,
+										}, {
+											field: 'o_total',
+											title: '商品總價',
+											width: 150,
+										}, {
+											field: 'o_service_charge',
+											title: '小費 ',
+											width: 200,
+										}, {
+												field: 'of_foodid',
+											title: '食品id ',
+											width: 100,
+										}, {
+												field: 'f_name',
+											title: '點單食品 ',
+											width: 100,
+										}, {
+												field: 'o_shop_ename',
+											title: '食品英文名 ',
+											width: 100,
+										},{
+												field: 'order_to_shop',
+												title: '商鋪id',
+												width: 100,
+											}, {
+											field: 'o_shop_name',
+											title: '店鋪名',
+											width: 100,
+										}, {
+												field: 'f_english_name',
+											title: '店鋪英文名 ',
+											width: 100,
+										}, {
+											field: 'o_time',
+											title: '下單時間',
+											width: 150,
+										}
+									]
+								]
 							});
-						} else {
-							layer.alert("设置天数失败" + data.meta.msg);
-						}
+							//点击查看详情 跳出
+							table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+								var data = obj.data; //获得当前行数据
+
+								var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+								var tr = obj.tr; //获得当前行 tr 的DOM对象
+								var sid = obj.data.orderToShop;
+								var id = obj.data.oId;
+								var table = obj.data.oStrolleyTable;
+								if(layEvent === 'query') { //删除
+									layer.confirm('确定通过审核吗？', function(index) {
+										$.ajax({
+											type: "post",
+											url: baseurl + "/myproduct/goOne",
+											data: {
+												id: id,
+											},
+											success: function() {
+												location.reload();
+											}
+										});
+									})
+								} else if(layEvent === 'query1') { //等待时间
+									layer.open({
+										type: 2,
+										title: '訂單詳情',
+										maxmin: true,
+										shadeClose: true, //点击遮罩关闭层
+										area: ['900px', '900px'],
+										content: 'waitTime.html?sid=' + sid +'&table='+table+'&id='+id//?userId=+ userId
+									});
+								} else if(layEvent === 'query2') { //投放时间
+									layer.open({
+										type: 2,
+										title: '产品投放时间',
+										maxmin: true,
+										shadeClose: true, //点击遮罩关闭层
+										area: ['800px', '800px'],
+										content: 'outTime.html?id=' + id //?userId=+ userId
+									});
+								}
+							});
+						});
 					}
-				})
+				});
 			}
 		</script>
 	</body>

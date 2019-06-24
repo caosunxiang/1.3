@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.zcf.pojo.DbFood">
         <id column="f_id" property="fId" />
+        <result column="id" property="id" />
         <result column="f_name" property="fName" />
         <result column="f_english_name" property="fEnglishName" />
         <result column="f_price" property="fPrice" />
@@ -19,11 +20,12 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        f_id, f_name, f_english_name, f_price, f_state, f_picture, f_type, f_type_name, food_to_shop,f_month, f_recommend
+        f_id, id, f_name, f_english_name, f_price, f_state, f_picture, f_type, f_type_name, food_to_shop,f_month, f_recommend
     </sql>
 <select id="percentage" resultType="java.util.Map">
 SELECT
 	f.f_id,
+	 f.id,
 	f.f_name,
 	COUNT(1) AS num,
 	(
@@ -48,5 +50,12 @@ AND TO_DAYS(NOW()) - TO_DAYS(o.o_time) = 0
 AND f.food_to_shop =#{sid}
 GROUP BY
 	of.of_foodid;
+</select>
+<select id="rand" resultMap="BaseResultMap">
+SELECT
+	a.*
+FROM
+	db_food a
+ORDER BY RAND();
 </select>
 </mapper>

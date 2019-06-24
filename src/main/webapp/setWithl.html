@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>设置用户等级和代理收益</title>
+		<title>菜品</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 	</head>
@@ -21,22 +21,13 @@
 				}
 			</style>
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>查看用户等级和代理收益</legend>
+				<legend>菜品</legend>
 			</fieldset>
 			<form class="layui-form">
-				<div class="layui-form-item">
-					<div class="layui-inline">
-						<label class="layui-form-label">用户手机号</label>
-						<div class="layui-input-inline namebox">
-							<input id="phone" name="phone" placeholder="用户手机号" autocomplete="off" class="layui-input phone">
-						</div>
-
-						<label class="layui-form-label"></label>
+						<!--	<label class="layui-form-label"></label>
 						<div class="layui-input-inline namebox"></div>
 						<button class="layui-btn seek" lay-submit lay-filter="formDemo" id="search" type="button">搜索</button>
-
-					</div>
-					<!--	<div class="layui-inline">
+					<div class="layui-inline">
 						<label class="layui-form-label">VIP状态</label>
 						<div class="layui-input-inline">
 							<select name="quiz" lay-filter="status">
@@ -48,33 +39,70 @@
 						</div>
 					</div>-->
 
-				</div>
-
 			</form>
-			<!--<div class="layui-btn-group demoTable">
+			<div class="layui-btn-group demoTable">
 				<!--<button type="button" class="layui-btn layui-btn-danger delet" data-type='getCheckData'><i class="layui-icon"></i>批量删除</button>-->
-			<!--<button type="button" class="layui-btn layui-btn-danger xinzeng" lay-event="del">新增用户</button>-->
+			<button type="button" class="layui-btn layui-btn-danger xinzeng" lay-event="del">新增菜品</button>
 		</div>
 		<table id="demo" lay-filter="test"></table>
 		<!--<div id="test1"></div>-->
+			<script type="text/html" id="typeBar">
+		    	 {{#  if(parseInt(d.fState) == "0"){ }}
+			     	禁用
+			    {{#  }else if(parseInt(d.fState)=="1"){ }}
+			     	启用
+			    {{#  }else if(parseInt(d.fState)=="2"){ }}
+			     	服務員結賬
+			    {{#  }else if(parseInt(d.fState)=="3"){ }}
+			      	已過期
+			     {{# }else { }}
+			      	未知
+	     		{{# } }}
+			 </script>
+			 <script type="text/html" id="fRecommend">
+		    	 {{#  if(parseInt(d.fRecommend) == "0"){ }}
+			     	不推荐
+			    {{#  }else if(parseInt(d.fRecommend)=="1"){ }}
+			     	推荐
+			    {{#  }else if(parseInt(d.fRecommend)=="2"){ }}
+			     	服務員結賬
+			    {{#  }else if(parseInt(d.fRecommend)=="3"){ }}
+			      	已過期
+			     {{# }else { }}
+			      	未知
+	     		{{# } }}
+			 </script>
+			 <script type="text/html" id="imgTpl">
+			<img style="display: inline-block;width: 100%;height: 100%;" src={{d.fPicture}} />
+		</script>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script src="js/common.js"></script>
 		<script src="layui/layui.js"></script>
 		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 		<script type="text/html" id="barDemo">
-			<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">设置费用等级
-
-				<!--<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">删除用户</a>-->
+			<a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="query">上架/下架</a>
+		    <a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-normal " lay-event="del">删除食品</a>
 		</script>
 		<script>
-			var list;
-			var laypage;
+			var sid = getQueryString("sid");
+			var f_type=getQueryString("ftype");
+			var fTypeName=getQueryString("ftname");
+			//新增
+			$(".xinzeng").click(function() { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				layer.open({
+					type: 2,
+					title: '添加商铺',
+					maxmin: true,
+					shadeClose: true, //点击遮罩关闭层
+					area: ['800px', '800px'],
+					content: 'addfood.html?ftype='+f_type+'&sid='+sid
+				});
+			});
 			$(function() {
 				layui.use(['form', 'laypage'], function() {
 					userlist("", "");
 					form = layui.form;
 					laypage = layui.laypage;
-
 				})
 
 				$("#search").click(function() {
@@ -83,14 +111,15 @@
 				})
 			})
 
-			function userlist(phone) {
-
+			function userlist() {
 				$.ajax({
 					type: "post", //提交方式 
-					url: baseurl + "/total/check", //baseurl + "/com/users", //路径 
+					url: baseurl + "/dbFood/getfood", //baseurl + "/com/users", //路径 
 					dataType: 'json',
 					data: {
-						phone: $(".phone").val()
+						sid:sid,
+						f_type:f_type
+					//	phone: $(".phone").val()
 						/*,address: address,*/
 						/*userType: userType,
 						vip: vip,*/
@@ -110,32 +139,46 @@
 								limits: [10],
 								cols: [
 									[{
-										field: 'id',
-										title: '用户ID',
+										field: 'fId',
+										title: '菜品ID',
 										width: 200,
 									}, {
-										field: 'stamoney',
-										title: '静态收益',
+										field: 'fName',
+										title: '菜品名称',
 										width: 300,
 									}, {
-										field: 'remoney',
-										title: '推荐收益',
+										field: 'fEnglishName',
+										title: '英文名',
 										width: 300,
 									}, {
-										field: 'agemoney',
-										title: '代理收益',
+										field: 'fPrice',
+										title: '价格',
 										width: 300,
 									}, {
-										field: 'number',
-										title: '推荐人数',
-										width: 100,
-									}, {
-										field: 'phone',
-										title: '手机号',
+										field: 'fState',
+										title: '状态',
+										templet:'#typeBar',
+										sort:true,
 										width: 210,
 									}, {
-										field: 'type',
-										title: '代理等级',
+										field: 'fPicture',
+										title: '照片',
+										templet:'#imgTpl',
+										sort:true,
+										width: 100,
+									}, {
+										field: 'fTypeName',
+										title: '分类',
+										width: 100,
+									}, {
+										field: 'fMonth',
+										title: '月销量',
+										width: 100,
+									}, {
+										field: 'fRecommend',
+										title: '推荐',
+										templet:'#fRecommend',
+										sort:true,
 										width: 100,
 									}, {
 										title: '操作',
@@ -144,23 +187,66 @@
 									}]
 								]
 							});
-
+						
 							//点击查看详情 跳出
 							table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
 								var data = obj.data; //获得当前行数据
-
 								var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 								var tr = obj.tr; //获得当前行 tr 的DOM对象
-								var phone = obj.data.phone;
+								var fId = obj.data.fId;
+								var fState = obj.data.fState;
+								var fTypeName = obj.data.fTypeName;
 								if(layEvent === 'query') { //等待时间
-									layer.open({
-										type: 2,
-										title: '产品等待时间',
-										maxmin: true,
-										shadeClose: true, //点击遮罩关闭层
-										area: ['800px', '800px'],
-										content: 'withl.html?phone=' + phone //?userId=+ userId
+									layer.confirm('真的要下架/上架', function(index) {
+										$.ajax({
+											type: "POST", //提交方式 
+											url: baseurl + "/dbFood/updown", //路径 
+											dataType: 'json',
+											data: {
+												fid:fId,
+												state: fState,
+											}, //数据，这里使用的是Json格式进行传输 
+											success: function(data) { //返回数据根据结果进行相应的处理 
+												console.log(data.meta.code);
+												if(data.meta.code == 200) {
+													layer.msg('操作成功', {
+														icon: 1
+													});
+													obj.del();
+												} else  {
+													layer.msg('操作失败！', {
+														icon: 5
+													});
+												}
+											}
+										})
+										layer.close(index);
 									});
+								}else{layer.confirm('真的要删除吗', function(index) {
+									$.ajax({
+										type: "POST", //提交方式 
+										url: baseurl + "/dbFood/de", //路径 
+										dataType: 'json',
+										data: {
+											fid:fId
+										}, //数据，这里使用的是Json格式进行传输 
+										success: function(data) { //返回数据根据结果进行相应的处理 
+											console.log(data.meta.code);
+											if(data.meta.code == 200) {
+												layer.msg('操作成功', {
+													icon: 1
+												});
+												obj.del();
+											} else  {
+												layer.msg('操作失败！', {
+													icon: 5
+												});
+											}
+										}
+									})
+									layer.close(index);
+								});
+									
 								}
 							});
 						});

@@ -4,6 +4,7 @@ import com.zcf.pojo.DbFood;
 import com.zcf.pojo.DbOrder;
 import com.zcf.pojo.DbOrderFood;
 import com.zcf.pojo.DbUserDiscounts;
+import com.zcf.pojo.Table;
 import com.zcf.common.json.Body;
 import com.zcf.common.utils.Hutool;
 import com.zcf.mapper.DbFoodMapper;
@@ -16,6 +17,7 @@ import com.zcf.utils.JsonUtils;
 import com.zcf.utils.StringHideUtils;
 import com.zcf.utils.Timetool;
 import com.zcf.websocket.WebSocket;
+import com.alipay.api.internal.util.StringUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
@@ -76,6 +78,13 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 			dbFoodMapper.updateById(dbFood);
 		}
 		if (count == 1) {
+			WebSocket socket=new WebSocket();
+			Map<String , Object> map=new HashMap<>();
+			map.put("state", "1");
+			map.put("data", "有新的订单");
+			map.put("touser",dbOrder.getOrderToShop());
+			map.put("table",dbOrder.getoStrolleyTable());
+			socket.onMessage(JsonUtils.objectToJson(map));
 			return Body.newInstance(dbOrder);
 		}
 		return Body.newInstance(201, "添加失敗");
@@ -126,6 +135,9 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 				Map<String, Object> msg = new HashMap<String, Object>();
 				msg.put("touser", dbOrder.getOrderToShop());
 				msg.put("data", dbOrder.getoStrolleyTable() + "需要結賬服務");
+				msg.put("state", "2");
+				msg.put("table", dbOrder.getoStrolleyTable());
+				msg.put("price", dbOrder.getoTotal());
 				socket.onMessage(JsonUtils.objectToJson(msg));
 				EntityWrapper<DbUserDiscounts> wrapper = new EntityWrapper<>();
 				wrapper.eq("ud_userid", dbOrder.getOrderToUser());
@@ -155,7 +167,7 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 		if (list.size() > 0) {
 			return Body.newInstance(list);
 		}
-		return Body.newInstance(201, "查詢無果");
+		return Body.newInstance(200, "查詢無果");
 	}
 
 	@Override
@@ -168,15 +180,20 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 	}
 
 	@Override
-	public Body addtoorder(DbOrder dbOrder, String fid,String  message,String price,String st) {
+	public Body addtoorder(String oid, String fid,String  message,String price,String st) {
 		// 分割字符串填入集合
 				List<String> list = StringHideUtils.divide(fid);
 				List<String> list1 =StringHideUtils.divide(message);
 				List<String> list2 =StringHideUtils.divide(price);
-				List<String> list3 =StringHideUtils.divide(st);
+				List<String> list3 = null;
+				if(!StringUtils.isEmpty(st)) {
+				 list3 =StringHideUtils.divide(st);
+				}
 				List<DbFood> dbFoods = new ArrayList<>();
-				// 添加订单
-				Integer count = dbOrderMapper.insert(dbOrder);
+			    DbOrder order=dbOrderMapper.selectById(oid);
+			    BigDecimal subtotal=order.getoSubtotal();
+//			    BigDecimal service=order.getoServiceCharge();
+			    BigDecimal total=order.getoTotal();
 				for (int i=0;i<list.size();i++) {
 					// 为订单里的菜品添加月销售额
 					DbFood dbFood = dbFoodMapper.selectById(list.get(i));
@@ -189,18 +206,27 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 					entity.setOfFoodid(list.get(i));
 					entity.setOfRemark(list1.get(i));
 					entity.setOfPrice(list2.get(i));
-					entity.setOfOrderid(dbOrder.getoId());
+					subtotal.add(new BigDecimal(list2.get(i)));
+					entity.setOfOrderid(oid);
 					dbOrderFoodMapper.insert(entity);
-					dbStrolleyMapper.deleteById(list3.get(i));
+					if(!StringUtils.isEmpty(st)) {
+						dbStrolleyMapper.deleteById(list3.get(i));
+					}
 					dbFoodMapper.updateById(dbFood);
 				}
+				order.setoServiceCharge(subtotal.multiply(new BigDecimal(0.1)));
+				order.setoTotal(subtotal.add(order.getoServiceCharge()).add(total));
+				Integer count=dbOrderMapper.updateById(order);
 		if (count == 1) {
 			WebSocket socket = new WebSocket();
 			Map<String, Object> msg = new HashMap<String, Object>();
-			msg.put("touser", dbOrder.getOrderToShop());
+			msg.put("touser", order.getOrderToShop());
 			msg.put("data", dbFoods);
+			msg.put("table", order.getoStrolleyTable());
+			msg.put("state", "0");
+			msg.put("price",order.getoTotal());
 			socket.onMessage(JsonUtils.objectToJson(msg));
-			return Body.newInstance(dbOrder);
+			return Body.newInstance(order);
 		}
 		return Body.newInstance(201, "添加失敗");
 	}
@@ -218,8 +244,8 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 	}
 
 	@Override
-	public Body today() {
-		List<DbOrder> list = dbOrderMapper.today();
+	public Body today(String sid) {
+		List<DbOrder> list = dbOrderMapper.today(sid);
 		Map<String, Object> map = new HashMap<>();
 		if (list.size() > 0) {
 			BigDecimal money = new BigDecimal(0);
@@ -264,6 +290,17 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 		return Body.newInstance(201, "暫無已完成的訂單");
 	}
 	@Override
+	public Body deover(String sid) {
+		EntityWrapper<DbOrder>wrapper=new EntityWrapper<>();
+		wrapper.ne("o_state", 0);
+		wrapper.eq("order_to_shop", sid);
+		Integer count=dbOrderMapper.delete(wrapper);
+		if(count!=0) {
+			return Body.BODY_200;
+		}
+		return Body.newInstance(201, "没有可重置的订单");
+	}
+	@Override
 	public Body bytable(String table,String sid) {
 		List<Map<String, Object>>list=dbOrderMapper.bytable(table, sid);
 		if(list.size()>0) {
@@ -286,5 +323,48 @@ public class DbOrderServiceImpl extends ServiceImpl<DbOrderMapper, DbOrder> impl
 			return Body.newInstance(map);
 		}
 	return Body.newInstance(201, "服务器内部问题");
+	}
+	@Override
+	public Body getallover(String state) {
+		EntityWrapper< DbOrder> wrapper=new EntityWrapper<>();
+		if(!StringUtils.isEmpty(state)) {
+			wrapper.eq("o_state", state);
+		}
+		List<DbOrder>list=dbOrderMapper.selectList(wrapper);
+		if(list.size()>0) {
+			return Body.newInstance(list);
+		}
+		return Body.newInstance(201, "暫無已完成的訂單");
+	}
+	@Override
+	public Body byalltable(String table,String sid,String oid) {
+		List< Map<String, Object>> list=dbOrderMapper.byalltable(oid, table, sid);
+		if(list.size()>0) {
+			return Body .newInstance(list);
+		}
+		return Body.newInstance(201, "訂單已被移除");
+	}
+	@Override
+	public Body table(String sid,Integer num) {
+		List<Table>listall=new ArrayList<>();
+		EntityWrapper<DbOrder>entityWrapper=new EntityWrapper<>();
+		entityWrapper.eq("order_to_shop", sid);
+		entityWrapper.eq("o_state", "0");
+		List<DbOrder> list=dbOrderMapper.selectList(entityWrapper);
+		for (int i = 1; i < num+1; i++) {
+			Table table=new Table();
+			for (int j= 0; j < list.size(); j++) {
+				if (Integer.parseInt(list.get(j).getoStrolleyTable())==i) {
+					table.setTable(i);
+					table.setPrice(list.get(j).getoTotal());
+					break;
+				}else {
+					table.setTable(i);
+					table.setPrice(BigDecimal.valueOf(0.0));
+				}
+			}
+			listall.add(table);
+		}
+		return Body.newInstance(listall);
 	}
 }

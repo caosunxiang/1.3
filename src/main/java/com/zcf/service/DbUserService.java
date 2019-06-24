@@ -25,4 +25,6 @@ public interface DbUserService extends IService<DbUser> {
 
 	Body head(MultipartFile[] files);
 
+	Body getall(String name);
+
 }

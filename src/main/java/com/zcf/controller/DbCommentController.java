@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alipay.api.internal.util.StringUtils;
 import com.zcf.common.json.Body;
+import com.zcf.common.result.ResultVo;
 import com.zcf.common.utils.Hutool;
 import com.zcf.pojo.DbComment;
 import com.zcf.pojo.DbCustom;
 import com.zcf.service.DbCommentService;
 import com.zcf.utils.IDUtils;
+import com.zcf.vo.in.PageVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,10 +49,10 @@ public class DbCommentController {
 	 */
 	@PostMapping("/comadd")
 	public Body comadd(String content, Integer score, String co, String table, String otime, String cu, String head,
-			String cs, String sname, String sename,String cl,String ccontent) {
+			String cs, String sname, String sename,String cl,String ccontent,String cuname) {
 		if (StringUtils.isEmpty(content) || score == null || StringUtils.isEmpty(co) || StringUtils.isEmpty(table)
 				|| StringUtils.isEmpty(otime) || StringUtils.isEmpty(cu) || StringUtils.isEmpty(cs)
-				|| StringUtils.isEmpty(sname) || StringUtils.isEmpty(sename)) {
+				|| StringUtils.isEmpty(sname) || StringUtils.isEmpty(sename)|| StringUtils.isEmpty(cuname)) {
 			return Body.BODY_451;
 		}
 		DbComment comment = new DbComment();
@@ -66,6 +68,7 @@ public class DbCommentController {
 		comment.setcShopName(sname);
 		comment.setcTime(otime);
 		comment.setcUserHead(head);
+		comment.setcUserName(cuname);
 		comment.setCommentToLine(cl);
 		comment.setcLineContent(ccontent);
 		return commentService.comadd(comment);
@@ -77,11 +80,9 @@ public class DbCommentController {
 	 * @return
 	 */
 	@PostMapping("/getbysid")
-	Body getbysid(String sid) {
-		if (StringUtils.isEmpty(sid)) {
-			return Body.BODY_451;
-		}
-		return commentService.getbysid(sid);
+	ResultVo getbysid(String sid,PageVo pv) {
+		
+		return commentService.getbysid(sid, pv);
 	}
 
 	/**
@@ -121,5 +122,17 @@ public class DbCommentController {
 		}
 		return commentService.remark(cid, remark);
 	}
-
+	/**
+	 * 置顶
+	 * @param cid
+	 * @param cup
+	 * @return
+	 */
+	@PostMapping("/cup")
+	Body cup(String cid, String cup) {
+		if(StringUtils.isEmpty(cid)||StringUtils.isEmpty(cup)) {
+			return Body.BODY_451;
+		}
+		return commentService.cup(cid, cup);
+	}
 }

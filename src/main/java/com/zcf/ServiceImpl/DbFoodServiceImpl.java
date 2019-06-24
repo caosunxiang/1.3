@@ -1,9 +1,15 @@
 package com.zcf.ServiceImpl;
 
+import com.zcf.pojo.DbActivity;
 import com.zcf.pojo.DbFood;
+import com.zcf.pojo.DbFoodtype;
+import com.zcf.pojo.JsonTest;
 import com.zcf.common.json.Body;
 import com.zcf.mapper.DbFoodMapper;
 import com.zcf.service.DbFoodService;
+import com.zcf.service.DbFoodtypeService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.internal.util.StringUtils;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -11,6 +17,8 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +38,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> implements DbFoodService {
 	@Autowired
 	private DbFoodMapper dbFoodMapper;
+	@Autowired
+	private DbFoodtypeService foodtypeService;
 	@Override
 	public Body addfood(DbFood dbFood) {
 		Integer count = dbFoodMapper.insert(dbFood);
@@ -68,7 +78,14 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 		}
 		return Body.newInstance(201, "查詢無果");
 	}
-
+@Override
+public Body getall() {
+	List<DbActivity>list=dbFoodMapper.rand();
+	if(list.size()>0) {
+		return Body.newInstance(list);
+	}
+	return Body.newInstance(201, "查询无果");
+}
 
 	@Override
 	public Body recommend() {
@@ -130,21 +147,6 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 	public Body percentage(String sid) {
 		List<Map<String, Object>>list=dbFoodMapper.percentage(sid);
 		if(list.size()>0) {
-			long num=0;
-			Double dou=0.00;
-			for (Map<String, Object> map : list) {
-				long all=(long)map.get("all");
-				if(map.containsKey("num")) {
-					num=(long)map.get("num");
-					dou=(double)num/all;
-//					 NumberFormat nf = NumberFormat.getNumberInstance();//創建數字容器
-//					// 保留两位小数
-//					 nf.setMaximumFractionDigits(2); 
-//					  // 如果不需要四舍五入，可以使用RoundingMode.DOWN
-//					 nf.setRoundingMode(RoundingMode.UP);
-					map.put("num",dou*100/*nf.format(*//*)*/);
-				}
-			}
 			return Body.newInstance(list);
 		}
 		return Body.newInstance(201, "今日尚未出售");
@@ -169,5 +171,43 @@ public class DbFoodServiceImpl extends ServiceImpl<DbFoodMapper, DbFood> impleme
 			return Body.BODY_200;
 		}
 		return Body.newInstance(201, "修改失敗");
+	}
+	@Override
+	public  Body getclassify(String sid) {
+		EntityWrapper<DbFoodtype> wrapper=new EntityWrapper<>();
+		if(!StringUtils.isEmpty(sid)) {
+			wrapper.eq("foodtype_to_shop", sid);
+		}
+		List<DbFoodtype> list=foodtypeService.selectList(wrapper);
+		EntityWrapper<DbFood> entityWrapper = new EntityWrapper<>();
+		if (!StringUtils.isEmpty(sid)) {
+			entityWrapper.eq("food_to_shop", sid);
+		}
+		List<DbFood> sfood = dbFoodMapper.selectList(entityWrapper);
+		List<JsonTest<DbFood>>json=new ArrayList<>();
+		for (DbFoodtype dbFoodtype : list) {
+			List<DbFood> test=new ArrayList<>();
+			JsonTest<DbFood> jsonTest=new JsonTest<DbFood>();
+			for (DbFood dbFood : sfood) {
+				if(Integer.parseInt(dbFood.getfType())==dbFoodtype.getFtId()) {
+					jsonTest.setName(dbFoodtype.getFtName());
+					test.add(dbFood);
+				}else {
+					continue;
+				}
+				jsonTest.setList(test);
+			}
+			json.add(jsonTest);
+		}
+		if (json.size()>0) {
+			List<JsonTest<DbFood>>jsontest=new ArrayList<>();
+			for (int i = 0; i < json.size(); i++) {
+				if(json.get(i).getName()!=null) {
+					jsontest.add(json.get(i));
+				}
+			}
+			return Body.newInstance(jsontest);
+		}
+		return Body.newInstance(201, "查询无果");
 	}
 }

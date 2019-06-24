@@ -35,6 +35,10 @@ public class DbShop extends Model<DbShop> {
      */
     private String sEnglishName;
     /**
+     * 桌位
+     * */
+    private  Integer sTable;
+    /**
      * 主营类型
      */
     private String sBusinessType;
@@ -144,7 +148,15 @@ public class DbShop extends Model<DbShop> {
         this.sEnglishName = sEnglishName;
     }
 
-    public String getsBusinessType() {
+    public Integer getsTable() {
+		return sTable;
+	}
+
+	public void setsTable(Integer sTable) {
+		this.sTable = sTable;
+	}
+
+	public String getsBusinessType() {
         return sBusinessType;
     }
 

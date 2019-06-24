@@ -47,10 +47,10 @@ public class DbOutlineServiceImpl extends ServiceImpl<DbOutlineMapper, DbOutline
 		return Body.newInstance(201, "添加失敗");
 	}
 	@Override
-	public Body up(String lid,String lcontent) {
+	public Body up(String lid,String lcontent,Integer lNum) {
 		EntityWrapper<DbOutline> wrapper=new EntityWrapper<>();
 		wrapper.eq("l_id", lid);
-		Integer count=outlineMapper.updateForSet("l_content='"+lcontent+"'", wrapper);
+		Integer count=outlineMapper.updateForSet("l_content='"+lcontent+"',l_num="+lNum, wrapper);
 		if(count==1) {
 			return Body.BODY_200;
 		}
@@ -70,6 +70,14 @@ public class DbOutlineServiceImpl extends ServiceImpl<DbOutlineMapper, DbOutline
 		List<DbOutline> list=outlineMapper.bysid(sid);
 		if(list.size()>0) {
 			return Body.newInstance(list);
+		}
+		return Body.newInstance(201, "查詢無果");
+	}
+	@Override
+	public Body getone(String lid) {
+		DbOutline outline=outlineMapper.selectById(lid);
+		if(outline!=null) {
+			return Body.newInstance(outline);
 		}
 		return Body.newInstance(201, "查詢無果");
 	}

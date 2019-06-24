@@ -111,4 +111,16 @@ public class DbUserServiceImpl extends ServiceImpl<DbUserMapper, DbUser> impleme
 		}
 return Body.newInstance(201, "上传失败");
 	}
+@Override
+public Body getall(String name) {
+	EntityWrapper<DbUser> wrapper=new EntityWrapper<>();
+	if(!StringUtils.isEmpty(name)) {
+		wrapper.like("u_name",name);
+	}
+	List<DbUser> list=dbUserMapper.selectList(wrapper);
+	if(list.size()>0) {
+		return Body.newInstance(list);
+	}
+	return Body.newInstance(201, "沒有符合條件的用戶");
+}
 }

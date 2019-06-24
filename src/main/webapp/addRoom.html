@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>修改房间</title>
+		<title>修改活动</title>
 		<link rel="stylesheet" href="layui/css/layui.css">
 		<link rel="stylesheet" href="static/css/style.css">
 		<link rel="stylesheet" href="layui/css/layuibtn.css">
@@ -27,7 +27,7 @@
 	<body>
 		<div class="container">
 			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-				<legend>创建房间</legend>
+				<legend>修改活动</legend>
 			</fieldset>
 
 			<form class="layui-form" action="">
@@ -39,38 +39,45 @@
 				</div>-->
 
 				<div class="layui-form-item">
-					<label class="layui-form-label">房间名</label>
+					<label class="layui-form-label">活动标题</label>
 					<div class="layui-input-block">
-						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input roomName">
+						<input type="text" name="atitle" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input roomName">
 					</div>
 				</div>
 
 				<div class="layui-form-item">
-					<label class="layui-form-label">房间人数</label>
+					<label class="layui-form-label">活动内容</label>
 					<div class="layui-input-block">
-						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入密码" class="layui-input roomNum">
+						<input type="text" name="acon" lay-verify="title" autocomplete="off" placeholder="请输入密码" class="layui-input roomNum">
+					</div>
+				</div>
+					<div class="layui-form-item">
+					<label class="layui-form-label">内容</label>
+					<div class="layui-input-block">
+						<textarea name="afcon" id="afcon" placeholder="请输入内容" class="layui-textarea content"></textarea>
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<label class="layui-form-label">房间类型</label>
+				<label class="layui-form-label">图片</label>
+				<div class="layui-input-block inputfile">
+					点击上传 <input type="file" name="head" lay-verify="title"
+						autocomplete="off" class="layui-input inputfileadd"
+						id="FileUpload">
+				</div>
+				<img class="upimg" name="head"/>
+			</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">商户号</label>
 					<div class="layui-input-block">
-						<select lay-filter="provSel" class="roomType" autocomplete="off">
+						<select lay-filter="provSel"  id="as" name="as" autocomplete="off">
 							<option value="0" selected="selected">请选择</option>
-							<option value="10">10元</option>
-							<option value="20">20元</option>
-							<option value="50">50元</option>
 						</select>
 					</div>
 				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">红包数</label>
-					<div class="layui-input-block">
-						<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入密码" class="layui-input redbagNum">
-					</div>
-				</div>
+				
 
 				<div class="layui-form-item">
-					<button type="button" class="layui-btn" onclick="settijiao()">提交</button>
+					<button type="button" class="layui-btn" lay-submit lay-filter="c" onclick="settijiao()">提交</button>
 					<button type="button" class="layui-btn" id="quxiao">取消</button>
 				</div>
 				<!--<div class="layui-form-item">
@@ -97,16 +104,58 @@
 		<script src="layui/layui.js"></script>
 		<script src="layer-v3.1.1/layer/mobile/layer.js"></script>
 		<script>
-			//$(function() {	
-			layui.use(['element', 'layer'], function() {
+	/*		$(function() {
+
+				
+			})*/
+					$(".inputfileadd").change(function(){
+			     
+			       var fileObj = document.getElementById("FileUpload").files[0]; // js 获取文件对象
+	               if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+	                 layer.alert('请选择图片'); 
+	                   return false;
+	               }
+	               var formFile = new FormData();
+	               formFile.append("files", fileObj); //加入文件对象
+	     $.ajax({
+	                url:baseurl + "/dbUser/head",  
+	                data: formFile,
+	                type: "Post",
+	                dataType: "json",
+	                cache: false,//上传文件无需缓存
+	                processData: false,//用于对data参数进行序列化处理 这里必须false
+	                contentType: false, //必须
+	                success: function (result) {
+	                  if (result.meta.code == 200) {
+	                	  $(".upimg").css("display","inline-block").attr("src",result.data);
+		                   layer.alert("上传完成!");
+	                  }
+	                },
+	            })
+			   });
+			layui.use(['form','element', 'layer'], function() {
 				var $ = layui.jquery,
 					element = layui.element;
+				var form = layui.form;
 				layer = layui.layer;
-
+				form.on('submit(c)', function(data){
+					 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+					 var a=data.field;
+					 settijiao(a);
+				})
+				
+								$.post(baseurl +"/dbShop/shop",function(data){
+					tr="";
+					list=data.data;
+					for (var i = 0; i < list.length; i++) {
+						tr+="<option value='"+list[i].s_id+"'>"+list[i].s_name+"</option>";
+					}
+					$("#as").append(tr);
+					form.render('select');
+				})
 			});
-			
-			var roomId = getQueryString("roomId");
-			$.ajax({
+			//var roomId = getQueryString("roomId");
+			/*$.ajax({
 				type: "post",
 				url: baseurl + "/com/queryRoomLp",
 				data: {
@@ -120,30 +169,25 @@
 					$(".roomNum").val(data.data.roomNum);
 					$(".redbagNum").val(data.data.redbagNum);
 				}
-			});
+			});*/
 
 			$("#quxiao").click(function() {
 				window.parent.location.reload();
 			})
 
 
-			function settijiao() {
+			function settijiao(a) {
+				 console.log(a);
 				$.ajax({
 					type: "post",
-					url: baseurl + "/com/inRoomLp",
-					data: {
-						//						roomId:$(".roomId").val(),
-						roomName: $(".roomName").val(),
-						roomType: $(".roomType").val(),
-						roomNum: $(".roomNum").val(),
-						redbagNum: $(".redbagNum").val()
-					},
+					url: baseurl + "/dbActivity/addact",
+					data:a,
 					success: function(data) {
 						console.log(data)
 						if(data.meta.code == 200) {
 							//alert('修改成功');
-							if(data.data == '已创建的房间不能多于10') {
-								layer.alert("已创建的房间不能多于10");
+							if(data.data == 201) {
+								layer.alert(data.meta.msg);
 							} else {
 								layer.alert('创建成功', function() {
 									window.parent.location.reload();

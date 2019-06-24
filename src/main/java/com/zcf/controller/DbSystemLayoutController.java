@@ -56,8 +56,8 @@ Body three() {
  * @return
  */
 @PostMapping("/upone")
-Body upone(String str) {
-	return layoutService.upone(str);
+Body upone(String str,String id) {
+	return layoutService.upone(str,id);
 }
 /**
 //修改搜索框以上的內容
@@ -85,6 +85,18 @@ Body upthree(String str) {
 
 Body getall() {
 	return layoutService.getall();
+}
+/**
+ * 唯一查询
+ * @param slid
+ * @return
+ */
+@PostMapping("/getone")
+Body getone(Integer slid) {
+	if (slid==null) {
+		return Body.BODY_451;
+	}
+	return layoutService.getone(slid);
 }
 }
 
